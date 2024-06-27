@@ -12,8 +12,8 @@ class AppColors {
 }
 
 class AppTextStyles {
-  static final TextStyle displayLarge = GoogleFonts.modak(
-    fontSize: 32.0,
+  static final TextStyle displayLarge = GoogleFonts.nunito(
+    fontSize: 15.0,
     fontWeight: FontWeight.bold,
     color: AppColors.primary,
   );
