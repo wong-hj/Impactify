@@ -12,6 +12,12 @@ class AppColors {
 }
 
 class AppTextStyles {
+  static final TextStyle authHead = GoogleFonts.nunito(
+    fontSize: 32.0,
+    //fontWeight: FontWeight.bold,
+    color: Colors.black
+  );
+
   static final TextStyle displayLarge = GoogleFonts.nunito(
     fontSize: 15.0,
     fontWeight: FontWeight.bold,
@@ -32,10 +38,7 @@ class CustomTheme {
       primaryColor: AppColors.primary,
       hintColor: AppColors.secondary,
       scaffoldBackgroundColor: AppColors.background,
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(color: AppColors.primary),
-        bodyLarge: TextStyle(color: AppColors.secondary),
-      ),
+      
       // Define other theme properties as needed
     );
   }
@@ -46,10 +49,7 @@ class CustomTheme {
       primaryColor: AppColors.primary,
       hintColor: AppColors.secondary,
       scaffoldBackgroundColor: AppColors.background,
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(color: AppColors.primary),
-        bodyLarge: TextStyle(color: AppColors.secondary),
-      ),
+      
       // Define other theme properties as needed
     );
   }

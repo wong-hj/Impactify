@@ -10,20 +10,20 @@ class Onboarding1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned(
-          top: -200.0, // Top left corner
-          left: -200.0,
-          child: ClipPath(  // Crop the circle // Custom clipper
-            child: Container(  // The actual circle
-              width: 400.0,  // Adjust size as needed
-              height: 400.0,  // Adjust size as needed
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.secondary,  // Adjust color as needed
-              ),
-            ),
-          ),
-        ),
+        // Positioned(
+        //   top: -200.0, // Top left corner
+        //   left: -200.0,
+        //   child: ClipPath(  // Crop the circle // Custom clipper
+        //     child: Container(  // The actual circle
+        //       width: 400.0,  // Adjust size as needed
+        //       height: 400.0,  // Adjust size as needed
+        //       decoration: const BoxDecoration(
+        //         shape: BoxShape.circle,
+        //         color: AppColors.secondary,  // Adjust color as needed
+        //       ),
+        //     ),
+        //   ),
+        // ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

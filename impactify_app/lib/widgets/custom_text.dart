@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:impactify_app/theming/custom_themes.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -25,10 +26,12 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        prefixIcon: icon != null ? Icon(icon) : null,
-        hintText: placeholderText,
-        border: const OutlineInputBorder(),
-      ),
+          prefixIcon: icon != null ? Icon(icon) : null,
+          labelText: placeholderText,
+          labelStyle: const TextStyle(color: AppColors.primary),
+          border: const OutlineInputBorder(),
+          focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.placeholder, width: 2.0))),
       obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
@@ -36,3 +39,5 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+
+

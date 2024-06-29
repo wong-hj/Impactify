@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:impactify_app/screens/user/login.dart';
+import 'package:impactify_app/screens/user/signup.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -47,7 +49,12 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUp()),
+                    );
+                  },
                   child: Text(buttonText),
                 ),
                 SmoothPageIndicator(

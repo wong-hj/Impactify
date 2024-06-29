@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: CustomTheme.lightTheme,
       darkTheme: CustomTheme.darkTheme,
-      home: //const OnboardingScreens(),
-      Login(),
+      home: const OnboardingScreens(),
+      //Login(),
     );
   }
 }
