@@ -52,7 +52,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUp()),
+                      MaterialPageRoute(builder: (context) => Login()),
                     );
                   },
                   child: Text(buttonText),

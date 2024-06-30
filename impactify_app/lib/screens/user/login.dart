@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/screens/user/home.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
@@ -31,8 +32,8 @@ class Login extends StatelessWidget {
         
                 CustomTextField(
                   controller: _controller,
-                  placeholderText: 'Email Address',
-                  keyboardType: TextInputType.text,
+                  placeholderText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
                     // Handle text field changes
                   },
@@ -48,7 +49,13 @@ class Login extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 40),
-                CustomAuthButton(onPressed: () {}, text: "Login"),
+                CustomAuthButton(onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                    (Route<dynamic> route) => false,
+                  );
+                }, text: "Login"),
                 const SizedBox(height: 50),
                 const Text("or", style: TextStyle(fontSize: 16)),
                 const SizedBox(height: 30),

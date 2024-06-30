@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
+import 'package:impactify_app/screens/user/home.dart';
 import 'package:impactify_app/screens/user/login.dart';
 import 'theming/custom_themes.dart';
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       darkTheme: CustomTheme.darkTheme,
       home: const OnboardingScreens(),
       //Login(),
+      //Home(),
     );
   }
 }

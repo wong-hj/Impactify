@@ -39,8 +39,8 @@ class SignUp extends StatelessWidget {
                 const SizedBox(height: 20),
                 CustomTextField(
                   controller: _controller,
-                  placeholderText: 'Email Address',
-                  keyboardType: TextInputType.text,
+                  placeholderText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
                     // Handle text field changes
                   },
