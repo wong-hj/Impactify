@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_app/screens/user/home.dart';
+import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
@@ -52,7 +51,7 @@ class Login extends StatelessWidget {
                 CustomAuthButton(onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => Home()),
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
                     (Route<dynamic> route) => false,
                   );
                 }, text: "Login"),

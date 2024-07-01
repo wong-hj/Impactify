@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
+import 'package:impactify_app/screens/user/events.dart';
 import 'package:impactify_app/screens/user/home.dart';
+import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/screens/user/login.dart';
 import 'theming/custom_themes.dart';
 
@@ -21,6 +23,9 @@ class MyApp extends StatelessWidget {
       home: const OnboardingScreens(),
       //Login(),
       //Home(),
+      //BottomNavBar()
+      //Events(),
+      //HomeScreen()
     );
   }
 }
