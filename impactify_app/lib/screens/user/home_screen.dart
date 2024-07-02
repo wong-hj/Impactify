@@ -14,13 +14,40 @@ class _HomeScreenState extends State<HomeScreen> {
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   PageController _pageController = PageController();
 
+  //late List<Widget> _pages;
+  // void _onMoreClicked() {
+  //   setState(() {
+  //     _page = 1;
+  //   });
+  //   _pageController.jumpToPage(1);
+  // }
+
   final List<Widget> _pages = [
+    //Home(onMoreClicked: () => _onMoreClicked()),
     Home(),
     Events(),
     Center(child: Text('Bookmark')),
     Center(child: Text('Community')),
     Center(child: Text('Profile')),
   ];
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _pages = [
+  //     Home(onMoreClicked: _onMoreClicked),
+  //     Events(),
+  //     Center(child: Text('Bookmark')),
+  //     Center(child: Text('Community')),
+  //     Center(child: Text('Profile')),
+  //   ];
+  // }
+
+  // void _onMoreClicked() {
+  //   setState(() {
+  //     _page = 1; 
+  //   });
+  //   _pageController.jumpToPage(1);
+  // }
 
   @override
   void dispose() {
@@ -52,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Icon(Icons.groups, size: 30, color: AppColors.primary),
           Icon(Icons.person, size: 30, color: AppColors.primary),
         ],
-        color: Color.fromARGB(150, 152 , 251, 152),
+        color: Color.fromARGB(150, 152, 251, 152),
         //AppColors.tertiary,
         backgroundColor: AppColors.background,
         animationCurve: Curves.easeInOut,

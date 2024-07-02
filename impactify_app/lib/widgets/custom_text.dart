@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -40,4 +41,39 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
+class CustomIconText extends StatelessWidget {
+  final String text;
+  final IconData icon;
+
+  const CustomIconText({
+    required this.text,
+    required this.icon,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 12,
+          color: AppColors.secondary,
+        ),
+        SizedBox(width: 3),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(
+              fontSize: 11,
+              color: AppColors.placeholder,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ],
+    );
+  }
+}
 
