@@ -32,7 +32,8 @@ class CustomTextField extends StatelessWidget {
           labelStyle: const TextStyle(color: Colors.black),
           border: const OutlineInputBorder(),
           focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.placeholder, width: 2.0))),
+              borderSide:
+                  BorderSide(color: AppColors.placeholder, width: 2.0))),
       obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
@@ -41,13 +42,15 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-class CustomSmallIconText extends StatelessWidget {
+class CustomIconText extends StatelessWidget {
   final String text;
   final IconData icon;
+  final double size;
 
-  const CustomSmallIconText({
+  const CustomIconText({
     required this.text,
     required this.icon,
+    required this.size,
     Key? key,
   }) : super(key: key);
 
@@ -57,7 +60,7 @@ class CustomSmallIconText extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: 12,
+          size: size + 5,
           color: AppColors.secondary,
         ),
         SizedBox(width: 3),
@@ -65,7 +68,7 @@ class CustomSmallIconText extends StatelessWidget {
           child: Text(
             text,
             style: GoogleFonts.poppins(
-              fontSize: 11,
+              fontSize: size,
               color: AppColors.placeholder,
             ),
             overflow: TextOverflow.ellipsis,
@@ -111,3 +114,36 @@ class CustomLargeIconText extends StatelessWidget {
   }
 }
 
+class CustomNumberText extends StatelessWidget {
+  final String number;
+  final String text;
+
+  const CustomNumberText({
+    required this.number,
+    required this.text,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          number,
+          style: GoogleFonts.poppins(
+            fontSize: 22,
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          text,
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+}

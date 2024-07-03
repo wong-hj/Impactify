@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/screens/user/addPost.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_posts.dart';
 
@@ -11,7 +12,14 @@ class Community extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddPost(),
+            ),
+          );
+        },
         backgroundColor: AppColors.tertiary,
         foregroundColor: Colors.black,
         elevation: 10,

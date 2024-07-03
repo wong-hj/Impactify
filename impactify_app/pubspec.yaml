@@ -45,6 +45,8 @@ dependencies:
   flutter_floating_bottom_bar: ^1.2.0
   dot_navigation_bar: ^1.0.2
   curved_navigation_bar: ^1.0.6
+  image_picker: ^1.1.2
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

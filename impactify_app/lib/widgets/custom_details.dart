@@ -124,12 +124,13 @@ class CustomDetailScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  CustomSmallIconText(
+                  CustomIconText(
                       text: location,
-                      icon: Icons.location_on),
+                      icon: Icons.location_on, 
+                      size: 12),
                   SizedBox(height: 8),
-                  CustomSmallIconText(
-                      text: date, icon: Icons.calendar_month),
+                  CustomIconText(
+                      text: date, icon: Icons.calendar_month, size: 12),
                   SizedBox(height: 8),
                   CircleAvatar(
                     radius: 15,

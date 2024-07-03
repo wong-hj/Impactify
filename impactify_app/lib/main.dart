@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
+import 'package:impactify_app/screens/user/addPost.dart';
 import 'package:impactify_app/screens/user/community.dart';
 import 'package:impactify_app/screens/user/event_details.dart';
 import 'package:impactify_app/screens/user/events.dart';
 import 'package:impactify_app/screens/user/home.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/screens/user/login.dart';
+import 'package:impactify_app/screens/user/profile.dart';
 import 'theming/custom_themes.dart';
 
 void main() {
@@ -29,7 +31,9 @@ class MyApp extends StatelessWidget {
       //Events(),
       //HomeScreen()
       //Community()
-      EventDetail(),
+      //EventDetail(),
+      //AddPost()
+      Profile()
     );
   }
 }
