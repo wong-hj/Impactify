@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:impactify_app/screens/user/community.dart';
 import 'package:impactify_app/screens/user/home.dart';
+import 'package:impactify_app/screens/user/profile.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'events.dart'; // Import the Events screen
 
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Events(),
     Center(child: Text('Bookmark')),
     Community(),
-    Center(child: Text('Profile')),
+    Profile(),
   ];
 
   @override

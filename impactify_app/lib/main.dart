@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: CustomTheme.lightTheme,
       darkTheme: CustomTheme.darkTheme,
-      home: //const OnboardingScreens(),
+      home: const OnboardingScreens(),
       //Login(),
       //Home(),
       //BottomNavBar()
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       //Community()
       //EventDetail(),
       //AddPost()
-      Profile()
+      //Profile()
     );
   }
 }
