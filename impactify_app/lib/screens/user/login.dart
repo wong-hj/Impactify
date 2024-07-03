@@ -48,7 +48,7 @@ class Login extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 40),
-                CustomAuthButton(onPressed: () {
+                CustomPrimaryButton(onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => HomeScreen()),

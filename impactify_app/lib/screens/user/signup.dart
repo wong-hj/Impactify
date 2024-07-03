@@ -56,7 +56,7 @@ class SignUp extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 40),
-                CustomAuthButton(onPressed: () {}, text: "Register"),
+                CustomPrimaryButton(onPressed: () {}, text: "Register"),
                 const SizedBox(height: 50),
                 const Text("or", style: TextStyle(fontSize: 16)),
                 const SizedBox(height: 30),

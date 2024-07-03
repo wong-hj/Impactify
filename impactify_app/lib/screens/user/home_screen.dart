@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:impactify_app/screens/user/community.dart';
 import 'package:impactify_app/screens/user/home.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'events.dart'; // Import the Events screen
@@ -14,40 +15,14 @@ class _HomeScreenState extends State<HomeScreen> {
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   PageController _pageController = PageController();
 
-  //late List<Widget> _pages;
-  // void _onMoreClicked() {
-  //   setState(() {
-  //     _page = 1;
-  //   });
-  //   _pageController.jumpToPage(1);
-  // }
-
   final List<Widget> _pages = [
     //Home(onMoreClicked: () => _onMoreClicked()),
     Home(),
     Events(),
     Center(child: Text('Bookmark')),
-    Center(child: Text('Community')),
+    Community(),
     Center(child: Text('Profile')),
   ];
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _pages = [
-  //     Home(onMoreClicked: _onMoreClicked),
-  //     Events(),
-  //     Center(child: Text('Bookmark')),
-  //     Center(child: Text('Community')),
-  //     Center(child: Text('Profile')),
-  //   ];
-  // }
-
-  // void _onMoreClicked() {
-  //   setState(() {
-  //     _page = 1; 
-  //   });
-  //   _pageController.jumpToPage(1);
-  // }
 
   @override
   void dispose() {

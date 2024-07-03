@@ -60,8 +60,8 @@ class CustomVerticalCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    CustomIconText(text: location, icon: Icons.location_on),
-                    CustomIconText(text: date, icon: Icons.calendar_month),
+                    CustomSmallIconText(text: location, icon: Icons.location_on),
+                    CustomSmallIconText(text: date, icon: Icons.calendar_month),
                     Spacer(),
                     CircleAvatar(
                       radius: 11,

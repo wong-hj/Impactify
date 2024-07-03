@@ -41,11 +41,11 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-class CustomIconText extends StatelessWidget {
+class CustomSmallIconText extends StatelessWidget {
   final String text;
   final IconData icon;
 
-  const CustomIconText({
+  const CustomSmallIconText({
     required this.text,
     required this.icon,
     Key? key,
@@ -70,6 +70,40 @@ class CustomIconText extends StatelessWidget {
             ),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomLargeIconText extends StatelessWidget {
+  final String text;
+  final IconData icon;
+
+  const CustomLargeIconText({
+    required this.text,
+    required this.icon,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 20,
+          color: AppColors.primary,
+        ),
+        SizedBox(width: 3),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.nunito(
+              fontSize: 20,
+              color: Colors.black,
+            ),
           ),
         ),
       ],

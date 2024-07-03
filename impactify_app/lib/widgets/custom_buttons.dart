@@ -3,11 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../theming/custom_themes.dart';
 
-class CustomAuthButton extends StatelessWidget {
+class CustomPrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const CustomAuthButton({
+  const CustomPrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,

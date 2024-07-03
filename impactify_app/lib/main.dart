@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
+import 'package:impactify_app/screens/user/community.dart';
+import 'package:impactify_app/screens/user/event_details.dart';
 import 'package:impactify_app/screens/user/events.dart';
 import 'package:impactify_app/screens/user/home.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
@@ -20,12 +22,14 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: CustomTheme.lightTheme,
       darkTheme: CustomTheme.darkTheme,
-      home: const OnboardingScreens(),
+      home: //const OnboardingScreens(),
       //Login(),
       //Home(),
       //BottomNavBar()
       //Events(),
       //HomeScreen()
+      //Community()
+      EventDetail(),
     );
   }
 }

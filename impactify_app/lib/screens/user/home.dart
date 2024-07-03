@@ -5,8 +5,6 @@ import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_cards.dart';
 
 class Home extends StatelessWidget {
-  //final Function onMoreClicked;
-  //const Home({required this.onMoreClicked, super.key});
   const Home({super.key});
 
   @override
@@ -118,36 +116,20 @@ class Home extends StatelessWidget {
                             'Upcoming Opportunities',
                             style: GoogleFonts.nunito(fontSize: 20),
                           ),
-                          // GestureDetector(
-                          //   onTap: onMoreClicked(),
-                          //   child: Text(
-                          //     'more',
-                          //     style: GoogleFonts.nunito(
-                          //       fontSize: 14,
-                          //       color: AppColors.primary,
-                          //       decoration: TextDecoration.underline,
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
+                      SizedBox(height: 20),
 
-                      //SizedBox(height: 16),
-
-                      SizedBox(
-                        height: 600, // Set a fixed height for the list
-                        child: ListView.builder(
-                          itemCount: 10, // Number of items
-                          itemBuilder: (context, index) {
-                            return CustomVerticalCard(
-                              imageUrl: 'https://tinyurl.com/4ztj48vp',
-                              title: 'Free Education for Youths',
-                              location: 'Taman Bukit Jalil, Putrajaya',
-                              date: '2023-06-30',
-                              circleImageUrl: 'https://via.placeholder.com/40',
-                            );
-                          },
-                        ),
+                      Column(
+                        children: List.generate(5, (index) {
+                          return CustomVerticalCard(
+                            imageUrl: 'https://tinyurl.com/4ztj48vp',
+                            title: 'Free Education for Youths',
+                            location: 'Taman Bukit Jalil, Putrajaya',
+                            date: '2023-06-30',
+                            circleImageUrl: 'https://via.placeholder.com/40',
+                          );
+                        }),
                       ),
 
                       SizedBox(height: 20)
