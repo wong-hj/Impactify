@@ -50,10 +50,8 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login()),
-                    );
+                    Navigator.pushNamed(context, '/login');
+                    
                   },
                   child: Text(buttonText),
                 ),

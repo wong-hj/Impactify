@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/screens/user/editProfile.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
@@ -56,7 +57,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                           ),
                           IconButton(
                             highlightColor: Colors.transparent,
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/editProfile');
+                            },
                             icon: Icon(Icons.mode_edit_outlined),
                             iconSize: 25,
                           ),
@@ -280,8 +283,6 @@ class HistoryContent extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              
-                              
                               Text(
                                 '+20',
                                 style: GoogleFonts.nunito(

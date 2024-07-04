@@ -49,11 +49,7 @@ class Login extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 CustomPrimaryButton(onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
-                    (Route<dynamic> route) => false,
-                  );
+                  Navigator.pushReplacementNamed(context, '/homeScreen');
                 }, text: "Login"),
                 const SizedBox(height: 50),
                 const Text("or", style: TextStyle(fontSize: 16)),

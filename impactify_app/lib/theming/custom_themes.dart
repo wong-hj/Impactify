@@ -43,7 +43,9 @@ class CustomTheme {
       appBarTheme: AppBarTheme(
         elevation: 0,
         scrolledUnderElevation: 0,
+        backgroundColor: Colors.transparent
       ),
+      
     );
   }
 
@@ -61,6 +63,7 @@ class CustomTheme {
       appBarTheme: AppBarTheme(
         elevation: 0,
         scrolledUnderElevation: 0,
+        backgroundColor: Colors.transparent
       ),
     );
   }
