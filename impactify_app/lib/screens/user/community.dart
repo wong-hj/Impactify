@@ -23,7 +23,7 @@ class Community extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -45,6 +45,7 @@ class Community extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 30),
               // Post Content
               Expanded(
                 child: ListView.builder(

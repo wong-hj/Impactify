@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:impactify_app/screens/user/bookmark.dart';
 import 'package:impactify_app/screens/user/community.dart';
 import 'package:impactify_app/screens/user/home.dart';
 import 'package:impactify_app/screens/user/profile.dart';
@@ -20,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //Home(onMoreClicked: () => _onMoreClicked()),
     Home(),
     Events(),
-    Center(child: Text('Bookmark')),
+    Bookmark(),
     Community(),
     Profile(),
   ];

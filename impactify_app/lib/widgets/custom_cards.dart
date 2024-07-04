@@ -60,8 +60,10 @@ class CustomVerticalCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    CustomIconText(text: location, icon: Icons.location_on, size: 12),
-                    CustomIconText(text: date, icon: Icons.calendar_month, size: 12),
+                    CustomIconText(
+                        text: location, icon: Icons.location_on, size: 12),
+                    CustomIconText(
+                        text: date, icon: Icons.calendar_month, size: 12),
                     Spacer(),
                     CircleAvatar(
                       radius: 11,
@@ -82,46 +84,74 @@ class CustomHorizontalCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String location;
-  //final String date;
-  //final String circleImageUrl;
 
   const CustomHorizontalCard({
     required this.imageUrl,
     required this.title,
     required this.location,
-    //required this.date,
-    //required this.circleImageUrl,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      semanticContainer: true,
-      surfaceTintColor: Colors.white,
-      margin: EdgeInsets.only(bottom: 10, right: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 4,
-      child: Container(
-        width: 200,
+    return Container(
+      width: 200,
+      child: Card(
+        semanticContainer: true,
+        surfaceTintColor: Colors.white,
+        margin: EdgeInsets.only(bottom: 10, right: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 4,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image
-            Container(
-              height: 130,
-              width: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                image: DecorationImage(
-                  image: NetworkImage(imageUrl),
-                  fit: BoxFit.cover,
+            Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 130, 
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondary,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 4,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      'SEPT\n11',
+                      style: GoogleFonts.nunito(
+                        fontSize: 10,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: EdgeInsets.all(10),
@@ -146,13 +176,138 @@ class CustomHorizontalCard extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 15,
-                        backgroundImage: NetworkImage(
-                            'https://via.placeholder.com/40'),
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/40'),
                       ),
                       ElevatedButton(
                         onPressed: () {},
                         child: Text(
                           'Enroll !',
+                          style: GoogleFonts.poppins(fontSize: 12),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.tertiary,
+                          foregroundColor: Colors.black, // Button color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          minimumSize: Size(100,
+                              30), // Ensure the button fits tightly to its child
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomEventCard extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final String location;
+
+  const CustomEventCard({
+    required this.imageUrl,
+    required this.title,
+    required this.location,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Card(
+        semanticContainer: true,
+        surfaceTintColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            Stack(
+              children: [
+                Container(
+                  height: 150, 
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondary,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 4,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      'SEPT\n11',
+                      style: GoogleFonts.nunito(
+                        fontSize: 10,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.nunito(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2, // Ensure text wraps
+                  ),
+                  Text(
+                    location,
+                    style: GoogleFonts.poppins(
+                        fontSize: 12, color: AppColors.placeholder),
+                    overflow: TextOverflow.ellipsis, 
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/40'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Text(
+                          'View More',
                           style: GoogleFonts.poppins(fontSize: 12),
                         ),
                         style: ElevatedButton.styleFrom(

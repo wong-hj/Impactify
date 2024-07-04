@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
 import 'package:impactify_app/screens/user/addPost.dart';
+import 'package:impactify_app/screens/user/bookmark.dart';
 import 'package:impactify_app/screens/user/community.dart';
 import 'package:impactify_app/screens/user/editProfile.dart';
 import 'package:impactify_app/screens/user/eventDetails.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         theme: CustomTheme.lightTheme,
         darkTheme: CustomTheme.darkTheme,
-        initialRoute: '/events',
+        initialRoute: '/',
         routes: {
           '/': (context) => OnboardingScreens(),
           '/login': (context) => Login(),
@@ -37,6 +38,8 @@ class MyApp extends StatelessWidget {
           '/editProfile': (context) => EditProfile(),
           '/homeScreen': (context) => HomeScreen(),
           '/profile': (context) => Profile(),
+          '/bookmark': (context) => Bookmark(),
+
         }
 
         );
