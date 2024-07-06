@@ -5,7 +5,7 @@ import 'package:impactify_app/screens/user/community.dart';
 import 'package:impactify_app/screens/user/home.dart';
 import 'package:impactify_app/screens/user/profile.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
-import 'events.dart'; // Import the Events screen
+import 'events.dart'; 
 
 class HomeScreen extends StatefulWidget {
   @override

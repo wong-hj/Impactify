@@ -101,7 +101,7 @@ class Bookmark extends StatelessWidget {
                               children: [
                                 SlidableAction(
                                   onPressed: (context) {
-                                    // Handle edit action
+                                    Navigator.pushNamed(context, '/eventDetail');
                                   },
                                   backgroundColor: AppColors.secondary,
                                   foregroundColor: Colors.white,

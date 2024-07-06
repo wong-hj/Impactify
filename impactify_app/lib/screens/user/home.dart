@@ -58,8 +58,10 @@ class Home extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Icon(Icons.calendar_today_rounded,
-                                    color: AppColors.primary),
+                                IconButton(onPressed: () {
+                                  Navigator.pushNamed(context, '/schedule');
+                                }, icon: Icon(Icons.calendar_today_rounded), color: AppColors.primary,),
+                                
                               ],
                             ),
                             SizedBox(height: 10),
