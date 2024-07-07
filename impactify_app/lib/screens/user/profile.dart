@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/screens/user/editProfile.dart';
@@ -17,6 +17,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
+  
   late TabController _tabController;
 
   @override
@@ -33,6 +34,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
@@ -68,7 +70,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       Row(
                         children: [
                           Text(
-                            'Horng Jun',
+                            authProvider.userData!.fullName,
                             style: GoogleFonts.nunito(
                                 fontSize: 25, color: AppColors.primary),
                           ),
@@ -93,7 +95,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     child: CircleAvatar(
                       radius: 30,
                       backgroundImage:
-                          NetworkImage('https://tinyurl.com/4whzdz72'),
+                          NetworkImage(authProvider.userData!.profileImage),
                     ),
                   ),
                 ],
@@ -131,7 +133,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          CustomNumberText(number: '120', text: 'Impoints'),
+                          CustomNumberText(number: '${authProvider.userData!.impoints}', text: 'Impoints'),
                           CustomNumberText(number: '10', text: 'Posts'),
                           CustomNumberText(number: '6', text: 'Participations'),
                           CustomNumberText(number: '4', text: 'Locations'),

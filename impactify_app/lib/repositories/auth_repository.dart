@@ -1,38 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:impactify_app/models/user.dart';
+
 
 class AuthRepository {
+  final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  User? _user;
-
-  User? get user => _user;
+  // Get the current user
+  auth.User? get currentUser => _firebaseAuth.currentUser;
+  
 
   // Sign up with email and password and save user info in Firestore
-  Future<User?> signUpWithEmail(String email, String password, String username, String fullname) async {
+  Future<auth.User?> signUpWithEmail(String email, String password, String fullName, String username) async {
     try {
-      final UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      final auth.UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      final User? user = userCredential.user;
+      final auth.User? user = userCredential.user;
 
       if (user != null) {
-        await _firestore.collection('users').doc(user.uid).set({
-          'userID': user.uid,
-          'email': email,
-          'username': username,
-          'fullName': fullname,
-          'profileImage': 'userPlaceholder',
-          'impoints': 0,
-          'createdAt': Timestamp.now(),
-        });
-      }
-      return user;
+        User newUser = User(
+          userID: user.uid,
+          fullName: fullName,
+          username: username,
+          email: email,
+          profileImage: "userPlaceholder", 
+          impoints: 0,
+          createdAt: Timestamp.now(),
+        );
 
+        await _firestore.collection('users').doc(user.uid).set(newUser.toJson());
+      }
+
+      return user;
     } catch (e) {
       print('Error signing up with email: $e');
       return null;
@@ -41,31 +45,31 @@ class AuthRepository {
 
 
   // Sign in with email and password
-  Future<User?> signInWithEmail(String email, String password) async {
+  Future<auth.User?> signInWithEmail(String email, String password) async {
     try {
-      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      final auth.UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       return userCredential.user;
     } catch (e) {
-      print('Error signing in: $e');
+      print('Error signing in with email: $e');
       return null;
     }
   }
 
   // Sign in with Google
-  Future<User?> signInWithGoogle() async {
+  Future<auth.User?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        final AuthCredential credential = GoogleAuthProvider.credential(
+        final auth.AuthCredential credential = auth.GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
-        _user = userCredential.user;
+        final auth.UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+        final auth.User? _user = userCredential.user;
         return _user;
       }
     } catch (e) {
@@ -85,7 +89,7 @@ class AuthRepository {
   }
 
   // Get currently signed-in user
-  User? getCurrentUser() {
+  auth.User? getCurrentUser() {
     return _firebaseAuth.currentUser;
   }
 

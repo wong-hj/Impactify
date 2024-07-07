@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             theme: CustomTheme.lightTheme,
             darkTheme: CustomTheme.darkTheme,
-            initialRoute: authProvider.user != null ? '/homeScreen' : '/',
+            initialRoute: authProvider.userData != null ? '/homeScreen' : '/',
             routes: {
               '/': (context) => OnboardingScreens(),
               '/login': (context) => Login(),

@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:impactify_app/constants/placeholderURL.dart';
 
 class User {
   final String userID;
   final String fullName;
   final String username;
   final String email;
-  final String? profileImage;
+  final String profileImage;
   final int impoints;
-  final DateTime createdAt;
+  final Timestamp createdAt;
 
 
   User({
@@ -27,7 +28,7 @@ class User {
       fullName: data['fullName'],
       username: data['username'],
       email: data['email'],
-      profileImage: data['profileImage'] != "" ? data['profileImage'] : 'Empty Image',
+      profileImage: data['profileImage'] != "userPlaceholder" ? data['profileImage'] : userPlaceholder,
       impoints: data['impoints'],
       createdAt: data['createdAt'],
     );
