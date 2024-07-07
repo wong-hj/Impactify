@@ -15,85 +15,101 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: Colors.transparent,
       ),
-      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Glad to see you again, stay impactful!",
-                    style: AppTextStyles.authHead),
-                const SizedBox(height: 50),
-                CustomTextField(
-                  controller: _emailController,
-                  placeholderText: 'Email',
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) {
-                    // Handle text field changes
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  controller: _passwordController,
-                  placeholderText: 'Password',
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: true,
-                  onChanged: (value) {
-                    // Handle text field changes
-                  },
-                ),
-                const SizedBox(height: 40),
-                CustomPrimaryButton(
-                    onPressed: () async {
-                      final email = _emailController.text.trim();
-                      final password = _passwordController.text.trim();
-                      await context
-                          .read<AuthProvider>()
-                          .signInWithEmail(email, password);
-                      if (context.read<AuthProvider>().user != null) {
-                        Navigator.pushReplacementNamed(context, '/homeScreen');
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text('Error Logging In, Please Try Again.', style: GoogleFonts.poppins(color: Colors.white)),
-                            showCloseIcon: true,
-                          ),
-                        );
-                      }
-                    },
-                    text: "Login"),
-                const SizedBox(height: 50),
-                const Text("or", style: TextStyle(fontSize: 16)),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
+          children: [
+            Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: Column(
                   children: [
-                    CustomIconButton(
-                        onPressed: () async {
-
-                          await context
-                          .read<AuthProvider>()
-                          .signInWithGoogle();
-                      if (context.read<AuthProvider>().user != null) {
-                        Navigator.pushReplacementNamed(context, '/homeScreen');
-                      }
-                        }, imagePath: "assets/google.png"),
-                    const SizedBox(width: 20),
-                    CustomIconButton(
-                        onPressed: () {}, imagePath: "assets/facebook.png"),
+                    Text("Glad to see you again, stay impactful!",
+                        style: AppTextStyles.authHead),
+                    const SizedBox(height: 100),
+                    CustomTextField(
+                      controller: _emailController,
+                      placeholderText: 'Email',
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) {
+                        // Handle text field changes
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    CustomTextField(
+                      controller: _passwordController,
+                      placeholderText: 'Password',
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: true,
+                      onChanged: (value) {
+                        // Handle text field changes
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                    CustomPrimaryButton(
+                      onPressed: () async {
+                        final email = _emailController.text.trim();
+                        final password = _passwordController.text.trim();
+                        await authProvider.signInWithEmail(email, password);
+                        if (authProvider.user != null) {
+                          Navigator.pushReplacementNamed(context, '/homeScreen');
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                'Error Logging In, Please Try Again.',
+                                style: GoogleFonts.poppins(color: Colors.white),
+                              ),
+                              showCloseIcon: true,
+                            ),
+                          );
+                        }
+                      },
+                      text: "Login",
+                    ),
+                    const SizedBox(height: 50),
+                    const Text("or", style: TextStyle(fontSize: 16)),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomIconButton(
+                            onPressed: () async {
+                              await authProvider.signInWithGoogle();
+                              if (authProvider.user != null) {
+                                Navigator.pushReplacementNamed(
+                                    context, '/homeScreen');
+                              }
+                            },
+                            imagePath: "assets/google.png"),
+                        const SizedBox(width: 20),
+                        CustomIconButton(
+                            onPressed: () {}, imagePath: "assets/facebook.png"),
+                      ],
+                    ),
+                    
                   ],
+                   
                 ),
-              ],
-            ),
-          ),
+              ),
+              if (authProvider.isLoading)
+                Container(
+                  color: Colors.black54,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    ),
+                  ),
+                ), 
+          ],
         ),
+          
+        
       ),
     );
   }
