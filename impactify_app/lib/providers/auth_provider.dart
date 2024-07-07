@@ -21,7 +21,7 @@ class AuthProvider with ChangeNotifier {
     _setLoadingState(true);
     _firebaseUser = await _authRepository.signInWithEmail(email, password);
     if (_firebaseUser != null) {
-      await _fetchUserData(_firebaseUser!.uid);
+      await fetchUserData(_firebaseUser!.uid);
     }
     _setLoadingState(false);
   }
@@ -31,7 +31,7 @@ class AuthProvider with ChangeNotifier {
     _setLoadingState(true);
     _firebaseUser = await _authRepository.signInWithGoogle();
     if (_firebaseUser != null) {
-      await _fetchUserData(_firebaseUser!.uid);
+      await fetchUserData(_firebaseUser!.uid);
     }
     _setLoadingState(false);
   }
@@ -40,7 +40,7 @@ class AuthProvider with ChangeNotifier {
     _setLoadingState(true);
     _firebaseUser = await _authRepository.signUpWithEmail(email, password, fullname, username);
     if (_firebaseUser != null) {
-      await _fetchUserData(_firebaseUser!.uid);
+      await fetchUserData(_firebaseUser!.uid);
     }
     _setLoadingState(false);
   }
@@ -57,12 +57,12 @@ class AuthProvider with ChangeNotifier {
   void checkCurrentUser() {
     _firebaseUser = _authRepository.currentUser;
     if (_firebaseUser != null) {
-      _fetchUserData(_firebaseUser!.uid);
+      fetchUserData(_firebaseUser!.uid);
     }
     notifyListeners();
   }
 
-  Future<void> _fetchUserData(String uid) async {
+  Future<void> fetchUserData(String uid) async {
     _userData = await _userRepository.getUserData(uid);
     notifyListeners();
   }

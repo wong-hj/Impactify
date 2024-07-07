@@ -30,6 +30,7 @@ class AuthRepository {
           email: email,
           profileImage: "userPlaceholder", 
           impoints: 0,
+          introduction: "",
           createdAt: Timestamp.now(),
         );
 

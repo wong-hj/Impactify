@@ -8,6 +8,7 @@ class User {
   final String email;
   final String profileImage;
   final int impoints;
+  final String introduction;
   final Timestamp createdAt;
 
 
@@ -18,6 +19,7 @@ class User {
     required this.email,
     this.profileImage = "",
     required this.impoints,
+    required this.introduction,
     required this.createdAt,
   });
 
@@ -30,6 +32,7 @@ class User {
       email: data['email'],
       profileImage: data['profileImage'] != "userPlaceholder" ? data['profileImage'] : userPlaceholder,
       impoints: data['impoints'],
+      introduction: data['introduction'],
       createdAt: data['createdAt'],
     );
   }
@@ -43,6 +46,7 @@ class User {
       'email': email,
       'profileImage': profileImage,
       'impoints': impoints,
+      'introduction': introduction,
       'createdAt': createdAt,
     };
   }

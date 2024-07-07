@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
+import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
 import 'package:impactify_app/screens/user/addPost.dart';
 import 'package:impactify_app/screens/user/bookmark.dart';
@@ -23,15 +24,18 @@ void main() async {
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
-//backup
-//project-1038533174457
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AuthProvider()..checkCurrentUser(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(
+            create: (_) => AuthProvider()..checkCurrentUser()),
+        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
+      ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
           return MaterialApp(
