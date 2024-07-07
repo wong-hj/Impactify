@@ -34,11 +34,15 @@ class CustomPrimaryButton extends StatelessWidget {
 class CustomIconButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String imagePath;
+  final String text;
+
 
   const CustomIconButton({
     super.key,
     required this.onPressed,
     required this.imagePath,
+    required this.text,
+
   });
 
   @override
@@ -52,10 +56,15 @@ class CustomIconButton extends StatelessWidget {
         side: const BorderSide(color: AppColors.placeholder)
       ),
       onPressed: onPressed,
-      child: Image.asset(
-        imagePath,
-        width: 25.0,
-        height: 25.0,
+      child: Row(
+        children: [
+          Image.asset(
+            imagePath,
+            height: 25.0,
+          ),
+          SizedBox(width: 10),
+          Text(text, style: GoogleFonts.nunito(color: Colors.black))
+        ],
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:impactify_app/models/user.dart' as prefix;
 
 class AuthRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -11,6 +10,35 @@ class AuthRepository {
   User? _user;
 
   User? get user => _user;
+
+  // Sign up with email and password and save user info in Firestore
+  Future<User?> signUpWithEmail(String email, String password, String username, String fullname) async {
+    try {
+      final UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).set({
+          'userID': user.uid,
+          'email': email,
+          'username': username,
+          'fullName': fullname,
+          'profileImage': 'userPlaceholder',
+          'impoints': 0,
+          'createdAt': Timestamp.now(),
+        });
+      }
+      return user;
+
+    } catch (e) {
+      print('Error signing up with email: $e');
+      return null;
+    }
+  }
+
 
   // Sign in with email and password
   Future<User?> signInWithEmail(String email, String password) async {
@@ -44,6 +72,7 @@ class AuthRepository {
       print('Error signing in with Google: $e');
       return null;
     }
+    return null;
   }
 
   // Sign out

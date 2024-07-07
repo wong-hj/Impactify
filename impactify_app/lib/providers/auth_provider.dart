@@ -24,6 +24,12 @@ class AuthProvider with ChangeNotifier {
     _setLoadingState(false);
   }
 
+  Future<void> signUpWithEmail(String email, String password, String fullname, String username) async {
+    _setLoadingState(true);
+    _user = await _authRepository.signUpWithEmail(email, password, fullname, username);
+    _setLoadingState(false);
+  }
+
   // Sign out and notify listeners
   Future<void> signOut() async {
     await _authRepository.logout();

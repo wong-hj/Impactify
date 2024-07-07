@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
@@ -6,6 +7,7 @@ import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -22,10 +24,11 @@ class Login extends StatelessWidget {
         backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
                     Text("Glad to see you again, stay impactful!",
@@ -79,6 +82,7 @@ class Login extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomIconButton(
+                            text: "Google Sign In",
                             onPressed: () async {
                               await authProvider.signInWithGoogle();
                               if (authProvider.user != null) {
@@ -87,29 +91,51 @@ class Login extends StatelessWidget {
                               }
                             },
                             imagePath: "assets/google.png"),
-                        const SizedBox(width: 20),
-                        CustomIconButton(
-                            onPressed: () {}, imagePath: "assets/facebook.png"),
                       ],
                     ),
-                    
+                    const SizedBox(height: 20),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Not part of us yet? ',
+                        style: TextStyle(color: Colors.black),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Sign Up Now!',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.pushNamed(context, '/signup');
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
-                   
                 ),
               ),
               if (authProvider.isLoading)
                 Container(
-                  color: Colors.black54,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                    ),
+                  color: AppColors.background,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SpinKitWanderingCubes(
+                        color: AppColors.primary,
+                        size: 70.0,
+                      ),
+                      SizedBox(height: 10),
+                      Text("Logging you in...",
+                          style: GoogleFonts.nunito(
+                              color: AppColors.primary, fontSize: 20))
+                    ],
                   ),
-                ), 
-          ],
+                )
+            ],
+          ),
         ),
-          
-        
       ),
     );
   }
