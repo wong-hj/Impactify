@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
@@ -22,7 +23,8 @@ void main() async {
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
-
+//backup
+//project-1038533174457
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

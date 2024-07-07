@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/screens/user/editProfile.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -33,6 +35,21 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+         await context
+              .read<AuthProvider>()
+              .signOut();
+          if (context.read<AuthProvider>().user == null) {
+            Navigator.pushReplacementNamed(context, '/login');
+          }
+        },
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        elevation: 5,
+        shape: CircleBorder(),
+        child: Icon(Icons.logout_outlined),
+      ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
         child: Container(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
@@ -58,8 +59,13 @@ class Login extends StatelessWidget {
                       if (context.read<AuthProvider>().user != null) {
                         Navigator.pushReplacementNamed(context, '/homeScreen');
                       } else {
-                        SnackBar(content: Text('Yay! A SnackBar!'));
-                        print("hello this is gay talking");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('Error Logging In, Please Try Again.', style: GoogleFonts.poppins(color: Colors.white)),
+                            showCloseIcon: true,
+                          ),
+                        );
                       }
                     },
                     text: "Login"),
@@ -70,7 +76,15 @@ class Login extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomIconButton(
-                        onPressed: () {}, imagePath: "assets/google.png"),
+                        onPressed: () async {
+
+                          await context
+                          .read<AuthProvider>()
+                          .signInWithGoogle();
+                      if (context.read<AuthProvider>().user != null) {
+                        Navigator.pushReplacementNamed(context, '/homeScreen');
+                      }
+                        }, imagePath: "assets/google.png"),
                     const SizedBox(width: 20),
                     CustomIconButton(
                         onPressed: () {}, imagePath: "assets/facebook.png"),

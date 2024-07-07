@@ -14,6 +14,12 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Sign in with Google and notify listeners
+  Future<void> signInWithGoogle() async {
+    _user = await _authRepository.signInWithGoogle();
+    notifyListeners();
+  }
+
   // Sign out and notify listeners
   Future<void> signOut() async {
     await _authRepository.logout();

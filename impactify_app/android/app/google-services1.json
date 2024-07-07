@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1038533174457",
+    "project_id": "impactifyapp-1fcfa",
+    "storage_bucket": "impactifyapp-1fcfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038533174457:android:ef37bd739cca92e8676768",
+        "android_client_info": {
+          "package_name": "com.example.impactify_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6yfWj8LmwCAbanbwAJp36apec856KOIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
