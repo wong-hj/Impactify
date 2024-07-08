@@ -19,6 +19,7 @@ class UserRepository {
     try {
       final DocumentSnapshot doc = await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
+        print('fetching user data: ' + doc.toString());
         return User.fromFirestore(doc);
       } else {
         return null;

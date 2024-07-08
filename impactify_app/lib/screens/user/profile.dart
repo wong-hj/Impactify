@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/constants/placeholderURL.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/screens/user/editProfile.dart';
@@ -36,6 +37,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
@@ -71,7 +73,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       Row(
                         children: [
                           Text(
-                            userProvider.userData!.fullName,
+                            userProvider.userData?.fullName ?? "",
                             style: GoogleFonts.nunito(
                                 fontSize: 25, color: AppColors.primary),
                           ),
@@ -96,7 +98,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     child: CircleAvatar(
                       radius: 30,
                       backgroundImage:
-                          NetworkImage(userProvider.userData!.profileImage),
+                          NetworkImage(userProvider.userData?.profileImage ?? userPlaceholder),
                     ),
                   ),
                 ],
@@ -134,7 +136,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          CustomNumberText(number: '${userProvider.userData!.impoints}', text: 'Impoints'),
+                          CustomNumberText(number: '${userProvider.userData?.impoints ?? 0}', text: 'Impoints'),
                           CustomNumberText(number: '10', text: 'Posts'),
                           CustomNumberText(number: '6', text: 'Participations'),
                           CustomNumberText(number: '4', text: 'Locations'),

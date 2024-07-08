@@ -7,7 +7,7 @@ import '../repositories/user_repository.dart';
 import '../models/user.dart';
 
 class UserProvider with ChangeNotifier {
-  final UserRepository _userRepository = UserRepository();
+  final UserRepository _userRepository = UserRepository(); 
   //final AuthProvider _authProvider = AuthProvider();
   //final AuthRepository _authRepository = AuthRepository();
 

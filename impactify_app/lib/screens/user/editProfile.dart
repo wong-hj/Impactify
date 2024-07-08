@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:impactify_app/constants/placeholderURL.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
@@ -33,10 +34,9 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     // Fetch user data and set it to the text controllers
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.checkCurrentUser(); // Ensure the user data is fetched
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    final user = authProvider.userData;
+    final user = userProvider.userData;
     if (user != null) {
       _fullNameController.text = user.fullName;
       _usernameController.text = user.username;
@@ -49,7 +49,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(),
@@ -73,9 +73,9 @@ class _EditProfileState extends State<EditProfile> {
                         child: CircleAvatar(
                           radius: 60,
                           backgroundImage:
-                              _image == null ? NetworkImage(authProvider.userData!.profileImage) as ImageProvider
+                              _image == null ? NetworkImage( userProvider.userData?.profileImage ?? userPlaceholder) as ImageProvider
                               : FileImage(
-                                
+                                 
                                 File(_image!.path),
                                 
                               ),
@@ -128,6 +128,7 @@ class _EditProfileState extends State<EditProfile> {
               CustomTextFormField(
                 controller: _emailController,
                 placeholderText: 'Email Address',
+                enabled: userProvider.userData?.signinMethod == "Email",
                 keyboardType: TextInputType.emailAddress,
                 onChanged: (value) {
                   // Handle text field changes

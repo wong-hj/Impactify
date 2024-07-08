@@ -50,6 +50,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final TextInputAction? textInputAction;
+  final bool enabled;
   final ValueChanged<String>? onChanged;
 
   const CustomTextFormField({
@@ -60,6 +61,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
     this.textInputAction,
+    this.enabled = true,
     this.onChanged,
   });
 
@@ -68,6 +70,7 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       cursorColor: Colors.black,
       controller: controller,
+      enabled: enabled,
       decoration: InputDecoration(
           prefixIcon: icon != null ? Icon(icon) : null,
           labelText: placeholderText,

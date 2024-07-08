@@ -9,6 +9,7 @@ class User {
   final String profileImage;
   final int impoints;
   final String introduction;
+  final String signinMethod;
   final Timestamp createdAt;
 
 
@@ -20,6 +21,7 @@ class User {
     this.profileImage = "",
     required this.impoints,
     required this.introduction,
+    required this.signinMethod,
     required this.createdAt,
   });
 
@@ -33,6 +35,7 @@ class User {
       profileImage: data['profileImage'] != "userPlaceholder" ? data['profileImage'] : userPlaceholder,
       impoints: data['impoints'],
       introduction: data['introduction'],
+      signinMethod: data['signinMethod'],
       createdAt: data['createdAt'],
     );
   }
@@ -47,6 +50,7 @@ class User {
       'profileImage': profileImage,
       'impoints': impoints,
       'introduction': introduction,
+      'signinMethod': signinMethod,
       'createdAt': createdAt,
     };
   }

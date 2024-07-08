@@ -31,6 +31,7 @@ class AuthRepository {
           profileImage: "userPlaceholder", 
           impoints: 0,
           introduction: "",
+          signinMethod: "Email",
           createdAt: Timestamp.now(),
         );
 
@@ -70,8 +71,32 @@ class AuthRepository {
           idToken: googleAuth.idToken,
         );
         final auth.UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
-        final auth.User? _user = userCredential.user;
-        return _user;
+        final auth.User? user = userCredential.user;
+
+        // Check if the user is new or already exists in Firestore
+        if (user != null) {
+          final DocumentReference userDocRef = _firestore.collection('users').doc(user.uid);
+          final DocumentSnapshot userDoc = await userDocRef.get();
+
+          if (!userDoc.exists) {
+
+            User newUser = User(
+              userID: user.uid,
+              fullName: user.displayName ?? 'Google Full Name',
+              username: user.displayName ?? 'Google Full Name',
+              email: user.email ?? "Google Email",
+              profileImage: user.photoURL ?? "userPlaceholder", 
+              impoints: 0,
+              introduction: "",
+              signinMethod: "Google",
+              createdAt: Timestamp.now(),
+            );
+            // Create a new document for the user
+            await userDocRef.set(newUser.toJson());
+          }
+        }
+
+        return user;
       }
     } catch (e) {
       print('Error signing in with Google: $e');
