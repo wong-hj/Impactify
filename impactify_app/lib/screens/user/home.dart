@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/constants/placeholderURL.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
+import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_cards.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -42,12 +43,12 @@ class Home extends StatelessWidget {
                               child: CircleAvatar(
                                 radius: 30,
                                 backgroundImage: NetworkImage(
-                                   authProvider.userData!.profileImage),
+                                   userProvider.userData!.profileImage),
                               ),
                             ),
                             SizedBox(width: 8),
                             Text(
-                              'Hello, ${authProvider.userData!.username}!',
+                              'Hello, ${userProvider.userData!.username}!',
                               style: GoogleFonts.nunito(fontSize: 15),
                             ),
                           ],

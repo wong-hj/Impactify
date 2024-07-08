@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
+import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
 import 'package:impactify_app/screens/user/addPost.dart';
@@ -34,7 +35,13 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthProvider>(
             create: (_) => AuthProvider()..checkCurrentUser()),
-        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, UserProvider>(
+          create: (context) => UserProvider(null),
+          update: (context, authProvider, userProvider) {
+            userProvider?.initialize(authProvider.user);
+            return userProvider!;
+          }),
+          ChangeNotifierProvider(create: (context) => EventProvider()), 
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

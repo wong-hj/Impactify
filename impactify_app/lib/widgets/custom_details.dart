@@ -149,7 +149,7 @@ class CustomDetailScreen extends StatelessWidget {
                         fontSize: 12, color: AppColors.placeholder),
                   ),
                   SizedBox(height: 16),
-                  if(sdgDescription != null && sdgDescription!.isNotEmpty) ...[
+                  if(type != "SPEECH") ...[
                     CustomLargeIconText(
                         icon: Icons.flag_outlined,
                         text: 'Sustainable Development Goals'),

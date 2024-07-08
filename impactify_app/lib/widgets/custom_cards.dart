@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
+import 'package:intl/intl.dart';
 
 class CustomVerticalCard extends StatelessWidget {
   final String imageUrl;
@@ -84,7 +86,7 @@ class CustomHorizontalCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String location;
-
+  
   const CustomHorizontalCard({
     required this.imageUrl,
     required this.title,
@@ -211,16 +213,23 @@ class CustomEventCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String location;
+  final Timestamp hostDate;
+  final String eventID;
 
   const CustomEventCard({
     required this.imageUrl,
     required this.title,
     required this.location,
+    required this.hostDate,
+    required this.eventID,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    DateTime date = hostDate.toDate();
+    String formattedDate = DateFormat('MMM\nd').format(date).toUpperCase();
+
     return Container(
       width: double.infinity,
       child: Card(
@@ -237,7 +246,7 @@ class CustomEventCard extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 150, 
+                  height: 180, 
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
@@ -266,9 +275,9 @@ class CustomEventCard extends StatelessWidget {
                       ],
                     ),
                     child: Text(
-                      'SEPT\n11',
+                      formattedDate,
                       style: GoogleFonts.nunito(
-                        fontSize: 10,
+                        fontSize: 12,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -305,7 +314,13 @@ class CustomEventCard extends StatelessWidget {
                             NetworkImage('https://via.placeholder.com/40'),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/eventDetail',
+                            arguments: eventID,
+                          );
+                        },
                         child: Text(
                           'View More',
                           style: GoogleFonts.poppins(fontSize: 12),

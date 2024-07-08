@@ -11,18 +11,25 @@ class UserProvider with ChangeNotifier {
   //final AuthProvider _authProvider = AuthProvider();
   //final AuthRepository _authRepository = AuthRepository();
 
-  final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
-
   auth.User? _firebaseUser;
    User? _userData;
 
    User? get userData => _userData;
 
-  UserProvider() {
-    _firebaseUser = _firebaseAuth.currentUser;
+  UserProvider(auth.User? firebaseUser) {
+    _firebaseUser = firebaseUser;
+    print("CURRENT: " + _firebaseUser.toString());
     if (_firebaseUser != null) {
       _fetchUserData(_firebaseUser!.uid);
     }
+  }
+
+  Future<void> initialize(auth.User? firebaseUser) async {
+    _firebaseUser = firebaseUser;
+    if (_firebaseUser != null) {
+      await _fetchUserData(_firebaseUser!.uid);
+    }
+    notifyListeners();
   }
 
   Future<void> updateUserData(Map<String, dynamic> data, XFile? imageFile) async {
@@ -41,11 +48,8 @@ class UserProvider with ChangeNotifier {
     notifyListeners(); // Notify listeners after fetching user data
   }
 
-  void checkCurrentUser() {
-    _firebaseUser = _firebaseAuth.currentUser;
-    if (_firebaseUser != null) {
-      _fetchUserData(_firebaseUser!.uid);
-    }
+  void clearUserData() {
+    _userData = null;
     notifyListeners();
   }
 }
