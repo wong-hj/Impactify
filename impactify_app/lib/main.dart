@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
+import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
             return userProvider!;
           }),
           ChangeNotifierProvider(create: (context) => EventProvider()), 
+          ChangeNotifierProvider(create: (_) => BookmarkProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {

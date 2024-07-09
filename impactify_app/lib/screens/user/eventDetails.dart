@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:impactify_app/constants/sdglogo.dart';
 import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
@@ -21,42 +22,18 @@ class EventDetail extends StatefulWidget {
 
 class _EventDetailState extends State<EventDetail> {
   late GoogleMapController mapController;
-  LatLng? _center;
-  Marker? _marker;
+  // LatLng? _center;
+  // Marker? _marker;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
-  // Future<void> _setMapLocation(String address) async {
-  //   print("ERROR occurred b:");
-  //   try {
-  //     print("ERROR occurred a:");
-  //     List<Location> locations = await locationFromAddress(address);
-  //     print("ERROR occurred b:");
-  //     if (locations.isNotEmpty) {
-  //       setState(() {
-  //         _center = LatLng(locations.first.latitude, locations.first.longitude);
-  //         _marker = Marker(
-  //           markerId: MarkerId(address),
-  //           position: _center!,
-  //           infoWindow: InfoWindow(
-  //             title: address,
-  //           ),
-  //         );
-  //       });
-  //       mapController.animateCamera(CameraUpdate.newLatLng(_center!));
-  //     }
-  //   } catch (e) {
-  //     print('Error occurred while fetching location: $e');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final String eventID = ModalRoute.of(context)!.settings.arguments as String;
     final eventProvider = Provider.of<EventProvider>(context, listen: false);
-
+    
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -73,10 +50,10 @@ class _EventDetailState extends State<EventDetail> {
           } else if (!snapshot.hasData) {
             return Center(child: Text('Event not found'));
           } else {
-            Event event = snapshot.data!;
-          //  _setMapLocation(event.location);
-
+            Event event = eventProvider.event!;
+          
             return CustomDetailScreen(
+              eventID: event.eventID,
               imageUrl: event.eventImage,
               type: 'EVENT',
               title: event.title,
@@ -85,14 +62,18 @@ class _EventDetailState extends State<EventDetail> {
               hostDate: event.hostDate,
               aboutDescription: event.description,
               impointsAdd: event.impointsAdd,
-              marker: _marker,
+              marker: eventProvider.marker,
               onMapCreated: _onMapCreated,
-              center: _center,
+              center: eventProvider.center,
               sdg: event.sdg,
+              initialOnSaved: false,
             );
           }
         },
       ),
     );
+
+    
   }
+  
 }
