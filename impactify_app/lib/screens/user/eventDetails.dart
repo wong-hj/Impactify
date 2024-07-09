@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:impactify_app/constants/sdglogo.dart';
+
 import 'package:impactify_app/models/event.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
+
 import 'package:impactify_app/providers/event_provider.dart';
-import 'package:impactify_app/theming/custom_themes.dart';
-import 'package:impactify_app/widgets/custom_buttons.dart';
+
 import 'package:impactify_app/widgets/custom_details.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
-import 'package:impactify_app/widgets/custom_text.dart';
+
 import 'package:provider/provider.dart';
 
 class EventDetail extends StatefulWidget {
@@ -22,18 +20,44 @@ class EventDetail extends StatefulWidget {
 
 class _EventDetailState extends State<EventDetail> {
   late GoogleMapController mapController;
-  // LatLng? _center;
-  // Marker? _marker;
+  //String? bookmarkID; // State variable to store bookmarkID
+  bool isSaved = false; // State variable to track if the event is bookmarked
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
   @override
+  void initState() {
+    
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _checkIfBookmarked();
+    });
+    
+  }
+
+  Future<void> _checkIfBookmarked() async {
+    
+    final bookmarkProvider =
+        Provider.of<BookmarkProvider>(context, listen: false);
+    final String eventID = ModalRoute.of(context)!.settings.arguments as String;
+   
+
+    bool saved = await bookmarkProvider.isEventBookmarked(eventID);
+    
+    setState(() {
+      isSaved = saved;
+    });
+  }
+  
+
+  @override
   Widget build(BuildContext context) {
+    
     final String eventID = ModalRoute.of(context)!.settings.arguments as String;
     final eventProvider = Provider.of<EventProvider>(context, listen: false);
-    
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -51,7 +75,7 @@ class _EventDetailState extends State<EventDetail> {
             return Center(child: Text('Event not found'));
           } else {
             Event event = eventProvider.event!;
-          
+
             return CustomDetailScreen(
               eventID: event.eventID,
               imageUrl: event.eventImage,
@@ -66,14 +90,61 @@ class _EventDetailState extends State<EventDetail> {
               onMapCreated: _onMapCreated,
               center: eventProvider.center,
               sdg: event.sdg,
-              initialOnSaved: false,
+              onSaved: isSaved,
+              onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
             );
           }
         },
       ),
     );
-
-    
   }
-  
+
+  Future<void> _saveOrDeleteBookmark(String eventID) async {
+    final bookmarkProvider =
+        Provider.of<BookmarkProvider>(context, listen: false);
+
+    if (!isSaved) {
+      try {
+        await bookmarkProvider.addBookmark(eventID);
+        setState(() {
+          isSaved = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Saved to Bookmark!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } catch (e) {
+        print('Error adding bookmark: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to add bookmark'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      try {
+        await bookmarkProvider.removeBookmark(eventID);
+        setState(() {
+          isSaved = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Removed Bookmark!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } catch (e) {
+        print('Error removing bookmark: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to remove bookmark'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 }

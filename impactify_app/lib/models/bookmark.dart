@@ -20,7 +20,7 @@ class Bookmark {
     );
   }
 
-  // Method to convert a Speech instance to JSON for Firestore
+  // Method to convert a Bookmark instance to JSON for Firestore
   Map<String, dynamic> toJson() {
     return {
       'bookmarkID': bookmarkID,

@@ -10,7 +10,7 @@ import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class CustomDetailScreen extends StatefulWidget {
+class CustomDetailScreen extends StatelessWidget {
   final String eventID;
   final String imageUrl;
   final String type;
@@ -24,7 +24,8 @@ class CustomDetailScreen extends StatefulWidget {
   final Marker? marker;
   final Function(GoogleMapController) onMapCreated;
   final LatLng? center;
-  final bool initialOnSaved;
+  final bool onSaved;
+  final VoidCallback onBookmarkToggle;
 
   const CustomDetailScreen({
     required this.eventID,
@@ -40,25 +41,14 @@ class CustomDetailScreen extends StatefulWidget {
     this.marker,
     this.center,
     this.sdg,
-    required this.initialOnSaved,
+    required this.onSaved,
+    required this.onBookmarkToggle,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<CustomDetailScreen> createState() => _CustomDetailScreenState();
-}
-
-class _CustomDetailScreenState extends State<CustomDetailScreen> {
-  late bool onSaved;
-
-  @override
-  void initState() {
-    super.initState();
-    onSaved = widget.initialOnSaved;
-  }
-  @override
   Widget build(BuildContext context) {
-    DateTime date = widget.hostDate.toDate();
+    DateTime date = hostDate.toDate();
     String formattedDate =
         DateFormat('dd MMMM yyyy, HH:mm').format(date).toUpperCase();
     bool isEventOver = date.isBefore(DateTime.now());
@@ -76,7 +66,7 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
                     height: 300,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(widget.imageUrl),
+                        image: NetworkImage(imageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -92,7 +82,7 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: NetworkImage(
-                                "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${widget.sdg}.jpg"),
+                                "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdg}.jpg"),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -118,26 +108,22 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
                     Row(
                       children: [
                         Text(
-                          widget.type,
+                          type,
                           style: GoogleFonts.nunito(
                               fontSize: 12, color: AppColors.primary),
                         ),
                         Spacer(),
                         IconButton(
-                          onPressed: () {
-                            setState(() {
-                              onSaved = !onSaved;
-                              _saveBookmark(onSaved, widget.eventID);
-                            });
-                          },
+                          
                           icon: Icon(onSaved ? Icons.bookmark : Icons.bookmark_border),
                           color: onSaved ? AppColors.primary : Colors.black,
+                          onPressed: onBookmarkToggle,
                         ),
                       ],
                     ),
                     SizedBox(height: 5),
                     Text(
-                      widget.title,
+                      title,
                       style: GoogleFonts.nunito(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -153,7 +139,7 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
                                 fontSize: 12, color: AppColors.placeholder),
                           ),
                           TextSpan(
-                            text: widget.hoster,
+                            text: hoster,
                             style: GoogleFonts.nunito(
                                 fontSize: 12,
                                 color: AppColors.primary,
@@ -164,7 +150,7 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
                     ),
                     SizedBox(height: 8),
                     CustomIconText(
-                        text: widget.location, icon: Icons.location_on, size: 12),
+                        text: location, icon: Icons.location_on, size: 12),
                     SizedBox(height: 8),
                     CustomIconText(
                         text: formattedDate,
@@ -181,19 +167,19 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
                         icon: Icons.info_outlined, text: 'About this Event'),
                     SizedBox(height: 8),
                     Text(
-                      "${widget.aboutDescription}\n\n**Participation adds ${widget.impointsAdd} Impoints!",
+                      "${aboutDescription}\n\n**Participation adds ${impointsAdd} Impoints!",
                       textAlign: TextAlign.justify,
                       style: GoogleFonts.poppins(
                           fontSize: 12, color: AppColors.placeholder),
                     ),
                     SizedBox(height: 16),
-                    if (widget.type != "SPEECH") ...[
+                    if (type != "SPEECH") ...[
                       CustomLargeIconText(
                           icon: Icons.flag_outlined,
                           text: 'Sustainable Development Goals'),
                       SizedBox(height: 8),
                       Text(
-                        'This event tackles SDG ${widget.sdg}',
+                        'This event tackles SDG ${sdg}',
                         textAlign: TextAlign.justify,
                         style: GoogleFonts.poppins(
                             fontSize: 12, color: AppColors.placeholder),
@@ -203,7 +189,7 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
                     CustomLargeIconText(
                         icon: Icons.explore_outlined, text: 'Location'),
                     SizedBox(height: 8),
-                    if (widget.center != null && widget.marker != null)
+                    if (center != null && marker != null)
                       Container(
                         height: 200,
                         decoration: BoxDecoration(
@@ -213,12 +199,12 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: GoogleMap(
-                            onMapCreated: widget.onMapCreated,
+                            onMapCreated: onMapCreated,
                             initialCameraPosition: CameraPosition(
-                              target: widget.center!,
+                              target: center!,
                               zoom: 13.0,
                             ),
-                            markers: {widget.marker!},
+                            markers: {marker!},
                           ),
                         ),
                       ),
@@ -250,26 +236,31 @@ class _CustomDetailScreenState extends State<CustomDetailScreen> {
       ],
     );
   }
-  Future<void> _saveBookmark(bool onSaved, String eventID) async {
-    final bookmarkProvider = Provider.of<BookmarkProvider>(context, listen: false);
-    
-    if (!onSaved) {
-      await bookmarkProvider.addBookmark(eventID);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Saved to Bookmark!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-    } else {
-      await bookmarkProvider.removeBookmark(eventID);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Removed Bookmark!'),
-            backgroundColor: Colors.red,
-          ),
-        );
-    }
-    
-  }
+
 }
+
+  
+  
+  // Future<void> _saveOrDeleleBookmark(bool onSaved, String eventID) async {
+  //   final bookmarkProvider = Provider.of<BookmarkProvider>(context, listen: false);
+    
+  //   if (!onSaved) {
+  //     String bookmarkID = await bookmarkProvider.addBookmark(eventID);
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Saved to Bookmark!'),
+  //           backgroundColor: Colors.green,
+  //         ),
+  //       );
+  //   } else {
+  //     await bookmarkProvider.removeBookmark(bookmarkID);
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Removed Bookmark!'),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
+  //   }
+    
+  // }
+
