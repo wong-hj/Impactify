@@ -28,26 +28,29 @@ class _EventDetailState extends State<EventDetail> {
     mapController = controller;
   }
 
-  Future<Map<String, dynamic>> _fetchEventAndLocation(String eventID) async {
-    final eventProvider = Provider.of<EventProvider>(context, listen: false);
-    Event event = await eventProvider.getEventByID(eventID);
-    List<Location> locations = await locationFromAddress(event.location);
-
-    LatLng center = LatLng(locations.first.latitude, locations.first.longitude);
-    Marker marker = Marker(
-      markerId: MarkerId(event.location),
-      position: center,
-      infoWindow: InfoWindow(
-        title: event.location,
-      ),
-    );
-
-    return {
-      'event': event,
-      'center': center,
-      'marker': marker,
-    };
-  }
+  // Future<void> _setMapLocation(String address) async {
+  //   print("ERROR occurred b:");
+  //   try {
+  //     print("ERROR occurred a:");
+  //     List<Location> locations = await locationFromAddress(address);
+  //     print("ERROR occurred b:");
+  //     if (locations.isNotEmpty) {
+  //       setState(() {
+  //         _center = LatLng(locations.first.latitude, locations.first.longitude);
+  //         _marker = Marker(
+  //           markerId: MarkerId(address),
+  //           position: _center!,
+  //           infoWindow: InfoWindow(
+  //             title: address,
+  //           ),
+  //         );
+  //       });
+  //       mapController.animateCamera(CameraUpdate.newLatLng(_center!));
+  //     }
+  //   } catch (e) {
+  //     print('Error occurred while fetching location: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +63,8 @@ class _EventDetailState extends State<EventDetail> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: _fetchEventAndLocation(eventID),
+      body: FutureBuilder<Event>(
+        future: eventProvider.getEventByID(eventID),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CustomLoading(text: 'Loading...'));
@@ -70,9 +73,8 @@ class _EventDetailState extends State<EventDetail> {
           } else if (!snapshot.hasData) {
             return Center(child: Text('Event not found'));
           } else {
-            Event event = snapshot.data!['event'];
-            LatLng center = snapshot.data!['center'];
-            Marker marker = snapshot.data!['marker'];
+            Event event = snapshot.data!;
+          //  _setMapLocation(event.location);
 
             return CustomDetailScreen(
               imageUrl: event.eventImage,
@@ -83,9 +85,9 @@ class _EventDetailState extends State<EventDetail> {
               hostDate: event.hostDate,
               aboutDescription: event.description,
               impointsAdd: event.impointsAdd,
-              marker: marker,
+              marker: _marker,
               onMapCreated: _onMapCreated,
-              center: center,
+              center: _center,
               sdg: event.sdg,
             );
           }
