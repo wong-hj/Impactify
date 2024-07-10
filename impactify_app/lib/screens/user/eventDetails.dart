@@ -64,35 +64,75 @@ class _EventDetailState extends State<EventDetail> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: FutureBuilder<Event>(
+      body: 
+
+      FutureBuilder<Event>(
         future: eventProvider.getEventByID(eventID),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CustomLoading(text: 'Loading...')); 
+            return Center(child: CustomLoading(text: 'Loading details...'));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
             return Center(child: Text('Event not found'));
           } else {
-            Event event = eventProvider.event!;
+            Event event = snapshot.data!;
 
-            return CustomDetailScreen(
-              eventID: event.eventID,
-              imageUrl: event.image,
-              type: 'EVENT',
-              title: event.title,
-              hoster: event.organizer,
-              location: event.location,
-              hostDate: event.hostDate,
-              aboutDescription: event.description,
-              impointsAdd: event.impointsAdd,
-              marker: eventProvider.marker,
-              onMapCreated: _onMapCreated,
-              center: eventProvider.center,
-              sdg: event.sdg,
-              onSaved: isSaved,
-              onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
+            if (event.type == 'speech') {
+              return FutureBuilder<Map<String, String>>(
+                future: eventProvider.fetchProjectIDAndName(event.projectID),
+                builder: (context, projectSnapshot) {
+                  if (projectSnapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox.shrink();
+                  } else if (projectSnapshot.hasError) {
+                    return Center(child: Text('Error: ${projectSnapshot.error}'));
+                  } else if (!projectSnapshot.hasData) {
+                    return Center(child: Text('Project not found'));
+                  } else {
+                    Map<String, String> project = projectSnapshot.data!;
+                    return CustomDetailScreen(
+                      eventID: event.eventID,
+                      image: event.image,
+                      type: event.type.toUpperCase(),
+                      title: event.title,
+                      hoster: event.organizer,
+                      location: event.location,
+                      hostDate: event.hostDate,
+                      aboutDescription: event.description,
+                      impointsAdd: event.impointsAdd,
+                      marker: eventProvider.marker,
+                      onMapCreated: _onMapCreated,
+                      center: eventProvider.center,
+                      sdg: event.sdg,
+                      onSaved: isSaved,
+                      onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
+                      projectID: project['projectID'],
+                      projectTitle: project['title'],
+                    );
+                  }
+                },
+            
             );
+            } else {
+              return CustomDetailScreen(
+                      eventID: event.eventID,
+                      image: event.image,
+                      type: event.type.toUpperCase(),
+                      title: event.title,
+                      hoster: event.organizer,
+                      location: event.location,
+                      hostDate: event.hostDate,
+                      aboutDescription: event.description,
+                      impointsAdd: event.impointsAdd,
+                      marker: eventProvider.marker,
+                      onMapCreated: _onMapCreated,
+                      center: eventProvider.center,
+                      sdg: event.sdg,
+                      onSaved: isSaved,
+                      onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
+                    );
+            }
+            
           }
         },
       ),

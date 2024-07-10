@@ -59,4 +59,23 @@ class EventProvider with ChangeNotifier {
       throw Exception('Error fetching event');
     }
   }
+
+  Future<Map<String, String>> fetchProjectIDAndName(String projectID) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      Event event = await _eventRepository.getProjectById(projectID);
+      _isLoading = false;
+      notifyListeners();
+      return {
+        'projectID': event.eventID,
+        'title': event.title,
+      };
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      throw Exception('Error fetching project details: $e');
+    }
+  }
 }

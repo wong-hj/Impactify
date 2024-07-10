@@ -215,6 +215,7 @@ class CustomEventCard extends StatelessWidget {
   final String location;
   final Timestamp hostDate;
   final String eventID;
+  final String type;
 
 
   const CustomEventCard({
@@ -223,6 +224,7 @@ class CustomEventCard extends StatelessWidget {
     required this.location,
     required this.hostDate,
     required this.eventID,
+    required this.type,
     Key? key,
   }) : super(key: key);
 
@@ -286,6 +288,30 @@ class CustomEventCard extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                ),
+                Positioned(
+                  left: 15,
+                  top: 15,
+                  child: 
+
+                  Container(
+                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                      decoration: BoxDecoration(
+                        color:
+                            type == 'project' ? AppColors.tertiary : Colors.orange, 
+                        borderRadius: BorderRadius.circular(5),
+                        
+                      ),
+                      child: Text(
+                        type.toUpperCase(),
+                        style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: type == 'project' ? AppColors.primary : Colors.yellow, // Text color
+                        ),
+                      ),
+                    ),
+                  
                 ),
               ],
             ),

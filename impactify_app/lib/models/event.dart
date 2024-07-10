@@ -12,6 +12,7 @@ class Event {
   final int impointsAdd;
   final Timestamp createdAt;
   final String type;
+  final String projectID;
   final String status;
 
   Event({
@@ -26,24 +27,44 @@ class Event {
     required this.impointsAdd,
     required this.createdAt,
     required this.type,
+    required this.projectID,
     required this.status,
   });
+
+  // factory Event.fromFirestore(DocumentSnapshot doc) {
+  //   Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+  //   return Event(
+  //     eventID: data['eventID'],
+  //     title: data['title'],
+  //     organizer: data['organizer'],
+  //     location: data['location'],
+  //     hostDate: data['hostDate'],
+  //     description: data['description'],
+  //     image: data['image'],
+  //     sdg: data['sdg'],
+  //     impointsAdd: data['impointsAdd'],
+  //     createdAt: data['createdAt'],
+  //     type: data['type'],
+  //     status: data['status'],
+  //   );
+  // }
 
   factory Event.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Event(
-      eventID: data['eventID'],
-      title: data['title'],
-      organizer: data['organizer'],
-      location: data['location'],
-      hostDate: data['hostDate'],
-      description: data['description'],
-      image: data['image'],
-      sdg: data['sdg'],
-      impointsAdd: data['impointsAdd'],
-      createdAt: data['createdAt'],
-      type: data['type'],
-      status: data['status'],
+      eventID: data['eventID'] ?? '',
+      title: data['title'] ?? '',
+      organizer: data['organizer'] ?? '',
+      location: data['location'] ?? '',
+      hostDate: data['hostDate'] ?? Timestamp.now(),
+      description: data['description'] ?? '',
+      image: data['image'] ?? '',
+      sdg: data['sdg'] ?? '',
+      impointsAdd: data['impointsAdd'] ?? 0,
+      createdAt: data['createdAt'] ?? Timestamp.now(),
+      type: data['type'] ?? '',
+      projectID: data['projectID'] ?? 'None',
+      status: data['status'] ?? '',
     );
   }
 
@@ -61,6 +82,7 @@ class Event {
       'impointsAdd': impointsAdd,
       'createdAt': createdAt,
       'type': type,
+      'projectID': projectID,
       'status': status,
     };
   }

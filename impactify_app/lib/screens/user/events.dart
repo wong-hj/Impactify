@@ -37,7 +37,6 @@ class _EventsState extends State<Events> {
   @override
   Widget build(BuildContext context) {
     final eventProvider = Provider.of<EventProvider>(context);
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -209,7 +208,9 @@ class _EventsState extends State<Events> {
                               title: event.title,
                               location: event.location,
                               hostDate: event.hostDate,
-                              eventID: event.eventID);
+                              eventID: event.eventID,
+                              type: event.type
+                              );
                         },
                         childCount: eventProvider.events.length,
                       ),

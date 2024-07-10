@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class CustomDetailScreen extends StatelessWidget {
   final String eventID;
-  final String imageUrl;
+  final String image;
   final String type;
   final String title;
   final String hoster;
@@ -26,10 +26,12 @@ class CustomDetailScreen extends StatelessWidget {
   final LatLng? center;
   final bool onSaved;
   final VoidCallback onBookmarkToggle;
+  final String? projectID;
+  final String? projectTitle;
 
   const CustomDetailScreen({
     required this.eventID,
-    required this.imageUrl,
+    required this.image,
     required this.type,
     required this.title,
     required this.hoster,
@@ -43,6 +45,9 @@ class CustomDetailScreen extends StatelessWidget {
     this.sdg,
     required this.onSaved,
     required this.onBookmarkToggle,
+    this.projectID,
+    this.projectTitle,
+
     Key? key,
   }) : super(key: key);
 
@@ -66,7 +71,7 @@ class CustomDetailScreen extends StatelessWidget {
                     height: 300,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(imageUrl),
+                        image: NetworkImage(image),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -121,7 +126,6 @@ class CustomDetailScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
                     Text(
                       title,
                       style: GoogleFonts.nunito(
@@ -129,7 +133,34 @@ class CustomDetailScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    type == "SPEECH" ?
+                    Container(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/eventDetail',
+                            arguments: projectID ?? "",
+                          );
+                        },
+                        child: Text(
+                          projectTitle ?? "",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.tertiary,
+                          foregroundColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          minimumSize: Size(100, 30),
+                        ),
+                      ),
+                    )
+                    : SizedBox(height: 10),
                     Text.rich(
                       TextSpan(
                         children: [
