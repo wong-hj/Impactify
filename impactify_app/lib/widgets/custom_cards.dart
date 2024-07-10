@@ -216,6 +216,7 @@ class CustomEventCard extends StatelessWidget {
   final Timestamp hostDate;
   final String eventID;
 
+
   const CustomEventCard({
     required this.imageUrl,
     required this.title,
@@ -232,6 +233,7 @@ class CustomEventCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
+      padding: EdgeInsets.only(bottom: 10),
       child: Card(
         semanticContainer: true,
         surfaceTintColor: Colors.white,

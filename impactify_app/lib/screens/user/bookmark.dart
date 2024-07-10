@@ -60,97 +60,123 @@ class _BookmarkState extends State<Bookmark> {
                     SizedBox(height: 10),
 
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: bookmarkProvider.events.length,
-                        itemBuilder: (context, index) {
-                          final bookmark = bookmarkProvider.events[index];
+                      child: bookmarkProvider.events.isEmpty
+                          ? Center(
+                              child: Text('No Bookmark as of now.',
+                                  style: GoogleFonts.poppins(
+                                      color: AppColors.primary, fontSize: 18)))
+                          : ListView.builder(
+                              itemCount: bookmarkProvider.events.length,
+                              itemBuilder: (context, index) {
+                                final bookmark = bookmarkProvider.events[index];
 
-                          DateTime date = bookmark.hostDate.toDate();
-                          String formattedDate =
-                              DateFormat('dd MMMM yyyy, HH:mm')
-                                  .format(date)
-                                  .toUpperCase();
-                          return Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 2),
-                                child: Slidable(
-                                  key: Key(bookmark.title),
-                                  startActionPane: ActionPane(
-                                    extentRatio: 0.4,
-                                    motion: BehindMotion(),
-                                    children: [
-                                      SlidableAction(
-                                        onPressed: (context) {
-                                          Navigator.pushNamed(
-                                              context, '/eventDetail');
-                                        },
-                                        backgroundColor: AppColors.secondary,
-                                        foregroundColor: Colors.white,
-                                        icon: Icons.visibility_rounded,
-                                        label: 'View More',
-                                      ),
-                                    ],
-                                  ),
-                                  endActionPane: ActionPane(
-                                    extentRatio: 0.4,
-                                    motion: ScrollMotion(),
-                                    children: [
-                                      SlidableAction(
-                                        onPressed: (context) {
-                                          // Handle delete action
-                                        },
-                                        backgroundColor: Colors.red,
-                                        foregroundColor: Colors.white,
-                                        icon: Icons.delete,
-                                        label: 'Delete',
-                                      ),
-                                    ],
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Image.network(
-                                        bookmark.eventImage,
-                                        width: 100,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            bookmark.title,
-                                            style: GoogleFonts.nunito(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
+                                DateTime date = bookmark.hostDate.toDate();
+                                String formattedDate =
+                                    DateFormat('dd MMMM yyyy, HH:mm')
+                                        .format(date)
+                                        .toUpperCase();
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 2),
+                                      child: Slidable(
+                                        key: Key(bookmark.title),
+                                        startActionPane: ActionPane(
+                                          extentRatio: 0.4,
+                                          motion: BehindMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              onPressed: (context) {
+                                                Navigator.pushNamed(
+                                                      context,
+                                                      '/eventDetail',
+                                                      arguments: bookmark.eventID,
+                                                    );
+                                              },
+                                              backgroundColor:
+                                                  AppColors.secondary,
+                                              foregroundColor: Colors.white,
+                                              icon: Icons.visibility_rounded,
+                                              label: 'View More',
                                             ),
-                                          ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            formattedDate,
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 12,
-                                              color: AppColors.placeholder,
+                                          ],
+                                        ),
+                                        endActionPane: ActionPane(
+                                          extentRatio: 0.4,
+                                          motion: ScrollMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              onPressed: (context) async {
+                                                try {
+                                                  await bookmarkProvider
+                                                      .removeBookmark(
+                                                          bookmark.eventID);
+                                                } catch (e) {
+                                                  print(
+                                                      'Error removing bookmark: $e');
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          'Failed to remove bookmark'),
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              backgroundColor: Colors.red,
+                                              foregroundColor: Colors.white,
+                                              icon: Icons.delete,
+                                              label: 'Delete',
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Image.network(
+                                              bookmark.image,
+                                              width: 100,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  bookmark.title,
+                                                  style: GoogleFonts.nunito(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 8),
+                                                Text(
+                                                  formattedDate,
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 12,
+                                                    color:
+                                                        AppColors.placeholder,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Divider(
-                                color: Colors.grey,
-                                thickness: 1,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+                                    ),
+                                    Divider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                     ),
                   ],
                 ),

@@ -68,7 +68,7 @@ class _EventDetailState extends State<EventDetail> {
         future: eventProvider.getEventByID(eventID),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CustomLoading(text: 'Loading...'));
+            return Center(child: CustomLoading(text: 'Loading...')); 
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
@@ -78,7 +78,7 @@ class _EventDetailState extends State<EventDetail> {
 
             return CustomDetailScreen(
               eventID: event.eventID,
-              imageUrl: event.eventImage,
+              imageUrl: event.image,
               type: 'EVENT',
               title: event.title,
               hoster: event.organizer,

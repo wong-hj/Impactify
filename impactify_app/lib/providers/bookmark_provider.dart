@@ -11,10 +11,13 @@ class BookmarkProvider with ChangeNotifier {
   List<Bookmark> _bookmarks = [];
   List<Event> _events = [];
   bool _isLoading = false;
+  bool _isRemoveDone = false;
+
 
   List<Bookmark> get bookmarks => _bookmarks;
   List<Event> get events => _events;
   bool get isLoading => _isLoading;
+  bool get isRemoveDone => _isRemoveDone;
 
   Future<void> addBookmark(String eventID) async {
     _isLoading = true;
@@ -36,6 +39,7 @@ class BookmarkProvider with ChangeNotifier {
   }
 
   Future<void> removeBookmark(String eventID) async {
+
     _isLoading = true;
     notifyListeners();
 
@@ -46,9 +50,9 @@ class BookmarkProvider with ChangeNotifier {
       print('Error in BookmarkProvider: $e');
     }
 
-
     _isLoading = false;
     notifyListeners();
+
   }
 
   // Future<void> fetchBookmarksByUserID() async {
@@ -73,7 +77,7 @@ class BookmarkProvider with ChangeNotifier {
 
     try {
       List<Bookmark> bookmarks = await _bookmarkRepository.fetchBookmarksByUserID(_authRepository.currentUser!.uid);
-      print("ERROR BM" + bookmarks.toList().toString());
+      
       // Fetch events using the eventIDs from the bookmarks
       List<Event> fetchedEvents = [];
       for (var bookmark in bookmarks) {

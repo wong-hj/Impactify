@@ -7,8 +7,10 @@ class Speech {
   final String location;
   final Timestamp hostDate;
   final String description;
+  final String image;
   final String eventID;
   final Timestamp createdAt;
+  final String status;
 
   Speech({
     required this.speechID,
@@ -17,8 +19,10 @@ class Speech {
     required this.location,
     required this.hostDate,
     required this.description,
+    required this.image,
     required this.eventID,
     required this.createdAt,
+    required this.status,
   });
 
   factory Speech.fromFirestore(DocumentSnapshot doc) {
@@ -30,8 +34,10 @@ class Speech {
       location: data['location'],
       hostDate: data['hostDate'],
       description: data['description'],
+      image: data['image'],
       eventID: data['eventID'],
       createdAt: data['createdAt'],
+      status: data['status'],
     );
   }
 
@@ -44,8 +50,10 @@ class Speech {
       'location': location,
       'hostDate': hostDate,
       'description': description,
+      'image': image,
       'eventID': eventID,
       'createdAt': createdAt,
+      'status': status,
     };
   }
 }

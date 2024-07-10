@@ -7,10 +7,12 @@ class Event {
   final String location;
   final Timestamp hostDate;
   final String description;
-  final String eventImage;
+  final String image;
   final String sdg;
   final int impointsAdd;
   final Timestamp createdAt;
+  final String type;
+  final String status;
 
   Event({
     required this.eventID,
@@ -19,10 +21,12 @@ class Event {
     required this.location,
     required this.hostDate,
     required this.description,
-    required this.eventImage,
+    required this.image,
     required this.sdg,
     required this.impointsAdd,
     required this.createdAt,
+    required this.type,
+    required this.status,
   });
 
   factory Event.fromFirestore(DocumentSnapshot doc) {
@@ -34,10 +38,12 @@ class Event {
       location: data['location'],
       hostDate: data['hostDate'],
       description: data['description'],
-      eventImage: data['eventImage'],
+      image: data['image'],
       sdg: data['sdg'],
       impointsAdd: data['impointsAdd'],
       createdAt: data['createdAt'],
+      type: data['type'],
+      status: data['status'],
     );
   }
 
@@ -50,10 +56,12 @@ class Event {
       'location': location,
       'hostDate': hostDate,
       'description': description,
-      'eventImage': eventImage,
+      'image': image,
       'sdg': sdg,
       'impointsAdd': impointsAdd,
       'createdAt': createdAt,
+      'type': type,
+      'status': status,
     };
   }
 }

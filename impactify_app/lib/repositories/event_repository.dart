@@ -7,7 +7,7 @@ class EventRepository {
 
   Future<List<Event>> getAllEvents() async {
     try {
-      QuerySnapshot snapshot = await _firestore.collection('events').get();
+      QuerySnapshot snapshot = await _firestore.collection('events').where('status', isEqualTo: 'active').get();
       List<Event> events = snapshot.docs.map((doc) {
         return Event.fromFirestore(doc);
       }).toList();

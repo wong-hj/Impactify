@@ -198,14 +198,14 @@ class _EventsState extends State<Events> {
 
               eventProvider.isLoading
                   ? SliverFillRemaining(
-                      child: CustomLoading(text: 'Awesome Events Coming In !') )
+                      child: CustomLoading(text: 'Awesome Stuffs Coming In !') )
                   : 
                   SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           Event event = eventProvider.events[index];
                           return CustomEventCard(
-                              imageUrl: event.eventImage,
+                              imageUrl: event.image,
                               title: event.title,
                               location: event.location,
                               hostDate: event.hostDate,
@@ -214,41 +214,7 @@ class _EventsState extends State<Events> {
                         childCount: eventProvider.events.length,
                       ),
                     ),
-              // SliverList(
-              //   delegate: SliverChildBuilderDelegate(
-              //     (context, index) {
-              //       return eventProvider.isLoading
-              //         ? Center(child:
-              //           SpinKitWanderingCubes(
-              //             color: AppColors.primary,
-              //             size: 50.0,
-              //           ),
-              //         )
-              //         : ListView.builder(
-              //             itemCount: eventProvider.events.length,
-              //             itemBuilder: (context, index) {
-              //               Event event = eventProvider.events[index];
-              //               return CustomEventCard(
-              //                 imageUrl: event.eventImage,
-              //                 title: event.title,
-              //                 location: event.location,
-              //               );
-              //             },
-              //           );
-
-              // Padding(
-              //   padding: const EdgeInsets.only(bottom: 8.0),
-              //   child: CustomEventCard(
-              //       imageUrl: 'https://tinyurl.com/4ztj48vp',
-              //       title: 'Event Title',
-              //       location: 'Location',
-
-              //   ),
-              // );
-              //},
-              //childCount: 10, // Number of items in the list
-              //),
-              //),
+           
             ],
           ),
         ),
