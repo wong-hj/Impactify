@@ -14,7 +14,7 @@ class Onboarding3 extends StatelessWidget {
         //   top: -200.0,
         //   right: -200.0,
         //   child: ClipPath(
-        //     // Crop the circle // Custom clipper
+        //     // Crop the circle // Custom clipper 
         //     child: Container(
         //       // The actual circle
         //       width: 400.0, // Adjust size as needed

@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Bookmark {
   final String bookmarkID;
-  final String eventID;
+  final String? eventID;
+  final String? speechID;
   final String userID;
 
   Bookmark({
     required this.bookmarkID,
-    required this.eventID,
+    this.eventID,
+    this.speechID,
     required this.userID,
   });
 
@@ -16,6 +18,7 @@ class Bookmark {
     return Bookmark(
       bookmarkID: data['bookmarkID'],
       eventID: data['eventID'],
+      speechID: data['speechID'],
       userID: data['userID'],
     );
   }
@@ -25,6 +28,7 @@ class Bookmark {
     return {
       'bookmarkID': bookmarkID,
       'eventID': eventID,
+      'speechID': speechID,
       'userID': userID,
     };
   }

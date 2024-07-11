@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CustomDetailScreen extends StatelessWidget {
-  final String eventID;
+  final String id;
   final String image;
   final String type;
   final String title;
@@ -19,18 +19,19 @@ class CustomDetailScreen extends StatelessWidget {
   final String location;
   final Timestamp hostDate;
   final String aboutDescription;
-  final int impointsAdd;
+  final int? impointsAdd;
   final String? sdg;
   final Marker? marker;
   final Function(GoogleMapController) onMapCreated;
   final LatLng? center;
   final bool onSaved;
   final VoidCallback onBookmarkToggle;
-  final String? projectID;
-  final String? projectTitle;
+   final String? eventID;
+   final String? eventTitle;
+
 
   const CustomDetailScreen({
-    required this.eventID,
+    required this.id,
     required this.image,
     required this.type,
     required this.title,
@@ -38,15 +39,15 @@ class CustomDetailScreen extends StatelessWidget {
     required this.location,
     required this.hostDate,
     required this.aboutDescription,
-    required this.impointsAdd,
+    this.impointsAdd,
     required this.onMapCreated,
     this.marker,
     this.center,
     this.sdg,
     required this.onSaved,
     required this.onBookmarkToggle,
-    this.projectID,
-    this.projectTitle,
+    this.eventID,
+    this.eventTitle,
 
     Key? key,
   }) : super(key: key);
@@ -76,7 +77,7 @@ class CustomDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
+                  type == "project" ? Positioned(
                     top: 40,
                     right: 30,
                     child: Material(
@@ -93,7 +94,7 @@ class CustomDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
+                  ) : SizedBox.shrink(),
                 ],
               ),
               // Content
@@ -113,7 +114,7 @@ class CustomDetailScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          type,
+                          type.toUpperCase(),
                           style: GoogleFonts.nunito(
                               fontSize: 12, color: AppColors.primary),
                         ),
@@ -133,34 +134,37 @@ class CustomDetailScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    type == "SPEECH" ?
-                    Container(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/eventDetail',
-                            arguments: projectID ?? "",
-                          );
-                        },
-                        child: Text(
-                          projectTitle ?? "",
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
+                    
+                    type == "speech" ?
+                      Container(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/eventDetail',
+                              arguments: eventID ?? "",
+                            );
+                          },
+                          child: Text(
+                            eventTitle ?? "",
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.tertiary,
-                          foregroundColor: AppColors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.tertiary,
+                            foregroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            minimumSize: Size(100, 30),
                           ),
-                          minimumSize: Size(100, 30),
                         ),
-                      ),
-                    )
-                    : SizedBox(height: 10),
+                      )
+                    : 
+                    SizedBox(height: 10),
                     Text.rich(
                       TextSpan(
                         children: [
@@ -198,13 +202,13 @@ class CustomDetailScreen extends StatelessWidget {
                         icon: Icons.info_outlined, text: 'About this Event'),
                     SizedBox(height: 8),
                     Text(
-                      "${aboutDescription}\n\n**Participation adds ${impointsAdd} Impoints!",
+                      "${aboutDescription} ${type == "project" ? "\n\n**Participation adds ${impointsAdd ?? 0} Impoints!" : ""}",
                       textAlign: TextAlign.justify,
                       style: GoogleFonts.poppins(
                           fontSize: 12, color: AppColors.placeholder),
                     ),
                     SizedBox(height: 16),
-                    if (type != "SPEECH") ...[
+                    if (type != "speech") ...[
                       CustomLargeIconText(
                           icon: Icons.flag_outlined,
                           text: 'Sustainable Development Goals'),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/event.dart';
 import 'package:impactify_app/repositories/event_repository.dart';
 
@@ -10,12 +11,14 @@ class EventProvider with ChangeNotifier {
   final EventRepository _eventRepository = EventRepository();
   List<Event> _events = [];
   Event? _event;
+  List<Activity>? _activities = [];
   bool _isLoading = false;
   LatLng? _center;
   Marker? _marker;
 
   List<Event> get events => _events;
   Event? get event => _event;
+  List<Activity>? get activities => _activities;
   bool get isLoading => _isLoading;
   LatLng? get center => _center;
   Marker? get marker => _marker;
@@ -28,6 +31,20 @@ class EventProvider with ChangeNotifier {
       _events = await _eventRepository.getAllEvents();
     } catch (e) {
       _events = [];
+      print('Error in EventProvider: $e');
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchAllActivities() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      _activities = await _eventRepository.fetchAllActivities();
+    } catch (e) {
+      _activities = [];
       print('Error in EventProvider: $e');
     }
     _isLoading = false;
@@ -60,22 +77,5 @@ class EventProvider with ChangeNotifier {
     }
   }
 
-  Future<Map<String, String>> fetchProjectIDAndName(String projectID) async {
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      Event event = await _eventRepository.getProjectById(projectID);
-      _isLoading = false;
-      notifyListeners();
-      return {
-        'projectID': event.eventID,
-        'title': event.title,
-      };
-    } catch (e) {
-      _isLoading = false;
-      notifyListeners();
-      throw Exception('Error fetching project details: $e');
-    }
-  }
+  
 }

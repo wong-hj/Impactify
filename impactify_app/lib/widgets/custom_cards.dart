@@ -343,11 +343,16 @@ class CustomEventCard extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(
+                          type == "project" ? Navigator.pushNamed(
                             context,
                             '/eventDetail',
                             arguments: eventID,
-                          );
+                          ) : Navigator.pushNamed(
+                            context,
+                            '/speechDetail',
+                            arguments: eventID,
+                          )
+                          ;
                         },
                         child: Text(
                           'View More',

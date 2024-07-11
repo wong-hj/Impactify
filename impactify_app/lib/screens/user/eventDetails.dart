@@ -78,60 +78,43 @@ class _EventDetailState extends State<EventDetail> {
           } else {
             Event event = snapshot.data!;
 
-            if (event.type == 'speech') {
-              return FutureBuilder<Map<String, String>>(
-                future: eventProvider.fetchProjectIDAndName(event.projectID),
-                builder: (context, projectSnapshot) {
-                  if (projectSnapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox.shrink();
-                  } else if (projectSnapshot.hasError) {
-                    return Center(child: Text('Error: ${projectSnapshot.error}'));
-                  } else if (!projectSnapshot.hasData) {
-                    return Center(child: Text('Project not found'));
-                  } else {
-                    Map<String, String> project = projectSnapshot.data!;
-                    return CustomDetailScreen(
-                      eventID: event.eventID,
-                      image: event.image,
-                      type: event.type.toUpperCase(),
-                      title: event.title,
-                      hoster: event.organizer,
-                      location: event.location,
-                      hostDate: event.hostDate,
-                      aboutDescription: event.description,
-                      impointsAdd: event.impointsAdd,
-                      marker: eventProvider.marker,
-                      onMapCreated: _onMapCreated,
-                      center: eventProvider.center,
-                      sdg: event.sdg,
-                      onSaved: isSaved,
-                      onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
-                      projectID: project['projectID'],
-                      projectTitle: project['title'],
-                    );
-                  }
-                },
-            
+            return CustomDetailScreen(
+              id: event.eventID,
+              image: event.image,
+              type: event.type,
+              title: event.title,
+              hoster: event.organizer,
+              location: event.location,
+              hostDate: event.hostDate,
+              aboutDescription: event.description,
+              impointsAdd: event.impointsAdd,
+              marker: eventProvider.marker,
+              onMapCreated: _onMapCreated,
+              center: eventProvider.center,
+              sdg: event.sdg,
+              onSaved: isSaved,
+              onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
             );
-            } else {
-              return CustomDetailScreen(
-                      eventID: event.eventID,
-                      image: event.image,
-                      type: event.type.toUpperCase(),
-                      title: event.title,
-                      hoster: event.organizer,
-                      location: event.location,
-                      hostDate: event.hostDate,
-                      aboutDescription: event.description,
-                      impointsAdd: event.impointsAdd,
-                      marker: eventProvider.marker,
-                      onMapCreated: _onMapCreated,
-                      center: eventProvider.center,
-                      sdg: event.sdg,
-                      onSaved: isSaved,
-                      onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
-                    );
-            }
+                  
+           // } else {
+              // return CustomDetailScreen(
+              //         eventID: event.eventID,
+              //         image: event.image,
+              //         type: event.type.toUpperCase(),
+              //         title: event.title,
+              //         hoster: event.organizer,
+              //         location: event.location,
+              //         hostDate: event.hostDate,
+              //         aboutDescription: event.description,
+              //         impointsAdd: event.impointsAdd,
+              //         marker: eventProvider.marker,
+              //         onMapCreated: _onMapCreated,
+              //         center: eventProvider.center,
+              //         sdg: event.sdg,
+              //         onSaved: isSaved,
+              //         onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
+              //       );
+            //}
             
           }
         },

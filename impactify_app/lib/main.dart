@@ -20,6 +20,7 @@ import 'package:impactify_app/screens/user/login.dart';
 import 'package:impactify_app/screens/user/profile.dart';
 import 'package:impactify_app/screens/user/signup.dart';
 import 'package:impactify_app/screens/user/schedule.dart';
+import 'package:impactify_app/screens/user/speechDetails.dart';
 import 'package:provider/provider.dart';
 import 'theming/custom_themes.dart';
 
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
           }),
           ChangeNotifierProvider(create: (context) => EventProvider()), 
           ChangeNotifierProvider(create: (_) => BookmarkProvider()),
-          //ChangeNotifierProvider(create: (_) => SpeechProvider()),
+          ChangeNotifierProvider(create: (_) => SpeechProvider()),
 
       ],
       child: Consumer<AuthProvider>(
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
               '/homeScreen': (context) => HomeScreen(),
               '/profile': (context) => Profile(),
               '/bookmark': (context) => Bookmark(),
+              '/speechDetail': (context) => SpeechDetail()
               //'/schedule': (context) => Schedule(),
             },
           );
