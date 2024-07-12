@@ -43,7 +43,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
     final String speechID =
         ModalRoute.of(context)!.settings.arguments as String;
 
-    bool saved = await bookmarkProvider.isEventBookmarked(speechID); //
+    bool saved = await bookmarkProvider.isSpeechBookmarked(speechID); //
 
     setState(() {
       isSaved = saved;
@@ -137,7 +137,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
 
     if (!isSaved) {
       try {
-        await bookmarkProvider.addBookmark(speechID);
+        await bookmarkProvider.addSpeechBookmark(speechID);
         setState(() {
           isSaved = true;
         });
@@ -158,7 +158,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
       }
     } else {
       try {
-        await bookmarkProvider.removeBookmark(speechID);
+        await bookmarkProvider.removeSpeechBookmark(speechID);
         setState(() {
           isSaved = false;
         });

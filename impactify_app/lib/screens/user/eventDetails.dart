@@ -44,7 +44,7 @@ class _EventDetailState extends State<EventDetail> {
     final String eventID = ModalRoute.of(context)!.settings.arguments as String;
    
 
-    bool saved = await bookmarkProvider.isEventBookmarked(eventID);
+    bool saved = await bookmarkProvider.isProjectBookmarked(eventID);
     
     setState(() {
       isSaved = saved;
@@ -67,7 +67,7 @@ class _EventDetailState extends State<EventDetail> {
       body: 
 
       FutureBuilder<Event>(
-        future: eventProvider.getEventByID(eventID),
+        future: eventProvider.fetchEventByID(eventID),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CustomLoading(text: 'Loading details...'));
@@ -128,7 +128,7 @@ class _EventDetailState extends State<EventDetail> {
 
     if (!isSaved) {
       try {
-        await bookmarkProvider.addBookmark(eventID);
+        await bookmarkProvider.addProjectBookmark(eventID);
         setState(() {
           isSaved = true;
         });
@@ -149,7 +149,7 @@ class _EventDetailState extends State<EventDetail> {
       }
     } else {
       try {
-        await bookmarkProvider.removeBookmark(eventID);
+        await bookmarkProvider.removeProjectBookmark(eventID);
         setState(() {
           isSaved = false;
         });

@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
-import 'package:impactify_app/providers/combineList_provider.dart';
 import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/providers/speech_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
