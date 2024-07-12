@@ -44,11 +44,16 @@ class _SpeechDetailState extends ConsumerState<SpeechDetail> {
         ModalRoute.of(context)!.settings.arguments as String;
 
     bool saved = await bookmarkNotifier.isSpeechBookmarked(speechID);
+    print("Initial bookmark check, Saved: $saved");
     print("Saved:" + saved.toString());
 
-    setState(() {
-      isSaved = saved;
-    });
+    if (isSaved != saved) {
+      setState(() {
+        isSaved = saved;
+      });
+    } else {
+      print("No change in bookmark status.");
+    }
   }
 
   @override
@@ -61,55 +66,108 @@ class _SpeechDetailState extends ConsumerState<SpeechDetail> {
     final isBookmarked = ref.watch(isSpeechBookmarkedProvider(speechID));
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: speechDetail.when(
-        data: (speech) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ref.read(speechProvider.notifier).setSpeechDetails(speech);
-          });
-          final projectDetail = ref.watch(projectDetailProvider(speech.eventID));
-          // return isBookmarked.when(
-          //   data: (saved) {
-              return projectDetail.when(
-                data: (project) {
-              return CustomDetailScreen(
-                id: speech.speechID,
-                image: speech.image,
-                type: speech.type,
-                title: speech.title,
-                hoster: speech.organizer,
-                location: speech.location,
-                hostDate: speech.hostDate,
-                aboutDescription: speech.description,
-                marker: speechState.marker,
-                onMapCreated: _onMapCreated,
-                center: speechState.center,
-                onSaved: isSaved,
-                onBookmarkToggle: () => _saveOrDeleteBookmark(speechID, isSaved),
-                eventID: project['projectID']!,
-                eventTitle: project['title']!,
-              );
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: speechDetail.when(
+          data: (speech) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ref.read(speechProvider.notifier).setSpeechDetails(speech);
+            });
+            final projectDetail =
+                ref.watch(projectDetailProvider(speech.eventID));
+            return isBookmarked.when(
+              data: (saved) {
+                return projectDetail.when(
+                  data: (project) {
+                    print(
+                        'Rendering CustomDetailScreen with saved status: $saved');
+                    return CustomDetailScreen(
+                      id: speech.speechID,
+                      image: speech.image,
+                      type: speech.type,
+                      title: speech.title,
+                      hoster: speech.organizer,
+                      location: speech.location,
+                      hostDate: speech.hostDate,
+                      aboutDescription: speech.description,
+                      marker: speechState.marker,
+                      onMapCreated: _onMapCreated,
+                      center: speechState.center,
+                      onSaved: saved,
+                      onBookmarkToggle: () =>
+                          _saveOrDeleteBookmark(speechID, saved),
+                      eventID: project['projectID']!,
+                      eventTitle: project['title']!,
+                    );
+                  },
+                  loading: () => Center(
+                      child: CustomLoading(text: 'Loading project details...')),
+                  error: (error, stack) => Center(child: Text('Error: $error')),
+                );
               },
-                loading: () => Center(child: CustomLoading(text: 'Loading project details...')),
-                error: (error, stack) => Center(child: Text('Error: $error')),
-              );
-          //   },
-          //   loading: () => Center(child: CustomLoading(text: 'Loading bookmark status...')),
-          //   error: (error, stack) => Center(child: Text('Error: $error')),
-          // );
-        },
-        loading: () => Center(child: CustomLoading(text: 'Loading details...')),
-        error: (error, stack) => Center(child: Text('Error: $error')),
-      ));
-      
-      
-      
-      
-    //   FutureBuilder<Speech>(
+              loading: () => Center(
+                  child: CustomLoading(text: 'Loading bookmark status...')),
+              error: (error, stack) => Center(child: Text('Error: $error')),
+            );
+          },
+          loading: () =>
+              Center(child: CustomLoading(text: 'Loading details...')),
+          error: (error, stack) => Center(child: Text('Error: $error')),
+        ));
+  }
+
+  Future<void> _saveOrDeleteBookmark(String speechID, bool isSaved) async {
+    final bookmarkNotifier = ref.read(bookmarkProvider.notifier);
+
+    if (!isSaved) {
+      try {
+        await bookmarkNotifier.addSpeechBookmark(speechID);
+        // No need to use setState here
+        ref.invalidate(isSpeechBookmarkedProvider(speechID));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Saved to Bookmark!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } catch (e) {
+        print('Error adding bookmark: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to add bookmark'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      try {
+        await bookmarkNotifier.removeSpeechBookmark(speechID);
+        // No need to use setState here
+        ref.invalidate(isSpeechBookmarkedProvider(speechID));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Removed Bookmark!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } catch (e) {
+        print('Error removing bookmark: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to remove bookmark'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+}
+
+
+//   FutureBuilder<Speech>(
     //     future: speechDetail.getSpeechByID(speechID),
     //     builder: (context, snapshot) {
     //       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -176,53 +234,3 @@ class _SpeechDetailState extends ConsumerState<SpeechDetail> {
     //     },
     //   ),
     // );
-  }
-
-  Future<void> _saveOrDeleteBookmark(String speechID, bool isSaved) async {
-    final bookmarkNotifier = ref.read(bookmarkProvider.notifier);
-
-    if (!isSaved) {
-      try {
-        await bookmarkNotifier.addSpeechBookmark(speechID);
-        setState(() {
-          isSaved = true;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Saved to Bookmark!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      } catch (e) {
-        print('Error adding bookmark: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to add bookmark'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } else {
-      try {
-        await bookmarkNotifier.removeSpeechBookmark(speechID);
-        setState(() {
-          isSaved = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Removed Bookmark!'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } catch (e) {
-        print('Error removing bookmark: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to remove bookmark'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-}

@@ -18,16 +18,19 @@ class _EventDetailState extends ConsumerState<EventDetail> {
   late GoogleMapController mapController;
   bool isSaved = false;
 
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkIfBookmarked();
+      final String eventID = ModalRoute.of(context)!.settings.arguments as String;
+      ref.invalidate(eventDetailProvider(eventID));
     });
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    
   }
 
   Future<void> _checkIfBookmarked() async {
@@ -43,8 +46,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
   Widget build(BuildContext context) {
     final String eventID = ModalRoute.of(context)!.settings.arguments as String;
     final eventDetail = ref.watch(eventDetailProvider(eventID));
+    final eventState = ref.watch(eventProvider);
     final isBookmarked = ref.watch(isEventBookmarkedProvider(eventID));
-    print('BookMARK' + isBookmarked.value.toString());
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -68,11 +72,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                 hostDate: event.hostDate,
                 aboutDescription: event.description,
                 impointsAdd: event.impointsAdd,
-                marker: ref.read(eventProvider).marker,
-                onMapCreated: (controller) {
-                  _onMapCreated(controller);
-                },
-                center: ref.read(eventProvider).center,
+                marker: eventState.marker,
+                onMapCreated: _onMapCreated,
+                center: eventState.center,
                 sdg: event.sdg,
                 onSaved: saved,
                 onBookmarkToggle: () => _saveOrDeleteBookmark(eventID, saved),
@@ -94,9 +96,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     if (!isSaved) {
       try {
         await bookmarkNotifier.addProjectBookmark(eventID);
-        setState(() {
-          isSaved = true;
-        });
+        ref.invalidate(isEventBookmarkedProvider(eventID));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Saved to Bookmark!'),
@@ -115,9 +115,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     } else {
       try {
         await bookmarkNotifier.removeProjectBookmark(eventID);
-        setState(() {
-          isSaved = false;
-        });
+        ref.invalidate(isEventBookmarkedProvider(eventID));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Removed Bookmark!'),

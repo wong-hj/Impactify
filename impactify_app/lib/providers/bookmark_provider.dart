@@ -278,7 +278,10 @@ class BookmarkNotifier extends StateNotifier<BookmarkState> {
   }
 
   Future<bool> isSpeechBookmarked(String speechID) async {
-    return await _bookmarkRepository.isActivityBookmarked(
+    print("Checking if speech is bookmarked: $speechID");
+    bool result = await _bookmarkRepository.isActivityBookmarked(
         _authRepository.currentUser!.uid, speechID, 'speech');
+    print("isSpeechBookmarked result: $result for speechID: $speechID");
+    return result;
   }
 }

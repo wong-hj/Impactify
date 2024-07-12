@@ -123,6 +123,7 @@ class BookmarkRepository {
 
   Future<bool> isActivityBookmarked(
       String userID, String id, String type) async {
+   print("Checking if activity is bookmarked for userID: $userID, id: $id, type: $type");
     QuerySnapshot snapshot;
     try {
       if (type == 'project') {
@@ -138,8 +139,10 @@ class BookmarkRepository {
             .where('speechID', isEqualTo: id)
             .get();
       }
-
-      return snapshot.docs.isNotEmpty;
+      bool isBookmarked = snapshot.docs.isNotEmpty;
+       print("isActivityBookmarked result: $isBookmarked for id: $id");
+       return isBookmarked;
+      //return snapshot.docs.isNotEmpty;
     } catch (e) {
       print('Error checking bookmark: $e');
       return false;

@@ -15,13 +15,17 @@ final speechProvider = StateNotifierProvider<SpeechNotifier, SpeechState>((ref) 
 
 final speechDetailProvider = FutureProvider.family<Speech, String>((ref, speechID) async {
   final speechNotifier = ref.read(speechProvider.notifier);
+  
   return await speechNotifier.fetchSpeechByID(speechID);
 });
 
 final isSpeechBookmarkedProvider = FutureProvider.family<bool, String>((ref, speechID) async {
   print("SPEECH ID HERE IS:" + speechID);
   final bookmarkNotifier = ref.read(bookmarkProvider.notifier);
-  return await bookmarkNotifier.isSpeechBookmarked(speechID);
+  bool result = await bookmarkNotifier.isSpeechBookmarked(speechID);
+  print("isSpeechBookmarkedProvider result: $result for speechID: $speechID");
+  return result;
+  //return await bookmarkNotifier.isSpeechBookmarked(speechID);
 });
 
 final projectDetailProvider = FutureProvider.family<Map<String, String>, String>((ref, projectID) async {
