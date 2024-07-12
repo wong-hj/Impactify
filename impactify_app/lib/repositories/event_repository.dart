@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/event.dart';
-import 'package:impactify_app/models/speech.dart';
+
 
 class EventRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -9,7 +8,7 @@ class EventRepository {
   // Future<List<Event>> getAllEvents() async {
   //   try {
   //     QuerySnapshot snapshot = await _firestore.collection('events').where('status', isEqualTo: 'active').get();
-
+      
   //     List<Event> events = snapshot.docs.map((doc) {
   //       print(Event.fromFirestore(doc).toJson().toString());
   //       return Event.fromFirestore(doc);
@@ -24,14 +23,11 @@ class EventRepository {
 
   Future<List<Event>> getAllEvents() async {
     try {
-      QuerySnapshot snapshot = await _firestore
-          .collection('events')
-          .where('status', isEqualTo: 'active')
-          .get();
-
+      QuerySnapshot snapshot = await _firestore.collection('events').where('status', isEqualTo: 'active').get();
+      
       List<Event> events = snapshot.docs.map((doc) {
-        //Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        //print("Fetched data: $data");
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        print("Fetched data: $data");
         return Event.fromFirestore(doc);
       }).toList();
       return events;
@@ -40,6 +36,7 @@ class EventRepository {
       throw e;
     }
   }
+<<<<<<< HEAD
 
   Future<List<Activity>> fetchAllActivities() async {
     
@@ -76,21 +73,35 @@ class EventRepository {
     }
   }
 
+=======
+  
+>>>>>>> parent of 9f4a7c3 (splitted out speech and event for better filtering)
   Future<Event> getEventById(String eventID) async {
     try {
-      DocumentSnapshot doc =
-          await _firestore.collection('events').doc(eventID).get();
-
+      DocumentSnapshot doc = await _firestore.collection('events').doc(eventID).get();
+      
       if (doc.exists) {
         return Event.fromFirestore(doc);
       } else {
         throw Exception('Event not found');
       }
+
     } catch (e) {
       print('Error fetching event: $e');
       throw e;
     }
   }
 
-  
+  Future<Event> getProjectById(String projectID) async {
+    try {
+      DocumentSnapshot doc = await _firestore.collection('events').doc(projectID).get();
+      if (doc.exists) {
+        return Event.fromFirestore(doc);
+      } else {
+        throw Exception('Event not found');
+      }
+    } catch (e) {
+      throw Exception('Error fetching event: $e');
+    }
+  }
 }

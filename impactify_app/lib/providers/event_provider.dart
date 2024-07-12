@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/event.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/repositories/event_repository.dart';
 
+<<<<<<< HEAD
 
 final eventProvider = StateNotifierProvider<EventNotifier, EventState>((ref) {
   return EventNotifier();
@@ -67,6 +67,21 @@ class EventNotifier extends StateNotifier<EventState> {
   final EventRepository _eventRepository = EventRepository();
 
   EventNotifier() : super(EventState());
+=======
+class EventProvider with ChangeNotifier {
+  final EventRepository _eventRepository = EventRepository();
+  List<Event> _events = [];
+  Event? _event;
+  bool _isLoading = false;
+  LatLng? _center;
+  Marker? _marker;
+
+  List<Event> get events => _events;
+  Event? get event => _event;
+  bool get isLoading => _isLoading;
+  LatLng? get center => _center;
+  Marker? get marker => _marker;
+>>>>>>> parent of 9f4a7c3 (splitted out speech and event for better filtering)
 
   Future<void> fetchAllEvents() async {
     state = state.copyWith(isLoading: true);
@@ -80,6 +95,7 @@ class EventNotifier extends StateNotifier<EventState> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> fetchAllActivities() async {
     state = state.copyWith(isLoading: true);
 
@@ -95,6 +111,12 @@ class EventNotifier extends StateNotifier<EventState> {
   }
 
   Future<Event> fetchEventByID(String eventID) async {
+=======
+  Future<Event> getEventByID(String eventID) async {
+    _isLoading = true;
+    notifyListeners();
+
+>>>>>>> parent of 9f4a7c3 (splitted out speech and event for better filtering)
     try {
       final event = await _eventRepository.getEventById(eventID);
       return event;
@@ -104,6 +126,7 @@ class EventNotifier extends StateNotifier<EventState> {
     }
   }
 
+<<<<<<< HEAD
   Future<void> setEventDetails(Event event) async {
     try {
       final locations = await locationFromAddress(event.location);
@@ -124,6 +147,24 @@ class EventNotifier extends StateNotifier<EventState> {
     } catch (e) {
       print('Error setting event details: $e');
       throw Exception('Error setting event details');
+=======
+  Future<Map<String, String>> fetchProjectIDAndName(String projectID) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      Event event = await _eventRepository.getProjectById(projectID);
+      _isLoading = false;
+      notifyListeners();
+      return {
+        'projectID': event.eventID,
+        'title': event.title,
+      };
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      throw Exception('Error fetching project details: $e');
+>>>>>>> parent of 9f4a7c3 (splitted out speech and event for better filtering)
     }
   }
 }

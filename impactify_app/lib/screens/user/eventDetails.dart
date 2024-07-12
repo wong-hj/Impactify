@@ -55,6 +55,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+<<<<<<< HEAD
       body: eventDetail.when(
         data: (event) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -83,6 +84,78 @@ class _EventDetailState extends ConsumerState<EventDetail> {
             loading: () => Center(child: CustomLoading(text: 'Loading bookmark status...')),
             error: (error, stack) => Center(child: Text('Error: $error')),
           );
+=======
+      body: 
+
+      FutureBuilder<Event>(
+        future: eventProvider.getEventByID(eventID),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CustomLoading(text: 'Loading details...'));
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData) {
+            return Center(child: Text('Event not found'));
+          } else {
+            Event event = snapshot.data!;
+
+            if (event.type == 'speech') {
+              return FutureBuilder<Map<String, String>>(
+                future: eventProvider.fetchProjectIDAndName(event.projectID),
+                builder: (context, projectSnapshot) {
+                  if (projectSnapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox.shrink();
+                  } else if (projectSnapshot.hasError) {
+                    return Center(child: Text('Error: ${projectSnapshot.error}'));
+                  } else if (!projectSnapshot.hasData) {
+                    return Center(child: Text('Project not found'));
+                  } else {
+                    Map<String, String> project = projectSnapshot.data!;
+                    return CustomDetailScreen(
+                      eventID: event.eventID,
+                      image: event.image,
+                      type: event.type.toUpperCase(),
+                      title: event.title,
+                      hoster: event.organizer,
+                      location: event.location,
+                      hostDate: event.hostDate,
+                      aboutDescription: event.description,
+                      impointsAdd: event.impointsAdd,
+                      marker: eventProvider.marker,
+                      onMapCreated: _onMapCreated,
+                      center: eventProvider.center,
+                      sdg: event.sdg,
+                      onSaved: isSaved,
+                      onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
+                      projectID: project['projectID'],
+                      projectTitle: project['title'],
+                    );
+                  }
+                },
+            
+            );
+            } else {
+              return CustomDetailScreen(
+                      eventID: event.eventID,
+                      image: event.image,
+                      type: event.type.toUpperCase(),
+                      title: event.title,
+                      hoster: event.organizer,
+                      location: event.location,
+                      hostDate: event.hostDate,
+                      aboutDescription: event.description,
+                      impointsAdd: event.impointsAdd,
+                      marker: eventProvider.marker,
+                      onMapCreated: _onMapCreated,
+                      center: eventProvider.center,
+                      sdg: event.sdg,
+                      onSaved: isSaved,
+                      onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
+                    );
+            }
+            
+          }
+>>>>>>> parent of 9f4a7c3 (splitted out speech and event for better filtering)
         },
         loading: () => Center(child: CustomLoading(text: 'Loading details...')),
         error: (error, stack) => Center(child: Text('Error: $error')),
