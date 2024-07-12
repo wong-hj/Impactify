@@ -15,7 +15,6 @@ class BookmarkProvider with ChangeNotifier {
   bool _isLoading = false;
   bool _isRemoveDone = false;
 
-
   List<Bookmark> get bookmarks => _bookmarks;
   List<Event> get events => _events;
   List<Speech> get speeches => _speeches;
@@ -32,7 +31,6 @@ class BookmarkProvider with ChangeNotifier {
       await fetchBookmarksAndProjects(); // Refresh the bookmarks list
       _isLoading = false;
       notifyListeners();
-      
     } catch (e) {
       _isLoading = false;
       notifyListeners();
@@ -51,7 +49,6 @@ class BookmarkProvider with ChangeNotifier {
       await fetchBookmarksAndSpeeches(); // Refresh the bookmarks list
       _isLoading = false;
       notifyListeners();
-      
     } catch (e) {
       _isLoading = false;
       notifyListeners();
@@ -61,12 +58,12 @@ class BookmarkProvider with ChangeNotifier {
   }
 
   Future<void> removeProjectBookmark(String projectID) async {
-
     _isLoading = true;
     notifyListeners();
 
     try {
-      await _bookmarkRepository.removeBookmark( _authRepository.currentUser!.uid, projectID, 'project');
+      await _bookmarkRepository.removeBookmark(
+          _authRepository.currentUser!.uid, projectID, 'project');
       await fetchBookmarksAndProjects();
     } catch (e) {
       print('Error in BookmarkProvider: $e');
@@ -74,16 +71,15 @@ class BookmarkProvider with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
-
   }
 
   Future<void> removeSpeechBookmark(String speechID) async {
-
     _isLoading = true;
     notifyListeners();
 
     try {
-      await _bookmarkRepository.removeBookmark( _authRepository.currentUser!.uid, speechID, 'project');
+      await _bookmarkRepository.removeBookmark(
+          _authRepository.currentUser!.uid, speechID, 'project');
       await fetchBookmarksAndSpeeches();
     } catch (e) {
       print('Error in BookmarkProvider: $e');
@@ -91,7 +87,6 @@ class BookmarkProvider with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
-
   }
 
   // Future<void> fetchBookmarksByUserID() async {
@@ -115,18 +110,23 @@ class BookmarkProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      List<Bookmark> bookmarks = await _bookmarkRepository.fetchBookmarksByUserID(_authRepository.currentUser!.uid);
-      
+      List<Bookmark> bookmarks = await _bookmarkRepository
+          .fetchBookmarksByUserID(_authRepository.currentUser!.uid);
+
       // Fetch events using the eventIDs from the bookmarks
       List<Event> fetchedEvents = [];
       for (var bookmark in bookmarks) {
-        Event event = await _bookmarkRepository.getEventById(bookmark.eventID!);
-        fetchedEvents.add(event);
+        if (bookmark.eventID != "") {
+          
+          Event event = await _bookmarkRepository.getEventById(bookmark.eventID!);
+
+          fetchedEvents.add(event);
+        }
       }
 
       _events = fetchedEvents;
     } catch (e) {
-      print('Error fetching bookmarks and events: $e');
+      print('Error fetching bookmarks and events1: $e');
     }
 
     _isLoading = false;
@@ -138,30 +138,36 @@ class BookmarkProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      List<Bookmark> bookmarks = await _bookmarkRepository.fetchBookmarksByUserID(_authRepository.currentUser!.uid);
-      
+      List<Bookmark> bookmarks = await _bookmarkRepository
+          .fetchBookmarksByUserID(_authRepository.currentUser!.uid);
+
       // Fetch events using the eventIDs from the bookmarks
       List<Speech> fetchedSpeeches = [];
+
       for (var bookmark in bookmarks) {
-        Speech speech = await _bookmarkRepository.getSpeechById(bookmark.speechID!);
-        fetchedSpeeches.add(speech);
+        if (bookmark.speechID != "") {
+          Speech speech =
+              await _bookmarkRepository.getSpeechById(bookmark.speechID!);
+          fetchedSpeeches.add(speech);
+        }
       }
 
       _speeches = fetchedSpeeches;
     } catch (e) {
-      print('Error fetching bookmarks and events: $e');
+      print('Error fetching bookmarks and events2: $e');
     }
 
     _isLoading = false;
     notifyListeners();
   }
 
-
   Future<bool> isProjectBookmarked(String projectID) async {
-    return await _bookmarkRepository.isActivityBookmarked(_authRepository.currentUser!.uid, projectID, 'project');
+    return await _bookmarkRepository.isActivityBookmarked(
+        _authRepository.currentUser!.uid, projectID, 'project');
   }
 
   Future<bool> isSpeechBookmarked(String speechID) async {
-    return await _bookmarkRepository.isActivityBookmarked(_authRepository.currentUser!.uid, speechID, 'speech');
+    return await _bookmarkRepository.isActivityBookmarked(
+        _authRepository.currentUser!.uid, speechID, 'speech');
   }
 }

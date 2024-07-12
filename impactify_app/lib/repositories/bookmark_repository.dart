@@ -73,7 +73,7 @@ class BookmarkRepository {
           .collection('bookmarks')
           .where('userID', isEqualTo: userID)
           .get();
-      print("TEST:" + snapshot.size.toString());
+      
       return snapshot.docs.map((doc) => Bookmark.fromFirestore(doc)).toList();
     } catch (e) {
       throw Exception('Error fetching bookmarks: $e');

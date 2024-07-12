@@ -22,6 +22,7 @@ class _BookmarkState extends State<Bookmark>
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     // Fetch events when the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final bookmarkProvider =
