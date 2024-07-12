@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
@@ -9,22 +10,22 @@ import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class Login extends StatelessWidget {
+class Login extends ConsumerWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   Login({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
-        
           child: Stack(
             children: [
               SingleChildScrollView(
@@ -58,8 +59,8 @@ class Login extends StatelessWidget {
                         onPressed: () async {
                           final email = _emailController.text.trim();
                           final password = _passwordController.text.trim();
-                          await authProvider.signInWithEmail(email, password);
-                          if (authProvider.user != null) {
+                          await authNotifier.signInWithEmail(email, password);
+                          if (authState.firebaseUser != null) {
                             Navigator.pushReplacementNamed(context, '/homeScreen');
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -85,8 +86,8 @@ class Login extends StatelessWidget {
                           CustomIconButton(
                               text: "Google Sign In",
                               onPressed: () async {
-                                await authProvider.signInWithGoogle();
-                                if (authProvider.user != null) {
+                                await authNotifier.signInWithGoogle();
+                                if (authState.firebaseUser != null) {
                                   Navigator.pushReplacementNamed(
                                       context, '/homeScreen');
                                 }
@@ -118,7 +119,7 @@ class Login extends StatelessWidget {
                   ),
                 ),
               ),
-              if (authProvider.isLoading)
+              if (authState.isLoading)
                 Container(
                   color: AppColors.background,
                   child: Column(

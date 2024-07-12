@@ -1,134 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:impactify_app/models/event.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
-
 import 'package:impactify_app/providers/event_provider.dart';
-
 import 'package:impactify_app/widgets/custom_details.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
 
-import 'package:provider/provider.dart';
-
-class EventDetail extends StatefulWidget {
-  const EventDetail({super.key});
+class EventDetail extends ConsumerStatefulWidget {
+  EventDetail({super.key});
 
   @override
-  State<EventDetail> createState() => _EventDetailState();
+  _EventDetailState createState() => _EventDetailState();
 }
 
-class _EventDetailState extends State<EventDetail> {
+class _EventDetailState extends ConsumerState<EventDetail> {
   late GoogleMapController mapController;
-  //String? bookmarkID; // State variable to store bookmarkID
-  bool isSaved = false; // State variable to track if the event is bookmarked
+  bool isSaved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkIfBookmarked();
+    });
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
-  @override
-  void initState() {
-    
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-    _checkIfBookmarked();
-    });
-    
-  }
-
   Future<void> _checkIfBookmarked() async {
-    
-    final bookmarkProvider =
-        Provider.of<BookmarkProvider>(context, listen: false);
+    final bookmarkNotifier = ref.read(bookmarkProvider.notifier);
     final String eventID = ModalRoute.of(context)!.settings.arguments as String;
-   
-
-    bool saved = await bookmarkProvider.isEventBookmarked(eventID);
-    
+    bool saved = await bookmarkNotifier.isProjectBookmarked(eventID);
     setState(() {
       isSaved = saved;
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
-    
     final String eventID = ModalRoute.of(context)!.settings.arguments as String;
-    final eventProvider = Provider.of<EventProvider>(context, listen: false);
-
+    final eventDetail = ref.watch(eventDetailProvider(eventID));
+    final isBookmarked = ref.watch(isEventBookmarkedProvider(eventID));
+    print('BookMARK' + isBookmarked.value.toString());
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: 
-
-      FutureBuilder<Event>(
-        future: eventProvider.getEventByID(eventID),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CustomLoading(text: 'Loading details...'));
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return Center(child: Text('Event not found'));
-          } else {
-            Event event = snapshot.data!;
-
-            return CustomDetailScreen(
-              id: event.eventID,
-              image: event.image,
-              type: event.type,
-              title: event.title,
-              hoster: event.organizer,
-              location: event.location,
-              hostDate: event.hostDate,
-              aboutDescription: event.description,
-              impointsAdd: event.impointsAdd,
-              marker: eventProvider.marker,
-              onMapCreated: _onMapCreated,
-              center: eventProvider.center,
-              sdg: event.sdg,
-              onSaved: isSaved,
-              onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
-            );
-                  
-           // } else {
-              // return CustomDetailScreen(
-              //         eventID: event.eventID,
-              //         image: event.image,
-              //         type: event.type.toUpperCase(),
-              //         title: event.title,
-              //         hoster: event.organizer,
-              //         location: event.location,
-              //         hostDate: event.hostDate,
-              //         aboutDescription: event.description,
-              //         impointsAdd: event.impointsAdd,
-              //         marker: eventProvider.marker,
-              //         onMapCreated: _onMapCreated,
-              //         center: eventProvider.center,
-              //         sdg: event.sdg,
-              //         onSaved: isSaved,
-              //         onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
-              //       );
-            //}
-            
-          }
+      body: eventDetail.when(
+        data: (event) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ref.read(eventProvider.notifier).setEventDetails(event);
+          });
+          return isBookmarked.when(
+            data: (saved) {
+              return CustomDetailScreen(
+                id: event.eventID,
+                image: event.image,
+                type: event.type,
+                title: event.title,
+                hoster: event.organizer,
+                location: event.location,
+                hostDate: event.hostDate,
+                aboutDescription: event.description,
+                impointsAdd: event.impointsAdd,
+                marker: ref.read(eventProvider).marker,
+                onMapCreated: (controller) {
+                  _onMapCreated(controller);
+                },
+                center: ref.read(eventProvider).center,
+                sdg: event.sdg,
+                onSaved: saved,
+                onBookmarkToggle: () => _saveOrDeleteBookmark(eventID, saved),
+              );
+            },
+            loading: () => Center(child: CustomLoading(text: 'Loading bookmark status...')),
+            error: (error, stack) => Center(child: Text('Error: $error')),
+          );
         },
+        loading: () => Center(child: CustomLoading(text: 'Loading details...')),
+        error: (error, stack) => Center(child: Text('Error: $error')),
       ),
     );
   }
 
-  Future<void> _saveOrDeleteBookmark(String eventID) async {
-    final bookmarkProvider =
-        Provider.of<BookmarkProvider>(context, listen: false);
+  Future<void> _saveOrDeleteBookmark(String eventID, bool isSaved) async {
+    final bookmarkNotifier = ref.read(bookmarkProvider.notifier);
 
     if (!isSaved) {
       try {
-        await bookmarkProvider.addBookmark(eventID);
+        await bookmarkNotifier.addProjectBookmark(eventID);
         setState(() {
           isSaved = true;
         });
@@ -149,7 +114,7 @@ class _EventDetailState extends State<EventDetail> {
       }
     } else {
       try {
-        await bookmarkProvider.removeBookmark(eventID);
+        await bookmarkNotifier.removeProjectBookmark(eventID);
         setState(() {
           isSaved = false;
         });
@@ -171,3 +136,5 @@ class _EventDetailState extends State<EventDetail> {
     }
   }
 }
+
+

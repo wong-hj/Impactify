@@ -1,25 +1,28 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/constants/placeholderURL.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
+import 'package:impactify_app/repositories/auth_repository.dart';
 import 'package:impactify_app/screens/user/editProfile.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class Profile extends ConsumerStatefulWidget {
+  Profile({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
-  
+class _ProfileState extends ConsumerState<Profile> with SingleTickerProviderStateMixin {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   late TabController _tabController;
 
   @override
@@ -36,16 +39,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+    final userState = ref.watch(userProvider);
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-         await context
-              .read<AuthProvider>()
-              .signOut();
-          if (context.read<AuthProvider>().user == null) {
+         await authNotifier.signOut();
+          if (auth.currentUser == null) {
             Navigator.pushReplacementNamed(context, '/login');
           }
         },
@@ -73,7 +76,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       Row(
                         children: [
                           Text(
-                            userProvider.userData?.fullName ?? "",
+                            userState.userData?.fullName ?? "",
                             style: GoogleFonts.nunito(
                                 fontSize: 25, color: AppColors.primary),
                           ),
@@ -98,7 +101,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     child: CircleAvatar(
                       radius: 30,
                       backgroundImage:
-                          NetworkImage(userProvider.userData?.profileImage ?? userPlaceholder),
+                          NetworkImage(userState.userData?.profileImage ?? userPlaceholder),
                     ),
                   ),
                 ],
@@ -136,7 +139,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          CustomNumberText(number: '${userProvider.userData?.impoints ?? 0}', text: 'Impoints'),
+                          CustomNumberText(number: '${userState.userData?.impoints ?? 0}', text: 'Impoints'),
                           CustomNumberText(number: '10', text: 'Posts'),
                           CustomNumberText(number: '6', text: 'Participations'),
                           CustomNumberText(number: '4', text: 'Locations'),

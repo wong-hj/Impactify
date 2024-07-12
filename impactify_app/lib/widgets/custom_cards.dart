@@ -322,6 +322,7 @@ class CustomEventCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
+                    
                     style: GoogleFonts.nunito(
                         fontSize: 16, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
@@ -343,11 +344,14 @@ class CustomEventCard extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          type == "project" ? Navigator.pushNamed(
+                          type == "project" ? 
+                          Navigator.pushNamed(
                             context,
                             '/eventDetail',
                             arguments: eventID,
-                          ) : Navigator.pushNamed(
+                          ) 
+                        
+                          : Navigator.pushNamed(
                             context,
                             '/speechDetail',
                             arguments: eventID,

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_app/constants/placeholderURL.dart';
@@ -11,14 +12,14 @@ import 'package:impactify_app/widgets/custom_buttons.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 
-class EditProfile extends StatefulWidget {
+class EditProfile extends ConsumerStatefulWidget {
   EditProfile({super.key});
 
   @override
-  State<EditProfile> createState() => _EditProfileState();
+  _EditProfileState createState() => _EditProfileState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _EditProfileState extends ConsumerState<EditProfile> {
    final ImagePicker _picker = ImagePicker();
   XFile? _image;
   final TextEditingController _fullNameController = TextEditingController();
@@ -34,9 +35,9 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     // Fetch user data and set it to the text controllers
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userState = ref.read(userProvider);
 
-    final user = userProvider.userData;
+    final user = userState.userData;
     if (user != null) {
       _fullNameController.text = user.fullName;
       _usernameController.text = user.username;
@@ -49,7 +50,9 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+    final userNotifier = ref.read(userProvider.notifier);
+    final userState = ref.watch(userProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(),
@@ -73,7 +76,7 @@ class _EditProfileState extends State<EditProfile> {
                         child: CircleAvatar(
                           radius: 60,
                           backgroundImage:
-                              _image == null ? NetworkImage( userProvider.userData?.profileImage ?? userPlaceholder) as ImageProvider
+                              _image == null ? NetworkImage( userState.userData?.profileImage ?? userPlaceholder) as ImageProvider
                               : FileImage(
                                  
                                 File(_image!.path),
@@ -128,7 +131,7 @@ class _EditProfileState extends State<EditProfile> {
               CustomTextFormField(
                 controller: _emailController,
                 placeholderText: 'Email Address',
-                enabled: userProvider.userData?.signinMethod == "Email",
+                enabled: userState.userData?.signinMethod == "Email",
                 keyboardType: TextInputType.emailAddress,
                 onChanged: (value) {
                   // Handle text field changes
@@ -164,14 +167,15 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> _updateProfile() async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userNotifier = ref.read(userProvider.notifier);
+    
     final data = {
       'fullName': _fullNameController.text.trim(),
       'username': _usernameController.text.trim(),
       'email': _emailController.text.trim(),
       'introduction': _introductionController.text.trim(),
     };
-    await userProvider.updateUserData(data, _image);
+    await userNotifier.updateUserData(data, _image);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Profile updated successfully'),

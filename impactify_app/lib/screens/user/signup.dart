@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
@@ -8,7 +9,7 @@ import 'package:impactify_app/widgets/custom_buttons.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends ConsumerWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -17,8 +18,9 @@ class SignUp extends StatelessWidget {
   SignUp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+    final authNotifier = ref.read(authProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -83,8 +85,8 @@ class SignUp extends StatelessWidget {
                             fullname.isNotEmpty &&
                             email.isNotEmpty &&
                             password.isNotEmpty) {
-                          await authProvider.signUpWithEmail(email, password, fullname, username);
-                          if (authProvider.user != null) {
+                          await authNotifier.signUpWithEmail(email, password, fullname, username);
+                          if (authState.firebaseUser != null) {
                             Navigator.pushReplacementNamed(
                                 context, '/homeScreen');
                           } else {
@@ -126,8 +128,8 @@ class SignUp extends StatelessWidget {
                       CustomIconButton(
                           text: "Google Sign In",
                           onPressed: () async {
-                            await authProvider.signInWithGoogle();
-                            if (authProvider.user != null) {
+                            await authNotifier.signInWithGoogle();
+                            if (authState.userData != null) {
                               Navigator.pushReplacementNamed(
                                   context, '/homeScreen');
                             }
@@ -138,7 +140,7 @@ class SignUp extends StatelessWidget {
                 ],
               ),
             ),
-            if (authProvider.isLoading)
+            if (authState.isLoading)
               Container(
                 color: AppColors.background,
                 child: Column(

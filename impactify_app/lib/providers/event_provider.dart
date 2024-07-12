@@ -1,81 +1,129 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/repositories/event_repository.dart';
 
-class EventProvider with ChangeNotifier {
-  final EventRepository _eventRepository = EventRepository();
-  List<Event> _events = [];
-  Event? _event;
-  List<Activity>? _activities = [];
-  bool _isLoading = false;
-  LatLng? _center;
-  Marker? _marker;
 
-  List<Event> get events => _events;
-  Event? get event => _event;
-  List<Activity>? get activities => _activities;
-  bool get isLoading => _isLoading;
-  LatLng? get center => _center;
-  Marker? get marker => _marker;
+final eventProvider = StateNotifierProvider<EventNotifier, EventState>((ref) {
+  return EventNotifier();
+});
+
+final eventDetailProvider = FutureProvider.family<Event, String>((ref, eventID) async {
+  final eventNotifier = ref.read(eventProvider.notifier);
+  return await eventNotifier.fetchEventByID(eventID);
+});
+
+final isEventBookmarkedProvider = FutureProvider.family<bool, String>((ref, eventID) async {
+  
+  final bookmarkNotifier = ref.read(bookmarkProvider.notifier);
+  print("AWAIT" +  bookmarkNotifier.isProjectBookmarked(eventID).toString());
+  return await bookmarkNotifier.isProjectBookmarked(eventID);
+});
+
+
+class EventState {
+  final List<Event> events;
+  final Event? event;
+  final List<Activity> activities;
+  final bool isLoading;
+  final LatLng? center;
+  final Marker? marker;
+
+  EventState({
+    this.events = const [],
+    this.event,
+    this.activities = const [],
+    this.isLoading = false,
+    this.center,
+    this.marker,
+  });
+
+  EventState copyWith({
+    List<Event>? events,
+    Event? event,
+    List<Activity>? activities,
+    bool? isLoading,
+    LatLng? center,
+    Marker? marker,
+  }) {
+    return EventState(
+      events: events ?? this.events,
+      event: event ?? this.event,
+      activities: activities ?? this.activities,
+      isLoading: isLoading ?? this.isLoading,
+      center: center ?? this.center,
+      marker: marker ?? this.marker,
+    );
+  }
+}
+
+class EventNotifier extends StateNotifier<EventState> {
+  final EventRepository _eventRepository = EventRepository();
+
+  EventNotifier() : super(EventState());
 
   Future<void> fetchAllEvents() async {
-    _isLoading = true;
-    notifyListeners();
+    state = state.copyWith(isLoading: true);
 
     try {
-      _events = await _eventRepository.getAllEvents();
+      final events = await _eventRepository.getAllEvents();
+      state = state.copyWith(events: events, isLoading: false);
     } catch (e) {
-      _events = [];
+      state = state.copyWith(events: [], isLoading: false);
       print('Error in EventProvider: $e');
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<void> fetchAllActivities() async {
-    _isLoading = true;
-    notifyListeners();
+    state = state.copyWith(isLoading: true);
 
     try {
-      _activities = await _eventRepository.fetchAllActivities();
+      
+      final activities = await _eventRepository.fetchAllActivities();
+      
+      state = state.copyWith(activities: activities, isLoading: false);
     } catch (e) {
-      _activities = [];
+      state = state.copyWith(activities: [], isLoading: false);
       print('Error in EventProvider: $e');
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
-  Future<Event> getEventByID(String eventID) async {
-    _isLoading = true;
-    notifyListeners();
-
+  Future<Event> fetchEventByID(String eventID) async {
     try {
-      _event = await _eventRepository.getEventById(eventID);
-      List<Location> locations = await locationFromAddress(_event!.location);
-      _center = LatLng(locations.first.latitude, locations.first.longitude);
-      _marker = Marker(
-        markerId: MarkerId(_event!.location),
-        position: _center!,
-        infoWindow: InfoWindow(
-          title: _event!.location,
-        ),
-      );
-      _isLoading = false;
-      notifyListeners();
-      return _event!;
+      final event = await _eventRepository.getEventById(eventID);
+      return event;
     } catch (e) {
-      _isLoading = false;
-      notifyListeners();
       print('Error in EventProvider: $e');
       throw Exception('Error fetching event');
     }
   }
 
-  
+  Future<void> setEventDetails(Event event) async {
+    try {
+      final locations = await locationFromAddress(event.location);
+      final center = LatLng(locations.first.latitude, locations.first.longitude);
+      final marker = Marker(
+        markerId: MarkerId(event.location),
+        position: center,
+        infoWindow: InfoWindow(
+          title: event.location,
+        ),
+      );
+      state = state.copyWith(
+        event: event,
+        center: center,
+        marker: marker,
+        isLoading: false,
+      );
+    } catch (e) {
+      print('Error setting event details: $e');
+      throw Exception('Error setting event details');
+    }
+  }
 }

@@ -8,8 +8,8 @@ class Bookmark {
 
   Bookmark({
     required this.bookmarkID,
-    this.eventID,
-    this.speechID,
+    this.eventID = "",
+    this.speechID = "",
     required this.userID,
   });
 
@@ -17,8 +17,8 @@ class Bookmark {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Bookmark(
       bookmarkID: data['bookmarkID'],
-      eventID: data['eventID'],
-      speechID: data['speechID'],
+      eventID: data['eventID'] ?? null,
+      speechID: data['speechID'] ?? null,
       userID: data['userID'],
     );
   }

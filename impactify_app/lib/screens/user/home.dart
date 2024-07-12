@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_app/constants/placeholderURL.dart';
-import 'package:impactify_app/providers/auth_provider.dart';
+
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_cards.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatelessWidget {
+class Home extends ConsumerWidget {
   const Home({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    //final userNotifier = ref.read(userProvider.notifier);
+    final userState = ref.watch(userProvider);
     
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -43,12 +44,12 @@ class Home extends StatelessWidget {
                               child: CircleAvatar(
                                 radius: 30,
                                 backgroundImage: NetworkImage(
-                                   userProvider.userData!.profileImage),
+                                   userState.userData!.profileImage),
                               ),
                             ),
                             SizedBox(width: 8),
                             Text(
-                              'Hello, ${userProvider.userData!.username}!',
+                              'Hello, ${userState.userData!.username}!',
                               style: GoogleFonts.nunito(fontSize: 15),
                             ),
                           ],
