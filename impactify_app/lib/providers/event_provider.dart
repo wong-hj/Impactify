@@ -51,7 +51,7 @@ class EventProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Event> getEventByID(String eventID) async {
+  Future<Event> fetchEventByID(String eventID) async {
     _isLoading = true;
     notifyListeners();
 

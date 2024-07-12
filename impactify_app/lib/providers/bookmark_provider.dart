@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:impactify_app/models/bookmark.dart';
 import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/repositories/auth_repository.dart';
 import 'package:impactify_app/repositories/bookmark_repository.dart';
 
@@ -10,23 +11,25 @@ class BookmarkProvider with ChangeNotifier {
 
   List<Bookmark> _bookmarks = [];
   List<Event> _events = [];
+  List<Speech> _speeches = [];
   bool _isLoading = false;
   bool _isRemoveDone = false;
 
 
   List<Bookmark> get bookmarks => _bookmarks;
   List<Event> get events => _events;
+  List<Speech> get speeches => _speeches;
   bool get isLoading => _isLoading;
   bool get isRemoveDone => _isRemoveDone;
 
-  Future<void> addBookmark(String eventID) async {
+  Future<void> addProjectBookmark(String projectID) async {
     _isLoading = true;
     notifyListeners();
 
     try {
       await _bookmarkRepository.addBookmark(
-          _authRepository.currentUser!.uid, eventID);
-      await fetchBookmarksAndEvents(); // Refresh the bookmarks list
+          _authRepository.currentUser!.uid, projectID, 'project');
+      await fetchBookmarksAndProjects(); // Refresh the bookmarks list
       _isLoading = false;
       notifyListeners();
       
@@ -38,14 +41,50 @@ class BookmarkProvider with ChangeNotifier {
     }
   }
 
-  Future<void> removeBookmark(String eventID) async {
+  Future<void> addSpeechBookmark(String speechID) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _bookmarkRepository.addBookmark(
+          _authRepository.currentUser!.uid, speechID, 'speech');
+      await fetchBookmarksAndSpeeches(); // Refresh the bookmarks list
+      _isLoading = false;
+      notifyListeners();
+      
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      print('Error in BookmarkProvider: $e');
+      throw Exception('Error adding bookmark');
+    }
+  }
+
+  Future<void> removeProjectBookmark(String projectID) async {
 
     _isLoading = true;
     notifyListeners();
 
     try {
-      await _bookmarkRepository.removeBookmark( _authRepository.currentUser!.uid, eventID);
-      await fetchBookmarksAndEvents();
+      await _bookmarkRepository.removeBookmark( _authRepository.currentUser!.uid, projectID, 'project');
+      await fetchBookmarksAndProjects();
+    } catch (e) {
+      print('Error in BookmarkProvider: $e');
+    }
+
+    _isLoading = false;
+    notifyListeners();
+
+  }
+
+  Future<void> removeSpeechBookmark(String speechID) async {
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _bookmarkRepository.removeBookmark( _authRepository.currentUser!.uid, speechID, 'project');
+      await fetchBookmarksAndSpeeches();
     } catch (e) {
       print('Error in BookmarkProvider: $e');
     }
@@ -71,7 +110,7 @@ class BookmarkProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> fetchBookmarksAndEvents() async {
+  Future<void> fetchBookmarksAndProjects() async {
     _isLoading = true;
     notifyListeners();
 
@@ -81,7 +120,7 @@ class BookmarkProvider with ChangeNotifier {
       // Fetch events using the eventIDs from the bookmarks
       List<Event> fetchedEvents = [];
       for (var bookmark in bookmarks) {
-        Event event = await _bookmarkRepository.getEventById(bookmark.eventID);
+        Event event = await _bookmarkRepository.getEventById(bookmark.eventID!);
         fetchedEvents.add(event);
       }
 
@@ -94,7 +133,35 @@ class BookmarkProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> isEventBookmarked(String eventID) async {
-    return await _bookmarkRepository.isEventBookmarked(_authRepository.currentUser!.uid, eventID);
+  Future<void> fetchBookmarksAndSpeeches() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      List<Bookmark> bookmarks = await _bookmarkRepository.fetchBookmarksByUserID(_authRepository.currentUser!.uid);
+      
+      // Fetch events using the eventIDs from the bookmarks
+      List<Speech> fetchedSpeeches = [];
+      for (var bookmark in bookmarks) {
+        Speech speech = await _bookmarkRepository.getSpeechById(bookmark.speechID!);
+        fetchedSpeeches.add(speech);
+      }
+
+      _speeches = fetchedSpeeches;
+    } catch (e) {
+      print('Error fetching bookmarks and events: $e');
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+
+  Future<bool> isProjectBookmarked(String projectID) async {
+    return await _bookmarkRepository.isActivityBookmarked(_authRepository.currentUser!.uid, projectID, 'project');
+  }
+
+  Future<bool> isSpeechBookmarked(String speechID) async {
+    return await _bookmarkRepository.isActivityBookmarked(_authRepository.currentUser!.uid, speechID, 'speech');
   }
 }

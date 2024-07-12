@@ -12,8 +12,9 @@ class UserProvider with ChangeNotifier {
   //final AuthRepository _authRepository = AuthRepository();
 
   auth.User? _firebaseUser;
-   User? _userData;
+  User? _userData;
 
+  auth.User? get firebaseUser => _firebaseUser;
    User? get userData => _userData;
 
   UserProvider(auth.User? firebaseUser) {

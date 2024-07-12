@@ -14,15 +14,26 @@ class Bookmark extends StatefulWidget {
   State<Bookmark> createState() => _BookmarkState();
 }
 
-class _BookmarkState extends State<Bookmark> {
+class _BookmarkState extends State<Bookmark>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
     // Fetch events when the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BookmarkProvider>(context, listen: false)
-          .fetchBookmarksAndEvents();
+      final bookmarkProvider =
+          Provider.of<BookmarkProvider>(context, listen: false);
+      bookmarkProvider.fetchBookmarksAndProjects();
+      bookmarkProvider.fetchBookmarksAndSpeeches();
     });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,130 +69,157 @@ class _BookmarkState extends State<Bookmark> {
                       ),
                     ),
                     SizedBox(height: 10),
-
-                    Expanded(
-                      child: bookmarkProvider.events.isEmpty
-                          ? Center(
-                              child: Text('No Bookmark as of now.',
-                                  style: GoogleFonts.poppins(
-                                      color: AppColors.primary, fontSize: 18)))
-                          : ListView.builder(
-                              itemCount: bookmarkProvider.events.length,
-                              itemBuilder: (context, index) {
-                                final bookmark = bookmarkProvider.events[index];
-
-                                DateTime date = bookmark.hostDate.toDate();
-                                String formattedDate =
-                                    DateFormat('dd MMMM yyyy, HH:mm')
-                                        .format(date)
-                                        .toUpperCase();
-                                return Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 2),
-                                      child: Slidable(
-                                        key: Key(bookmark.title),
-                                        startActionPane: ActionPane(
-                                          extentRatio: 0.4,
-                                          motion: BehindMotion(),
-                                          children: [
-                                            SlidableAction(
-                                              onPressed: (context) {
-                                                Navigator.pushNamed(
-                                                      context,
-                                                      '/eventDetail',
-                                                      arguments: bookmark.eventID,
-                                                    );
-                                              },
-                                              backgroundColor:
-                                                  AppColors.secondary,
-                                              foregroundColor: Colors.white,
-                                              icon: Icons.visibility_rounded,
-                                              label: 'View More',
-                                            ),
-                                          ],
-                                        ),
-                                        endActionPane: ActionPane(
-                                          extentRatio: 0.4,
-                                          motion: ScrollMotion(),
-                                          children: [
-                                            SlidableAction(
-                                              onPressed: (context) async {
-                                                try {
-                                                  await bookmarkProvider
-                                                      .removeBookmark(
-                                                          bookmark.eventID);
-                                                } catch (e) {
-                                                  print(
-                                                      'Error removing bookmark: $e');
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                          'Failed to remove bookmark'),
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              backgroundColor: Colors.red,
-                                              foregroundColor: Colors.white,
-                                              icon: Icons.delete,
-                                              label: 'Delete',
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Image.network(
-                                              bookmark.image,
-                                              width: 100,
-                                              fit: BoxFit.cover,
-                                            ),
-                                            SizedBox(width: 8),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  bookmark.title,
-                                                  style: GoogleFonts.nunito(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  formattedDate,
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 12,
-                                                    color:
-                                                        AppColors.placeholder,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(
-                                      color: Colors.grey,
-                                      thickness: 1,
-                                    ),
-                                  ],
-                                );
-                              },
+                    Container(
+                      height: 38.0,
+                      child: TabBar(
+                        splashFactory: NoSplash.splashFactory,
+                        dividerColor: Colors.transparent,
+                        controller: _tabController,
+                        indicator: UnderlineTabIndicator(
+                          borderSide:
+                              BorderSide(width: 2.0, color: AppColors.primary),
+                        ),
+                        labelColor: AppColors.primary,
+                        unselectedLabelColor: Colors.black,
+                        labelStyle: GoogleFonts.poppins(),
+                        unselectedLabelStyle: GoogleFonts.poppins(),
+                        tabs: [
+                          Tab(
+                            child: Container(
+                              width: double.infinity,
+                              alignment: Alignment.center,
+                              child: Text('Projects'),
                             ),
+                          ),
+                          Tab(
+                            child: Container(
+                              width: double.infinity,
+                              alignment: Alignment.center,
+                              child: Text('Speech'),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                    SizedBox(height: 30),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          ProjectContent(),
+                          SpeechContent()
+                          //PostContent(),
+                          //HistoryContent(),
+                        ],
+                      ),
+                    ),
+                  ]
                 ),
               ),
             ),
     );
   }
 }
+
+class ProjectContent extends StatelessWidget {
+  const ProjectContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final bookmarkProvider = Provider.of<BookmarkProvider>(context);
+
+    
+    return Column(
+      children: [
+        Expanded(
+          child: bookmarkProvider.events.isEmpty
+              ? Center(
+                  child: Text('No Bookmark for Projects as of now.',
+                      style: GoogleFonts.poppins(
+                          color: AppColors.primary, fontSize: 18)))
+              : ListView.builder(
+                  itemCount: bookmarkProvider.events.length,
+                  itemBuilder: (context, index) {
+                    final bookmark = bookmarkProvider.events[index];
+                    DateTime date = bookmark.hostDate.toDate();
+                    String formattedDate = DateFormat('dd MMMM yyyy, HH:mm')
+                        .format(date)
+                        .toUpperCase();
+                    return CustomList(
+                      imageUrl: bookmark.image,
+                      eventID: bookmark.eventID,
+                      title: bookmark.title,
+                      date: formattedDate,
+                      image: bookmark.image,
+                      onPressed: (context) async {
+                        try {
+                          await bookmarkProvider.removeProjectBookmark(bookmark.eventID);
+                        } catch (e) {
+                          print('Error removing bookmark: $e');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to remove bookmark'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  }),
+        ),
+      ],
+    );
+  }
+}
+
+class SpeechContent extends StatelessWidget {
+  const SpeechContent({super.key});
+
+  @override
+  Widget build(BuildContext context,) {
+    final bookmarkProvider = Provider.of<BookmarkProvider>(context);
+
+    return Column(
+      children: [
+        Expanded(
+          child: bookmarkProvider.speeches.isEmpty
+              ? Center(
+                  child: Text('No Bookmark for Speeches as of now.',
+                      style: GoogleFonts.poppins(
+                          color: AppColors.primary, fontSize: 18)))
+              : ListView.builder(
+                  itemCount: bookmarkProvider.speeches.length,
+                  itemBuilder: (context, index) {
+                    final bookmark = bookmarkProvider.speeches[index];
+                    DateTime date = bookmark.hostDate.toDate();
+                    String formattedDate = DateFormat('dd MMMM yyyy, HH:mm')
+                        .format(date)
+                        .toUpperCase();
+                    return CustomList(
+                      imageUrl: bookmark.image,
+                      speechID: bookmark.speechID,
+                      title: bookmark.title,
+                      date: formattedDate,
+                      image: bookmark.image,
+                      onPressed: (context) async {
+                        try {
+                          await bookmarkProvider.removeSpeechBookmark(bookmark.speechID);
+                        } catch (e) {
+                          print('Error removing bookmark: $e');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to remove bookmark'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  }),
+        ),
+      ],
+    );
+  }
+}
+

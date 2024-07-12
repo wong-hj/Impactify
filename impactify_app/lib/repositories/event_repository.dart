@@ -42,6 +42,8 @@ class EventRepository {
   }
 
   Future<List<Activity>> fetchAllActivities() async {
+    
+    await Future.delayed(Duration(seconds: 1));
     List<Activity> activities = [];
     try {
       QuerySnapshot eventSnapshot = await _firestore
@@ -53,12 +55,15 @@ class EventRepository {
           eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
 
       QuerySnapshot speechSnapshot = await _firestore
+          
           .collection('speeches')
           .where('status', isEqualTo: 'active')
           .get();
+           
       activities.addAll(
           speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
           
+         
            // Print each activity
     activities.forEach((activity) {
       print(activity.toString());
