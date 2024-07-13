@@ -3,6 +3,7 @@
     
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" /> 
 
     <application
         android:label="Impactify"
@@ -12,6 +13,7 @@
                android:value="AIzaSyDThgSxlX8mD-3DKWQeVKveSPHppBXX3ds"/>
         <activity
             android:name=".MainActivity"
+            android:supportsPictureInPicture="true"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

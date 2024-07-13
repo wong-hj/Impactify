@@ -18,6 +18,7 @@ import 'package:impactify_app/screens/user/home.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/screens/user/login.dart';
 import 'package:impactify_app/screens/user/profile.dart';
+import 'package:impactify_app/screens/user/recording.dart';
 import 'package:impactify_app/screens/user/signup.dart';
 import 'package:impactify_app/screens/user/schedule.dart';
 import 'package:impactify_app/screens/user/speechDetails.dart';
@@ -58,7 +59,8 @@ class MyApp extends StatelessWidget {
             darkTheme: CustomTheme.darkTheme,
             initialRoute: authProvider.userData != null ? '/homeScreen' : '/',
             routes: {
-              '/': (context) => OnboardingScreens(),
+              '/': (context) => Recording(),
+              //OnboardingScreens(),
               '/login': (context) => Login(),
               '/signup': (context) => SignUp(),
               '/home': (context) => Home(),
