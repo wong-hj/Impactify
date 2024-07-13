@@ -26,6 +26,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userProvider =
+          Provider.of<UserProvider>(context, listen: false);
+      userProvider.fetchUserData();
+    });
   }
 
   @override

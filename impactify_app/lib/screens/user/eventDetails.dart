@@ -98,26 +98,6 @@ class _EventDetailState extends State<EventDetail> {
               parentContext: context,
             );
                   
-           // } else {
-              // return CustomDetailScreen(
-              //         eventID: event.eventID,
-              //         image: event.image,
-              //         type: event.type.toUpperCase(),
-              //         title: event.title,
-              //         hoster: event.organizer,
-              //         location: event.location,
-              //         hostDate: event.hostDate,
-              //         aboutDescription: event.description,
-              //         impointsAdd: event.impointsAdd,
-              //         marker: eventProvider.marker,
-              //         onMapCreated: _onMapCreated,
-              //         center: eventProvider.center,
-              //         sdg: event.sdg,
-              //         onSaved: isSaved,
-              //         onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
-              //       );
-            //}
-            
           }
         },
       ),

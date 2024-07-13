@@ -13,6 +13,7 @@ class Speech implements Activity {
   final String eventID;
   final Timestamp createdAt;
   final String status;
+  final List<String> tags; 
 
   Speech({
     required this.speechID,
@@ -26,6 +27,8 @@ class Speech implements Activity {
     required this.eventID,
     required this.createdAt,
     required this.status,
+    required this.tags,
+
   });
 
   @override
@@ -50,6 +53,7 @@ class Speech implements Activity {
       eventID: data['eventID'],
       createdAt: data['createdAt'],
       status: data['status'],
+      tags: List<String>.from(data['tags'] ?? []),
     );
   }
 
@@ -67,6 +71,7 @@ class Speech implements Activity {
       'eventID': eventID,
       'createdAt': createdAt,
       'status': status,
+      'tags': tags,
     };
   }
 }

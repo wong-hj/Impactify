@@ -14,6 +14,7 @@ class Event implements Activity {
   final Timestamp createdAt;
   final String type;
   final String status;
+  final List<String> tags; 
 
   Event({
     required this.eventID,
@@ -28,6 +29,7 @@ class Event implements Activity {
     required this.createdAt,
     required this.type,
     required this.status,
+    required this.tags,
   });
 
   @override
@@ -71,6 +73,7 @@ class Event implements Activity {
       createdAt: data['createdAt'] ?? Timestamp.now(),
       type: data['type'] ?? '',
       status: data['status'] ?? '',
+      tags: List<String>.from(data['tags'] ?? []),
     );
   }
 
@@ -89,6 +92,7 @@ class Event implements Activity {
       'createdAt': createdAt,
       'type': type,
       'status': status,
+      'tags': tags,
     };
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/event.dart';
 import 'package:impactify_app/models/speech.dart';
+import 'package:impactify_app/models/tag.dart';
 
 class EventRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -41,14 +42,27 @@ class EventRepository {
     }
   }
 
+  Future<List<Tag>> fetchAllTags() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection('tags').get();
+
+      return snapshot.docs.map((doc) => Tag.fromFirestore(doc)).toList();
+
+    } catch (e) {
+      print('Error fetching events: $e');
+      throw e;
+    }
+  }
+
   Future<List<Activity>> fetchAllActivities() async {
     
-    await Future.delayed(Duration(seconds: 1));
+    //await Future.delayed(Duration(seconds: 1));
     List<Activity> activities = [];
     try {
       QuerySnapshot eventSnapshot = await _firestore
           .collection('events')
           .where('status', isEqualTo: 'active')
+          .where('hostDate', isGreaterThan: Timestamp.now())
           .get();
 
       activities.addAll(
@@ -72,6 +86,36 @@ class EventRepository {
       return activities;
     } catch (e) {
       print('Error fetching activities: $e');
+      throw e;
+    }
+  }
+
+  Future<List<Activity>> fetchFilteredActivities(String filter, List<String> tagIDs) async {
+    List<Activity> activities = [];
+    try {
+      if (filter == 'All' || filter == 'Project') {
+        Query eventQuery = _firestore.collection('events').where('status', isEqualTo: 'active');
+        if (tagIDs.isNotEmpty) {
+          eventQuery = eventQuery.where('tags', arrayContainsAny: tagIDs);
+        }
+        QuerySnapshot eventSnapshot = await eventQuery.where('hostDate', isGreaterThan: Timestamp.now()).get();
+        activities.addAll(
+            eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
+      }
+
+      if (filter == 'All' || filter == 'Speech') {
+        Query speechQuery = _firestore.collection('speeches').where('status', isEqualTo: 'active');
+        if (tagIDs.isNotEmpty) {
+          speechQuery = speechQuery.where('tags', arrayContainsAny: tagIDs);
+        }
+        QuerySnapshot speechSnapshot = await speechQuery.get();
+        activities.addAll(
+            speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
+      }
+
+      return activities;
+    } catch (e) {
+      print('Error fetching filtered activities: $e');
       throw e;
     }
   }

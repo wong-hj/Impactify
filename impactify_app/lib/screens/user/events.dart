@@ -57,24 +57,37 @@ class _EventsState extends State<Events> {
 
   String selectedFilter = 'All';
   List<String> selectedTags = [];
+  List<String> selectedTagIDs = [];
+  String searchText = '';
 
   void _showFilterOptions() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return FilterOptions(
-          onApplyFilters: (String filter, List<String> tags) {
+          onApplyFilters:
+              (String filter, List<String> tags, List<String> tagIDs) {
             setState(() {
               selectedFilter = filter;
               selectedTags = tags;
+              selectedTagIDs = tagIDs;
             });
-            // Fetch and update your list here based on the selected filters
+            Provider.of<EventProvider>(context, listen: false)
+                .fetchFilteredActivities(filter, tagIDs);
           },
           selectedFilter: selectedFilter,
           selectedTags: selectedTags,
+          selectedTagIDs: selectedTagIDs,
         );
       },
     );
+  }
+
+  void _searchActivities(String text) {
+    setState(() {
+      searchText = text;
+    });
+    Provider.of<EventProvider>(context, listen: false).searchActivities(text);
   }
 
   @override
@@ -82,133 +95,141 @@ class _EventsState extends State<Events> {
     final eventProvider = Provider.of<EventProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      body:  Padding(
-          padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-          child: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                floating: true,
-                pinned: true,
-                backgroundColor: AppColors.background,
-                elevation: 0,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Discover',
-                            style: GoogleFonts.nunito(
-                                fontSize: 24,
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          //Spacer(),
-                          IconButton(
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: AppColors.background,
+              elevation: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Discover',
+                          style: GoogleFonts.nunito(
+                              fontSize: 24,
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        //Spacer(),
+                        IconButton(
                           onPressed: _showFilterOptions,
                           icon: Icon(Icons.filter_list),
                           color: AppColors.primary,
                         ),
-                          // GestureDetector( 
-                          //   onTap: _toggle,
-                          //   child: Container(
-                          //     padding: EdgeInsets.symmetric(
-                          //         vertical: 8.0, horizontal: 5.0),
-                          //     decoration: BoxDecoration(
-                          //       color:
-                          //           nearMe ? AppColors.tertiary : Colors.white,
-                          //       border: Border.all(
-                          //           color: nearMe
-                          //               ? AppColors.tertiary
-                          //               : Colors.black),
-                          //       borderRadius: BorderRadius.circular(30),
-                          //     ),
-                          //     child: Row(
-                          //       mainAxisSize: MainAxisSize.min,
-                          //       children: [
-                          //         Icon(
-                          //           nearMe
-                          //               ? Icons.location_on_outlined
-                          //               : Icons.location_off_outlined,
-                          //           size: 18,
-                          //           color: nearMe
-                          //               ? Colors.black
-                          //               : AppColors.primary,
-                          //         ),
-                          //         SizedBox(width: 3),
-                          //         Text(
-                          //           'Near Me',
-                          //           style: TextStyle(
-                          //             fontSize: 14,
-                          //             color: nearMe
-                          //                 ? Colors.black
-                          //                 : AppColors.primary,
-                          //           ),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // )
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      // Search Bar
-                      TextField(
-                        onChanged: (text) {
-                          // Perform action when text changes
-                          print('Text changed to: $text');
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          prefixIcon: Icon(Icons.search),
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusColor: AppColors.tertiary,
-                          contentPadding: EdgeInsets.symmetric(vertical: 10.0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.primary),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
+                        // GestureDetector(
+                        //   onTap: _toggle,
+                        //   child: Container(
+                        //     padding: EdgeInsets.symmetric(
+                        //         vertical: 8.0, horizontal: 5.0),
+                        //     decoration: BoxDecoration(
+                        //       color:
+                        //           nearMe ? AppColors.tertiary : Colors.white,
+                        //       border: Border.all(
+                        //           color: nearMe
+                        //               ? AppColors.tertiary
+                        //               : Colors.black),
+                        //       borderRadius: BorderRadius.circular(30),
+                        //     ),
+                        //     child: Row(
+                        //       mainAxisSize: MainAxisSize.min,
+                        //       children: [
+                        //         Icon(
+                        //           nearMe
+                        //               ? Icons.location_on_outlined
+                        //               : Icons.location_off_outlined,
+                        //           size: 18,
+                        //           color: nearMe
+                        //               ? Colors.black
+                        //               : AppColors.primary,
+                        //         ),
+                        //         SizedBox(width: 3),
+                        //         Text(
+                        //           'Near Me',
+                        //           style: TextStyle(
+                        //             fontSize: 14,
+                        //             color: nearMe
+                        //                 ? Colors.black
+                        //                 : AppColors.primary,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // )
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    // Search Bar
+                    TextField(
+                      onChanged: (text) {
+                        // Perform action when text changes
+
+                        print('Text changed to: $text');
+                        _searchActivities(text);
+                      },
+                      onTapOutside: ((event) {
+                        FocusScope.of(context).unfocus();
+                      }),
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        prefixIcon: Icon(Icons.search),
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusColor: AppColors.tertiary,
+                        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.primary),
+                          borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      
-                    ],
-                  ),
-                ),
-                expandedHeight: 80,
-              ),
-
-              eventProvider.isLoading
-                  ? SliverFillRemaining(
-                      child: CustomLoading(text: 'Awesome Stuffs Coming In !') )
-                  : 
-                  SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          Activity activity = eventProvider.activities![index];
-                          return CustomEventCard(
-                              imageUrl: activity.image,
-                              title: activity.title,
-                              location: activity.location,
-                              hostDate: activity.hostDate,
-                              eventID: activity.id,
-                              type: activity.type
-                              );
-                        },
-                        childCount: eventProvider.activities!.length,
-                      ),
                     ),
-           
-            ],
-          ),
+                  ],
+                ),
+              ),
+              expandedHeight: 70,
+            ),
+            if (eventProvider.isLoading)
+              SliverFillRemaining(
+                child: CustomLoading(text: 'Awesome Stuffs Coming In !'),
+              )
+            else if (eventProvider.activities!.isEmpty)
+              SliverFillRemaining(
+                  child: Center(
+                child: Text("No Activities after Filtered.\nPlease try again.",
+                    style: GoogleFonts.nunito(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary)),
+              ))
+            else
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    Activity activity = eventProvider.activities![index];
+                    return CustomEventCard(
+                        imageUrl: activity.image,
+                        title: activity.title,
+                        location: activity.location,
+                        hostDate: activity.hostDate,
+                        eventID: activity.id,
+                        type: activity.type);
+                  },
+                  childCount: eventProvider.activities!.length,
+                ),
+              ),
+          ],
         ),
-      
+      ),
     );
   }
 }
@@ -235,7 +256,7 @@ class _EventsState extends State<Events> {
 //                             selectedColor: AppColors.primary,
 //                           ),
 //                           SizedBox(width: 5),
-                          
+
 //                         ],
 //                       ),
 

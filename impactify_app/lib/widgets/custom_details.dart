@@ -251,7 +251,7 @@ class CustomDetailScreen extends StatelessWidget {
                               Provider.of<ParticipationProvider>(context,
                                   listen: false);
                           try {
-                            await participationProvider.joinActivity(id, type);
+                            await participationProvider.joinActivity(id, type, impointsAdd ?? 0);
 
                             AwesomeDialog(
                               context: parentContext,

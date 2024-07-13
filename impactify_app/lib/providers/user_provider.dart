@@ -8,7 +8,7 @@ import '../models/user.dart';
 
 class UserProvider with ChangeNotifier {
   final UserRepository _userRepository = UserRepository(); 
-  //final AuthProvider _authProvider = AuthProvider();
+  final AuthRepository _authRepository = AuthRepository();
   //final AuthRepository _authRepository = AuthRepository();
 
   auth.User? _firebaseUser;
@@ -30,6 +30,13 @@ class UserProvider with ChangeNotifier {
     if (_firebaseUser != null) {
       await _fetchUserData(_firebaseUser!.uid);
     }
+    notifyListeners();
+  }
+
+  Future<void> fetchUserData() async {
+    
+    await _fetchUserData(_authRepository.currentUser!.uid);
+    
     notifyListeners();
   }
 

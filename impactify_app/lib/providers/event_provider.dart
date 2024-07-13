@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/tag.dart';
 import 'package:impactify_app/repositories/event_repository.dart';
 
 class EventProvider with ChangeNotifier {
@@ -12,11 +13,14 @@ class EventProvider with ChangeNotifier {
   List<Event> _events = [];
   Event? _event;
   List<Activity>? _activities = [];
+  List<Activity>? _allActivities = [];
+  List<Tag> _tags = [];
   bool _isLoading = false;
   LatLng? _center;
   Marker? _marker;
 
   List<Event> get events => _events;
+  List<Tag> get tags => _tags;
   Event? get event => _event;
   List<Activity>? get activities => _activities;
   bool get isLoading => _isLoading;
@@ -37,12 +41,40 @@ class EventProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchAllTags() async {
+    
+    notifyListeners();
+    try {
+      _tags = await _eventRepository.fetchAllTags();
+    } catch (e) {
+      _tags = [];
+      print('Error in EventProvider: $e');
+    }
+    notifyListeners();
+  }
+
   Future<void> fetchAllActivities() async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      _activities = await _eventRepository.fetchAllActivities();
+      _allActivities  = await _eventRepository.fetchAllActivities();
+      _activities = _allActivities;
+
+    } catch (e) {
+      _activities = [];
+      print('Error in EventProvider: $e');
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchFilteredActivities(String filter, List<String> tagIDs) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      _activities = await _eventRepository.fetchFilteredActivities(filter, tagIDs);
     } catch (e) {
       _activities = [];
       print('Error in EventProvider: $e');
@@ -75,6 +107,18 @@ class EventProvider with ChangeNotifier {
       print('Error in EventProvider: $e');
       throw Exception('Error fetching event');
     }
+  }
+
+  void searchActivities(String searchText) {
+    if (searchText.isEmpty || searchText == "") {
+      _activities = _allActivities;
+    } else {
+      _activities = _allActivities!.where((activity) {
+        return activity.title.toLowerCase().contains(searchText.toLowerCase()) ||
+               activity.location.toLowerCase().contains(searchText.toLowerCase());
+      }).toList();
+    }
+    notifyListeners();
   }
 
   

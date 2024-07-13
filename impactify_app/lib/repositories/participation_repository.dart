@@ -9,7 +9,8 @@ class ParticipationRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Future<void> joinActivity(String userID, String id, String type) async {
+  Future<void> joinActivity(
+      String userID, String id, String type, int impoints) async {
     DocumentReference docRef;
     try {
       // Create a new document in the bookmarks collection
@@ -25,6 +26,30 @@ class ParticipationRepository {
       await docRef.update({
         'participationID': docRef.id,
       });
+
+      if (type == 'project') {
+        try {
+          DocumentReference userDocRef =
+              _firestore.collection('users').doc(userID);
+
+          // Fetch the current points
+          DocumentSnapshot userDoc = await userDocRef.get();
+          if (!userDoc.exists) {
+            throw Exception("User not found");
+          }
+
+          int currentPoints = userDoc['impoints'] ?? 0;
+          int updatedPoints = currentPoints + impoints;
+
+          // Update the points field
+          await userDocRef.update({'impoints': updatedPoints});
+
+          print('Points updated successfully');
+        } catch (e) {
+          print('Error updating points: $e');
+          throw e;
+        }
+      }
     } catch (e) {
       throw Exception('Error adding participation: $e');
     }
@@ -33,13 +58,12 @@ class ParticipationRepository {
   Future<void> leaveActivity(String userID, String id, String type) async {
     QuerySnapshot snapshot;
     try {
-      
-        snapshot = await _firestore
-            .collection('participation')
-            .where('userID', isEqualTo: userID)
-            .where('activityID', isEqualTo: id)
-            .get();
-      
+      snapshot = await _firestore
+          .collection('participation')
+          .where('userID', isEqualTo: userID)
+          .where('activityID', isEqualTo: id)
+          .get();
+
       if (snapshot.docs.isNotEmpty) {
         for (var doc in snapshot.docs) {
           await _firestore.collection('participation').doc(doc.id).delete();
@@ -60,7 +84,9 @@ class ParticipationRepository {
           .where('userID', isEqualTo: userID)
           .get();
 
-      return snapshot.docs.map((doc) => Participation.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => Participation.fromFirestore(doc))
+          .toList();
     } catch (e) {
       throw Exception('Error fetching participation: $e');
     }
@@ -93,5 +119,4 @@ class ParticipationRepository {
       throw Exception('Error fetching speech: $e');
     }
   }
-
 }
