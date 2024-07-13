@@ -64,7 +64,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
       ),
       body: FutureBuilder<Speech>(
         future: speechProvider.getSpeechByID(speechID),
-        builder: (context, snapshot) {
+        builder: (pageContext, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CustomLoading(text: 'Loading details...'));
           } else if (snapshot.hasError) {
@@ -102,6 +102,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
                       onBookmarkToggle: () => _saveOrDeleteBookmark(speechID),
                       eventID: project['projectID'],
                       eventTitle: project['title'],
+                      parentContext: pageContext,
                     );
                   }
 

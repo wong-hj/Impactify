@@ -8,6 +8,7 @@ import 'package:impactify_app/screens/user/filterOption.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_cards.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class Events extends StatefulWidget {
@@ -31,9 +32,27 @@ class _EventsState extends State<Events> {
   void initState() {
     super.initState();
     // Fetch events when the widget is built
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestLocationPermission();
       Provider.of<EventProvider>(context, listen: false).fetchAllActivities();
     });
+  }
+
+  Future<void> _requestLocationPermission() async {
+    var status = await Permission.location.status;
+    if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
+      // We didn't ask for permission yet or the permission has been denied before but not permanently.
+      status = await Permission.location.request();
+    }
+    if (status.isGranted) {
+      print('Location permission granted');
+      // You can fetch the location-based events here if needed
+    } else {
+      print('Location permission denied');
+      // Handle the situation when the user denies the permission
+      // Show a dialog or a message to inform the user
+    }
   }
 
   String selectedFilter = 'All';

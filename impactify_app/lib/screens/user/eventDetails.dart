@@ -8,6 +8,7 @@ import 'package:impactify_app/providers/event_provider.dart';
 
 import 'package:impactify_app/widgets/custom_details.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:provider/provider.dart';
 
@@ -94,6 +95,7 @@ class _EventDetailState extends State<EventDetail> {
               sdg: event.sdg,
               onSaved: isSaved,
               onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
+              parentContext: context,
             );
                   
            // } else {

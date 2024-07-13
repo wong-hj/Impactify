@@ -1,9 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:impactify_app/constants/sdglogo.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
+import 'package:impactify_app/providers/participation_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
@@ -26,9 +28,9 @@ class CustomDetailScreen extends StatelessWidget {
   final LatLng? center;
   final bool onSaved;
   final VoidCallback onBookmarkToggle;
-   final String? eventID;
-   final String? eventTitle;
-
+  final String? eventID;
+  final String? eventTitle;
+  final BuildContext parentContext;
 
   const CustomDetailScreen({
     required this.id,
@@ -48,7 +50,7 @@ class CustomDetailScreen extends StatelessWidget {
     required this.onBookmarkToggle,
     this.eventID,
     this.eventTitle,
-
+    required this.parentContext,
     Key? key,
   }) : super(key: key);
 
@@ -58,7 +60,6 @@ class CustomDetailScreen extends StatelessWidget {
     String formattedDate =
         DateFormat('dd MMMM yyyy, HH:mm').format(date).toUpperCase();
     bool isEventOver = date.isBefore(DateTime.now());
-    
 
     return Stack(
       children: [
@@ -77,24 +78,26 @@ class CustomDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  type == "project" ? Positioned(
-                    top: 40,
-                    right: 30,
-                    child: Material(
-                      elevation: 10,
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(
-                                "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdg}.jpg"),
-                            fit: BoxFit.cover,
+                  type == "project"
+                      ? Positioned(
+                          top: 40,
+                          right: 30,
+                          child: Material(
+                            elevation: 10,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdg}.jpg"),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ) : SizedBox.shrink(),
+                        )
+                      : SizedBox.shrink(),
                 ],
               ),
               // Content
@@ -120,8 +123,8 @@ class CustomDetailScreen extends StatelessWidget {
                         ),
                         Spacer(),
                         IconButton(
-                          
-                          icon: Icon(onSaved ? Icons.bookmark : Icons.bookmark_border),
+                          icon: Icon(
+                              onSaved ? Icons.bookmark : Icons.bookmark_border),
                           color: onSaved ? AppColors.primary : Colors.black,
                           onPressed: onBookmarkToggle,
                         ),
@@ -134,37 +137,35 @@ class CustomDetailScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    
-                    type == "speech" ?
-                      Container(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/eventDetail',
-                              arguments: eventID ?? "",
-                            );
-                          },
-                          child: Text(
-                            eventTitle ?? "",
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
+                    type == "speech"
+                        ? Container(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/eventDetail',
+                                  arguments: eventID ?? "",
+                                );
+                              },
+                              child: Text(
+                                eventTitle ?? "",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.tertiary,
+                                foregroundColor: AppColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                minimumSize: Size(100, 30),
+                              ),
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.tertiary,
-                            foregroundColor: AppColors.primary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            minimumSize: Size(100, 30),
-                          ),
-                        ),
-                      )
-                    : 
-                    SizedBox(height: 10),
+                          )
+                        : SizedBox(height: 10),
                     Text.rich(
                       TextSpan(
                         children: [
@@ -244,7 +245,45 @@ class CustomDetailScreen extends StatelessWidget {
                         ),
                       ),
                     SizedBox(height: 16),
-                    CustomPrimaryButton(onPressed: () {}, text: "I'm In!"),
+                    CustomPrimaryButton(
+                        onPressed: () async {
+                          final participationProvider =
+                              Provider.of<ParticipationProvider>(context,
+                                  listen: false);
+                          try {
+                            await participationProvider.joinActivity(id, type);
+
+                            AwesomeDialog(
+                              context: parentContext,
+                              animType: AnimType.scale,
+                              dialogType: DialogType.success,
+                              body: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Center(
+                                  child: Text(
+                                    'Successfully joined activity!\nMark your calendar on ${formattedDate}!',
+                                    style: GoogleFonts.poppins(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                              btnOkOnPress: () {
+                                Navigator.of(parentContext).pop();
+                              },
+                              btnOkColor: AppColors.secondary,
+                            )..show();
+                          } catch (e) {
+                            print('Error joining project: $e');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to join project'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                          
+                        },
+                        text: "I'm In!"),
+                        
                   ],
                 ),
               ),
@@ -271,7 +310,6 @@ class CustomDetailScreen extends StatelessWidget {
       ],
     );
   }
-
 }
 
   

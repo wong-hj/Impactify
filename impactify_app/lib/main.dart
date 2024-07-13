@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/providers/event_provider.dart';
+import 'package:impactify_app/providers/participation_provider.dart';
 import 'package:impactify_app/providers/speech_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => EventProvider()), 
           ChangeNotifierProvider(create: (_) => BookmarkProvider()),
           ChangeNotifierProvider(create: (_) => SpeechProvider()),
+          ChangeNotifierProvider(create: (_) => ParticipationProvider()),
 
       ],
       child: Consumer<AuthProvider>(
