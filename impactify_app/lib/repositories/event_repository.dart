@@ -7,21 +7,6 @@ import 'package:impactify_app/models/tag.dart';
 class EventRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Future<List<Event>> getAllEvents() async {
-  //   try {
-  //     QuerySnapshot snapshot = await _firestore.collection('events').where('status', isEqualTo: 'active').get();
-
-  //     List<Event> events = snapshot.docs.map((doc) {
-  //       print(Event.fromFirestore(doc).toJson().toString());
-  //       return Event.fromFirestore(doc);
-  //     }).toList();
-  //     return events;
-  //   } catch (e) {
-  //     print('Error fetching events: $e');
-  //     throw e;
-  //   }
-
-  // }
 
   Future<List<Event>> getAllEvents() async {
     try {
@@ -132,6 +117,21 @@ class EventRepository {
       }
     } catch (e) {
       print('Error fetching event: $e');
+      throw e;
+    }
+  }
+
+  Future<List<Speech>> fetchSpeechesByProjectID(String eventID) async {
+    List<Speech> speeches = [];
+    try {
+      QuerySnapshot speechSnapshot = await _firestore
+          .collection('speeches')
+          .where('eventID', isEqualTo: eventID)
+          .get();
+      speeches = speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList();
+      return speeches;
+    } catch (e) {
+      print('Error fetching speeches: $e');
       throw e;
     }
   }

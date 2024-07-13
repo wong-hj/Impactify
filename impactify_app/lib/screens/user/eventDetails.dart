@@ -79,28 +79,41 @@ class _EventDetailState extends State<EventDetail> {
           } else {
             Event event = snapshot.data!;
 
-            return CustomDetailScreen(
-              id: event.eventID,
-              image: event.image,
-              type: event.type,
-              title: event.title,
-              hoster: event.organizer,
-              location: event.location,
-              hostDate: event.hostDate,
-              aboutDescription: event.description,
-              impointsAdd: event.impointsAdd,
-              marker: eventProvider.marker,
-              onMapCreated: _onMapCreated,
-              center: eventProvider.center,
-              sdg: event.sdg,
-              onSaved: isSaved,
-              onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
-              parentContext: context,
-            );
+            return FutureBuilder<void>(
+              future: eventProvider.fetchSpeechesByEventID(event.eventID),
+              builder: (context, speechSnapshot) {
+                if (speechSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CustomLoading(text: 'Loading speeches...'));
+                } else if (speechSnapshot.hasError) {
+                  return Center(child: Text('Error: ${speechSnapshot.error}'));
+                } else {
+
+                  return CustomDetailScreen(
+                    id: event.eventID,
+                    image: event.image,
+                    type: event.type,
+                    title: event.title,
+                    hoster: event.organizer,
+                    location: event.location,
+                    hostDate: event.hostDate,
+                    aboutDescription: event.description,
+                    impointsAdd: event.impointsAdd,
+                    marker: eventProvider.marker,
+                    onMapCreated: _onMapCreated,
+                    center: eventProvider.center,
+                    sdg: event.sdg,
+                    onSaved: isSaved,
+                    onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
+                    parentContext: context,
+                    relatedSpeeches: eventProvider.relatedSpeeches,
+                  );
                   
+                }
+              },
+            );
           }
-        },
-      ),
+        }
+      ), 
     );
   }
 

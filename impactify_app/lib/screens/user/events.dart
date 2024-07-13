@@ -169,9 +169,6 @@ class _EventsState extends State<Events> {
                     // Search Bar
                     TextField(
                       onChanged: (text) {
-                        // Perform action when text changes
-
-                        print('Text changed to: $text');
                         _searchActivities(text);
                       },
                       onTapOutside: ((event) {

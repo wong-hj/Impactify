@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:impactify_app/constants/sdglogo.dart';
+import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/providers/participation_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
@@ -31,6 +32,7 @@ class CustomDetailScreen extends StatelessWidget {
   final String? eventID;
   final String? eventTitle;
   final BuildContext parentContext;
+  final List<Speech>? relatedSpeeches;
 
   const CustomDetailScreen({
     required this.id,
@@ -51,6 +53,7 @@ class CustomDetailScreen extends StatelessWidget {
     this.eventID,
     this.eventTitle,
     required this.parentContext,
+    this.relatedSpeeches,
     Key? key,
   }) : super(key: key);
 
@@ -208,6 +211,53 @@ class CustomDetailScreen extends StatelessWidget {
                       style: GoogleFonts.poppins(
                           fontSize: 12, color: AppColors.placeholder),
                     ),
+                    
+                    if (relatedSpeeches!.isNotEmpty) ...[
+                      SizedBox(height: 16),
+                      CustomLargeIconText(
+                          icon: Icons.record_voice_over_outlined,
+                          text: 'Related Speech / Pitch'),
+                      SizedBox(height: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: relatedSpeeches!.map((speech) {
+                          return
+                              // ListTile(
+                              //   title: Text("${speech.title} at ${DateFormat('dd MMMM, HH:mm')
+                              //         .format(speech.hostDate.toDate())}"),
+                              //   onTap: () {
+                              //     Navigator.pushNamed(
+                              //       context,
+                              //       '/speechDetail',
+                              //       arguments: speech.speechID,
+                              //     );
+                              //   },
+                              // );
+
+                              Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context,
+                                    '/speechDetail',
+                                    arguments: speech.speechID,
+                                  );
+                              },
+                              child: Text(
+                                "${speech.title} @ ${DateFormat('dd MMMM, HH:mm').format(speech.hostDate.toDate())}",
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    color: AppColors.placeholder,
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                     SizedBox(height: 16),
                     if (type != "speech") ...[
                       CustomLargeIconText(
@@ -251,7 +301,8 @@ class CustomDetailScreen extends StatelessWidget {
                               Provider.of<ParticipationProvider>(context,
                                   listen: false);
                           try {
-                            await participationProvider.joinActivity(id, type, impointsAdd ?? 0);
+                            await participationProvider.joinActivity(
+                                id, type, impointsAdd ?? 0);
 
                             AwesomeDialog(
                               context: parentContext,
@@ -280,10 +331,8 @@ class CustomDetailScreen extends StatelessWidget {
                               ),
                             );
                           }
-                          
                         },
                         text: "I'm In!"),
-                        
                   ],
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/tag.dart';
 import 'package:impactify_app/repositories/event_repository.dart';
 
@@ -18,6 +19,9 @@ class EventProvider with ChangeNotifier {
   bool _isLoading = false;
   LatLng? _center;
   Marker? _marker;
+  List<Speech> _relatedSpeeches = [];
+
+  
 
   List<Event> get events => _events;
   List<Tag> get tags => _tags;
@@ -26,6 +30,7 @@ class EventProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   LatLng? get center => _center;
   Marker? get marker => _marker;
+  List<Speech> get relatedSpeeches => _relatedSpeeches;
 
   Future<void> fetchAllEvents() async {
     _isLoading = true;
@@ -118,6 +123,11 @@ class EventProvider with ChangeNotifier {
                activity.location.toLowerCase().contains(searchText.toLowerCase());
       }).toList();
     }
+    notifyListeners();
+  }
+
+  Future<void> fetchSpeechesByEventID(String eventID) async {
+    _relatedSpeeches = await _eventRepository.fetchSpeechesByProjectID(eventID);
     notifyListeners();
   }
 
