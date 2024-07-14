@@ -11,6 +11,7 @@ class Speech implements Activity {
   final String description;
   final String type;
   final String eventID;
+  final String? recording;
   final Timestamp createdAt;
   final String status;
   final List<String> tags; 
@@ -25,6 +26,7 @@ class Speech implements Activity {
     required this.description,
     required this.type,
     required this.eventID,
+    this.recording = "",
     required this.createdAt,
     required this.status,
     required this.tags,
@@ -51,6 +53,7 @@ class Speech implements Activity {
       description: data['description'],
       type: data['type'],
       eventID: data['eventID'],
+      recording: data['recording'] ?? null,
       createdAt: data['createdAt'],
       status: data['status'],
       tags: List<String>.from(data['tags'] ?? []),
@@ -69,6 +72,7 @@ class Speech implements Activity {
       'description': description,
       'type': type,
       'eventID': eventID,
+      'recording': recording,
       'createdAt': createdAt,
       'status': status,
       'tags': tags,

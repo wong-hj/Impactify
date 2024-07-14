@@ -100,6 +100,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
                       center: speechProvider.center,
                       onSaved: isSaved,
                       onBookmarkToggle: () => _saveOrDeleteBookmark(speechID),
+                      recordingUrl: speech.recording ?? "",
                       eventID: project['projectID'],
                       eventTitle: project['title'],
                       parentContext: pageContext,

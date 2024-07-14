@@ -59,8 +59,9 @@ class MyApp extends StatelessWidget {
             darkTheme: CustomTheme.darkTheme,
             initialRoute: authProvider.userData != null ? '/homeScreen' : '/',
             routes: {
-              '/': (context) => Recording(),
-              //OnboardingScreens(),
+              '/': (context) => 
+              //Recording(),
+              OnboardingScreens(),
               '/login': (context) => Login(),
               '/signup': (context) => SignUp(),
               '/home': (context) => Home(),
@@ -72,7 +73,8 @@ class MyApp extends StatelessWidget {
               '/homeScreen': (context) => HomeScreen(),
               '/profile': (context) => Profile(),
               '/bookmark': (context) => Bookmark(),
-              '/speechDetail': (context) => SpeechDetail()
+              '/speechDetail': (context) => SpeechDetail(),
+              '/recording': (context) => Recording(),
               //'/schedule': (context) => Schedule(),
             },
           );

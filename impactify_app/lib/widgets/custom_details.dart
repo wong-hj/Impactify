@@ -31,6 +31,7 @@ class CustomDetailScreen extends StatelessWidget {
   final VoidCallback onBookmarkToggle;
   final String? eventID;
   final String? eventTitle;
+  final String? recordingUrl;
   final BuildContext parentContext;
   final List<Speech>? relatedSpeeches;
 
@@ -52,8 +53,9 @@ class CustomDetailScreen extends StatelessWidget {
     required this.onBookmarkToggle,
     this.eventID,
     this.eventTitle,
+    this.recordingUrl,
     required this.parentContext,
-    this.relatedSpeeches,
+    this.relatedSpeeches = const [],
     Key? key,
   }) : super(key: key);
 
@@ -63,7 +65,6 @@ class CustomDetailScreen extends StatelessWidget {
     String formattedDate =
         DateFormat('dd MMMM yyyy, HH:mm').format(date).toUpperCase();
     bool isEventOver = date.isBefore(DateTime.now());
-
     return Stack(
       children: [
         SingleChildScrollView(
@@ -211,7 +212,6 @@ class CustomDetailScreen extends StatelessWidget {
                       style: GoogleFonts.poppins(
                           fontSize: 12, color: AppColors.placeholder),
                     ),
-                    
                     if (relatedSpeeches!.isNotEmpty) ...[
                       SizedBox(height: 16),
                       CustomLargeIconText(
@@ -239,10 +239,10 @@ class CustomDetailScreen extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(
-                                    context,
-                                    '/speechDetail',
-                                    arguments: speech.speechID,
-                                  );
+                                  context,
+                                  '/speechDetail',
+                                  arguments: speech.speechID,
+                                );
                               },
                               child: Text(
                                 "${speech.title} @ ${DateFormat('dd MMMM, HH:mm').format(speech.hostDate.toDate())}",
@@ -343,16 +343,50 @@ class CustomDetailScreen extends StatelessWidget {
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.7),
-              child: Center(
-                child: Text(
-                  'The event has over\nthank you for your support!',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'The event has over\nthank you for your support!',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
+                  if (type == 'speech' || recordingUrl != "")
+                    SizedBox(height: 5),
+                    Text(
+                      'To view the recording of the session:',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/recording',
+                          arguments: recordingUrl,
+                        );
+                      },
+                      child: Text(
+                        'Click Here!',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -361,28 +395,25 @@ class CustomDetailScreen extends StatelessWidget {
   }
 }
 
-  
-  
-  // Future<void> _saveOrDeleleBookmark(bool onSaved, String eventID) async {
-  //   final bookmarkProvider = Provider.of<BookmarkProvider>(context, listen: false);
-    
-  //   if (!onSaved) {
-  //     String bookmarkID = await bookmarkProvider.addBookmark(eventID);
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text('Saved to Bookmark!'),
-  //           backgroundColor: Colors.green,
-  //         ),
-  //       );
-  //   } else {
-  //     await bookmarkProvider.removeBookmark(bookmarkID);
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text('Removed Bookmark!'),
-  //           backgroundColor: Colors.red,
-  //         ),
-  //       );
-  //   }
-    
-  // }
+// Future<void> _saveOrDeleleBookmark(bool onSaved, String eventID) async {
+//   final bookmarkProvider = Provider.of<BookmarkProvider>(context, listen: false);
 
+//   if (!onSaved) {
+//     String bookmarkID = await bookmarkProvider.addBookmark(eventID);
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('Saved to Bookmark!'),
+//           backgroundColor: Colors.green,
+//         ),
+//       );
+//   } else {
+//     await bookmarkProvider.removeBookmark(bookmarkID);
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('Removed Bookmark!'),
+//           backgroundColor: Colors.red,
+//         ),
+//       );
+//   }
+
+// }

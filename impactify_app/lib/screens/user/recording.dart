@@ -1,5 +1,6 @@
-import 'package:better_player/better_player.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class Recording extends StatefulWidget {
   const Recording({super.key});
@@ -9,59 +10,58 @@ class Recording extends StatefulWidget {
 }
 
 class _RecordingState extends State<Recording> {
-  late BetterPlayerController _betterPlayerController;
-  GlobalKey _betterPlayerKey = GlobalKey(); 
-  
+  FlickManager? flickManager;
 
   @override
   void initState() {
-    BetterPlayerConfiguration betterPlayerConfiguration =
-        BetterPlayerConfiguration(
-      aspectRatio: 16 / 9,
-      fit: BoxFit.contain,
-    );
-    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-        //"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-"https://firebasestorage.googleapis.com/v0/b/impactifyapp-1fcfa.appspot.com/o/Timing.mp4?alt=media&token=1f59c474-525e-43b5-ad0f-3718a4cc6728"
-    );
-    _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
-    _betterPlayerController.setupDataSource(dataSource);
-    _betterPlayerController.setBetterPlayerGlobalKey(_betterPlayerKey);
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final String recordingURL = ModalRoute.of(context)!.settings.arguments as String;
+      setState(() {
+        flickManager = FlickManager(
+          videoPlayerController: VideoPlayerController.network(recordingURL),
+        );
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    flickManager?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    
-    _betterPlayerController.isPictureInPictureSupported();
-    
-    return Expanded(
-      child: Column(
-        children: [
-          AspectRatio(
-            aspectRatio: 16 / 9,
-            child: BetterPlayer(
-              controller: _betterPlayerController,
-              key: _betterPlayerKey,
-            ),
-          ),
-      
-          ElevatedButton(
-              child: Text("Show PiP"),
-              onPressed: () async {
-                _betterPlayerController.enablePictureInPicture(_betterPlayerKey);
-              },
-            ),
-      
-            ElevatedButton(
-              child: Text("Disable PiP"),
-              onPressed: () async {
-                _betterPlayerController.disablePictureInPicture();
-              },
-            ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Recording For Speech'),
       ),
+      body: flickManager == null
+          ? Center(child: CircularProgressIndicator())
+          : OrientationBuilder(
+              builder: (context, orientation) {
+                if (orientation == Orientation.landscape) {
+                  flickManager!.flickControlManager!.enterFullscreen();
+                } else {
+                  flickManager!.flickControlManager!.exitFullscreen();
+                }
+                return Center(
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: FlickVideoPlayer(
+                      flickManager: flickManager!,
+                      flickVideoWithControls: FlickVideoWithControls(
+                        controls: FlickPortraitControls(),
+                      ),
+                      flickVideoWithControlsFullscreen: FlickVideoWithControls(
+                        controls: FlickLandscapeControls(),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 }
