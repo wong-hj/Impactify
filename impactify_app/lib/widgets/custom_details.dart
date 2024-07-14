@@ -366,7 +366,7 @@ class CustomDetailScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-
+                    SizedBox(height: 15),
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(
@@ -378,7 +378,7 @@ class CustomDetailScreen extends StatelessWidget {
                       child: Text(
                         'Click Here!',
                         style: GoogleFonts.poppins(
-                          fontSize: 14,
+                          fontSize: 17,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline
