@@ -45,7 +45,8 @@ class CustomOptOutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        foregroundColor: AppColors.primary,// Text color
+        backgroundColor: Colors.white,
+        foregroundColor: AppColors.primary, // Text color
         textStyle: GoogleFonts.poppins(fontSize: 16),
         minimumSize: const Size(double.infinity, 50),
         shape: RoundedRectangleBorder(
@@ -54,6 +55,8 @@ class CustomOptOutButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed,
+
+      
       child: Text(text),
     );
   }
@@ -64,25 +67,22 @@ class CustomIconButton extends StatelessWidget {
   final String imagePath;
   final String text;
 
-
   const CustomIconButton({
     super.key,
     required this.onPressed,
     required this.imagePath,
     required this.text,
-
   });
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        side: const BorderSide(color: AppColors.placeholder)
-      ),
+          padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          side: const BorderSide(color: AppColors.placeholder)),
       onPressed: onPressed,
       child: Row(
         children: [

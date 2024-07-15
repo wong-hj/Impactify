@@ -86,128 +86,112 @@ class CustomHorizontalCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String location;
-  
+  final VoidCallback onTap;
+
   const CustomHorizontalCard({
     required this.imageUrl,
     required this.title,
     required this.location,
+    required this.onTap,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: 10, right: 16),
       width: 200,
-      child: Card(
-        semanticContainer: true,
-        surfaceTintColor: Colors.white,
-        margin: EdgeInsets.only(bottom: 10, right: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        elevation: 4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 130, 
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    ),
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondary,
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 4,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      'SEPT\n11',
-                      style: GoogleFonts.nunito(
-                        fontSize: 10,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Card(
+          semanticContainer: true,
+          surfaceTintColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          elevation: 4,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image
+              Stack(
                 children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.nunito(
-                        fontSize: 14, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis, // Ensure text wraps
-                  ),
-                  Text(
-                    location,
-                    style: GoogleFonts.poppins(
-                        fontSize: 10, color: AppColors.placeholder),
-                    overflow: TextOverflow.ellipsis, // Ensure text wraps
-                  ),
-                  SizedBox(height: 17),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundImage:
-                            NetworkImage('https://via.placeholder.com/40'),
+                  Container(
+                    width: double.infinity,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Enroll !',
-                          style: GoogleFonts.poppins(fontSize: 12),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.tertiary,
-                          foregroundColor: Colors.black, // Button color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: NetworkImage(imageUrl),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 8), // Better padding
+                      decoration: BoxDecoration(
+                        color: AppColors.secondary,
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 4,
+                            offset: Offset(2, 2),
                           ),
-                          minimumSize: Size(100,
-                              30), // Ensure the button fits tightly to its child
-                        ),
+                        ],
                       ),
-                    ],
+                      child: Text(
+                        'SEPT\n11',
+                        style: GoogleFonts.nunito(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.nunito(
+                          fontSize: 14, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis, // Ensure text wraps
+                      maxLines: 2,
+                    ),
+                    Text(
+                      location,
+                      style: GoogleFonts.poppins(
+                          fontSize: 10, color: AppColors.placeholder),
+                      overflow: TextOverflow.ellipsis, // Ensure text wraps
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
 
 class CustomEventCard extends StatelessWidget {
   final String imageUrl;
@@ -216,7 +200,6 @@ class CustomEventCard extends StatelessWidget {
   final Timestamp hostDate;
   final String eventID;
   final String type;
-
 
   const CustomEventCard({
     required this.imageUrl,
@@ -250,7 +233,7 @@ class CustomEventCard extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 180, 
+                  height: 180,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
@@ -292,26 +275,25 @@ class CustomEventCard extends StatelessWidget {
                 Positioned(
                   left: 15,
                   top: 15,
-                  child: 
-
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                      decoration: BoxDecoration(
-                        color:
-                            type == 'project' ? AppColors.tertiary : Colors.orange, 
-                        borderRadius: BorderRadius.circular(5),
-                        
-                      ),
-                      child: Text(
-                        type.toUpperCase(),
-                        style: GoogleFonts.nunito(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: type == 'project' ? AppColors.primary : Colors.yellow, // Text color
-                        ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: type == 'project'
+                          ? AppColors.tertiary
+                          : Colors.orange,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      type.toUpperCase(),
+                      style: GoogleFonts.nunito(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: type == 'project'
+                            ? AppColors.primary
+                            : Colors.yellow, // Text color
                       ),
                     ),
-                  
+                  ),
                 ),
               ],
             ),
@@ -331,7 +313,7 @@ class CustomEventCard extends StatelessWidget {
                     location,
                     style: GoogleFonts.poppins(
                         fontSize: 12, color: AppColors.placeholder),
-                    overflow: TextOverflow.ellipsis, 
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -343,16 +325,17 @@ class CustomEventCard extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          type == "project" ? Navigator.pushNamed(
-                            context,
-                            '/eventDetail',
-                            arguments: eventID,
-                          ) : Navigator.pushNamed(
-                            context,
-                            '/speechDetail',
-                            arguments: eventID,
-                          )
-                          ;
+                          type == "project"
+                              ? Navigator.pushNamed(
+                                  context,
+                                  '/eventDetail',
+                                  arguments: eventID,
+                                )
+                              : Navigator.pushNamed(
+                                  context,
+                                  '/speechDetail',
+                                  arguments: eventID,
+                                );
                         },
                         child: Text(
                           'View More',

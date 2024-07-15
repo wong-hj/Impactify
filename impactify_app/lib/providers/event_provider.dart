@@ -18,18 +18,18 @@ class EventProvider with ChangeNotifier {
   Event? _event;
   List<Activity>? _activities = [];
   List<Activity>? _allActivities = [];
+  List<Activity>? _allUserActivities = [];
   List<Tag> _tags = [];
   bool _isLoading = false;
   LatLng? _center;
   Marker? _marker;
   List<Speech> _relatedSpeeches = [];
 
-  
-
   List<Event> get events => _events;
   List<Tag> get tags => _tags;
   Event? get event => _event;
   List<Activity>? get activities => _activities;
+  List<Activity>? get allUserActivities => _allUserActivities;
   bool get isLoading => _isLoading;
   LatLng? get center => _center;
   Marker? get marker => _marker;
@@ -58,6 +58,22 @@ class EventProvider with ChangeNotifier {
       _tags = [];
       print('Error in EventProvider: $e');
     }
+    notifyListeners();
+  }
+
+  Future<void> fetchAllActivitiesByUserID() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      _allUserActivities  = await _eventRepository.fetchAllActivitiesByUserID(_authRepository.currentUser!.uid);
+      
+
+    } catch (e) {
+      _allUserActivities = [];
+      print('Error in EventProvider: $e');
+    }
+    _isLoading = false;
     notifyListeners();
   }
 

@@ -16,15 +16,19 @@ class _HomeScreenState extends State<HomeScreen> {
   int _page = 0;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   PageController _pageController = PageController();
+  late List<Widget> _pages;
 
-  final List<Widget> _pages = [
-    //Home(onMoreClicked: () => _onMoreClicked()),
-    Home(),
-    Events(),
-    Bookmark(),
-    Community(),
-    Profile(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      Home(),
+      Events(),
+      Bookmark(),
+      Community(),
+      Profile(),
+    ];
+  }
 
   @override
   void dispose() {
@@ -57,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Icon(Icons.person, size: 30, color: AppColors.primary),
         ],
         color: Color.fromARGB(150, 152, 251, 152),
-        //AppColors.tertiary,
         backgroundColor: AppColors.background,
         animationCurve: Curves.easeInOut,
         animationDuration: Duration(milliseconds: 600),

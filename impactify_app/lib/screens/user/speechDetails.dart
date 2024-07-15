@@ -40,11 +40,11 @@ class _SpeechDetailState extends State<SpeechDetail> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkIfBookmarked();
+      _checkIfBookmarkedAndJoined();
     });
   }
 
-  Future<void> _checkIfBookmarked() async {
+  Future<void> _checkIfBookmarkedAndJoined() async {
     final bookmarkProvider =
         Provider.of<BookmarkProvider>(context, listen: false);
     final String speechID =
@@ -52,8 +52,15 @@ class _SpeechDetailState extends State<SpeechDetail> {
 
     bool saved = await bookmarkProvider.isSpeechBookmarked(speechID); //
 
+    final eventProvider =
+        Provider.of<EventProvider>(context, listen: false);
+  
+
+    bool joined = await eventProvider.isActivityJoined(speechID);
+
     setState(() {
       isSaved = saved;
+      isJoined = joined;
     });
   }
 
@@ -73,11 +80,11 @@ class _SpeechDetailState extends State<SpeechDetail> {
         future: speechProvider.getSpeechByID(speechID),
         builder: (pageContext, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CustomLoading(text: 'Loading details...'));
+            return Center(child: CustomLoading(text: 'Loading Details...'));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            return Center(child: Text('Event not found'));
+            return Center(child: Text('Speech not found'));
           } else {
             Speech speech = snapshot.data!;
             return FutureBuilder<Map<String, String>>(
@@ -90,7 +97,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
                     return Center(
                         child: Text('Error: ${projectSnapshot.error}'));
                   } else if (!projectSnapshot.hasData) {
-                    return Center(child: Text('Project not found'));
+                    return Center(child: Text('Speech not found'));
                   } else {
                     Map<String, String> project = projectSnapshot.data!;
                     return CustomDetailScreen(

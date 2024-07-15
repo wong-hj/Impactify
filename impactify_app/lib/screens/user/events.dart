@@ -63,6 +63,7 @@ class _EventsState extends State<Events> {
   void _showFilterOptions() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         return FilterOptions(
           onApplyFilters:
@@ -193,7 +194,7 @@ class _EventsState extends State<Events> {
                   ],
                 ),
               ),
-              expandedHeight: 70,
+              expandedHeight: 80,
             ),
             if (eventProvider.isLoading)
               SliverFillRemaining(

@@ -1,158 +1,289 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/api/articleAPI.dart';
 import 'package:impactify_app/constants/placeholderURL.dart';
+import 'package:impactify_app/models/article.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
+import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_cards.dart';
+import 'package:impactify_app/widgets/custom_loading.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  late Future<List<Article>> articles;
+  @override
+  void initState() {
+    super.initState();
+    // Fetch events when the widget is built
+    articles = fetchArticles();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<EventProvider>(context, listen: false)
+          .fetchAllActivitiesByUserID();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    
+    final eventProvider = Provider.of<EventProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.3,
-            color: Color.fromRGBO(168, 234, 186, 100),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-            child: SingleChildScrollView(
-              child:  Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: eventProvider.isLoading
+          ? Center(child: CustomLoading(text: 'Loading...'))
+          : Stack(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  color: Color.fromRGBO(168, 234, 186, 100),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(2.0), // Border width
-                              decoration: BoxDecoration(
-                                color: AppColors.primary, // Border color
-                                shape: BoxShape.circle,
-                              ),
-                              child: CircleAvatar(
-                                radius: 30,
-                                backgroundImage: NetworkImage(
-                                   userProvider.userData!.profileImage),
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(2.0), // Border width
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary, // Border color
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: NetworkImage(
+                                        userProvider.userData!.profileImage),
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Hello, ${userProvider.userData!.username}!',
+                                  style: GoogleFonts.nunito(fontSize: 15),
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 8),
-                            Text(
-                              'Hello, ${userProvider.userData!.username}!',
-                              style: GoogleFonts.nunito(fontSize: 15),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/schedule');
+                              },
+                              icon: Icon(Icons.calendar_today_rounded),
+                              color: AppColors.primary,
                             ),
                           ],
                         ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/schedule');
-                          },
-                          icon: Icon(Icons.calendar_today_rounded),
-                          color: AppColors.primary,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    // My Events Text
-                    Text(
-                      'My Events',
-                      style: GoogleFonts.nunito(fontSize: 20),
-                    ),
-                    // Pill with Upcoming and Past options
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: Text(
-                              'Upcoming',
-                              style: GoogleFonts.nunito(
-                                fontSize: 14,
-                                color: AppColors.primary,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 16),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Text('Past'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    // Horizontally scrollable cards
-                    SizedBox(
-                      height: 260,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          return CustomHorizontalCard(
-                            imageUrl: 'https://tinyurl.com/4ztj48vp',
-                            title: 'Free Education for Youths',
-                            location: 'Taman Bukit Jalil, Putrajaya',
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    // Upcoming Opportunities Text
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                        SizedBox(height: 10),
+                        // My Events Text
                         Text(
-                          'Upcoming Opportunities',
+                          'My Events',
                           style: GoogleFonts.nunito(fontSize: 20),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            // Add your action here for "more"
+                        SizedBox(height: 16),
+                        eventProvider.allUserActivities!.isEmpty
+                            ? Container(
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: AppColors.secondary,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/fist.png',
+                                          height: 70,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: Text(
+                                            'Hey, you have not participated in any activities yet!',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 15),
+                                    Text(
+                                      'Be sure to check out the amazing activities in Impactify, Stay Impactful!',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            :
+                            // Horizontally scrollable cards
+                            SizedBox(
+                                height: 260,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                      eventProvider.allUserActivities?.length ??
+                                          0,
+                                  itemBuilder: (context, index) {
+                                    final activity =
+                                        eventProvider.allUserActivities![index];
+                                    return CustomHorizontalCard(
+                                      imageUrl: activity.image,
+                                      title: activity.title,
+                                      location: activity.location,
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context,
+                                            activity.type == 'project'
+                                                ? '/eventDetail'
+                                                : '/speechDetail',
+                                            arguments: activity.id);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                        SizedBox(height: 10),
+                        // Upcoming Opportunities Text
+
+                        Text(
+                          'SDG Related Articles',
+                          style: GoogleFonts.nunito(fontSize: 20),
+                        ),
+
+                        SizedBox(height: 20),
+                        // Vertically scrollable cards
+                        FutureBuilder<List<Article>>(
+                          future: articles,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: SpinKitThreeBounce(
+                                  color: AppColors.primary,
+                                  size: 30.0,
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return Center(child: Text('No articles found'));
+                            } else {
+                              return Column(
+                                children: snapshot.data!.take(5).map((article) {
+                                  // DateTime dateTime = article.date;
+                                  // String formattedDate =
+                                  //     DateFormat('MMMM dd, yyyy - HH:mm')
+                                  //         .format(dateTime);
+                                  return Card(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        Uri myURI = Uri.parse(article.url);
+                                        if (!await launchUrl(myURI)) {
+                                          throw Exception(
+                                              'Could not launch $myURI');
+                                        }
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
+                                            ),
+                                            child: Image.network(
+                                                article.thumbnail,
+                                                width: double.infinity,
+                                                fit: BoxFit.cover),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(article.title,
+                                                    style: GoogleFonts.nunito(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                SizedBox(height: 8),
+                                                Text(article.excerpt,
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 10)),
+                                                SizedBox(height: 8),
+                                                
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                    'Published by: ',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 10)),
+                                                    
+                                                    
+                                                    Text(
+                                                    article.publisherName,
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 10),
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 1),
+                                                        SizedBox(width: 2),
+                                                        Image.network(article.publisherFavicon, width: 20),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 8),
+                                                Text('Date: ${article.date}',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 10)),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            }
                           },
-                          child: Text(
-                            'More',
-                            style: GoogleFonts.nunito(
-                              fontSize: 14,
-                              color: AppColors.primary,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    // Vertically scrollable cards
-                    Column(
-                      children: List.generate(5, (index) {
-                        return CustomVerticalCard(
-                          imageUrl: 'https://tinyurl.com/4ztj48vp',
-                          title: 'Free Education for Youths',
-                          location: 'Taman Bukit Jalil, Putrajaya',
-                          date: '2023-06-30',
-                          circleImageUrl: 'https://via.placeholder.com/40',
-                        );
-                      }),
-                    ),
-                  ],
+                  ),
                 ),
-              
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

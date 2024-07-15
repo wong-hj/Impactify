@@ -89,7 +89,7 @@ class _EventDetailState extends State<EventDetail> {
         future: eventProvider.fetchEventByID(eventID),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CustomLoading(text: 'Loading details...'));
+            return Center(child: CustomLoading(text: 'Loading Details...'));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
@@ -101,7 +101,7 @@ class _EventDetailState extends State<EventDetail> {
               future: eventProvider.fetchSpeechesByEventID(event.eventID),
               builder: (context, speechSnapshot) {
                 if (speechSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CustomLoading(text: 'Loading speeches...'));
+                  return SizedBox.shrink();
                 } else if (speechSnapshot.hasError) {
                   return Center(child: Text('Error: ${speechSnapshot.error}'));
                 } else {
