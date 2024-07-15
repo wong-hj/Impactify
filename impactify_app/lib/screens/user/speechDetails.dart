@@ -23,10 +23,17 @@ class SpeechDetail extends StatefulWidget {
 class _SpeechDetailState extends State<SpeechDetail> {
   late GoogleMapController mapController;
   //String? bookmarkID; // State variable to store bookmarkID
-  bool isSaved = false; // State variable to track if the event is bookmarked
+  bool isSaved = false; 
+  bool isJoined = false;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+  }
+
+  void _toggleJoinStatus() {
+    setState(() {
+      isJoined = !isJoined;
+    });
   }
 
   @override
@@ -104,6 +111,8 @@ class _SpeechDetailState extends State<SpeechDetail> {
                       eventID: project['projectID'],
                       eventTitle: project['title'],
                       parentContext: pageContext,
+                      isJoined: isJoined,
+                      toggleJoinStatus: _toggleJoinStatus,
                     );
                   }
 

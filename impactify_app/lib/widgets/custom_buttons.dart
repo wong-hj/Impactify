@@ -31,6 +31,34 @@ class CustomPrimaryButton extends StatelessWidget {
   }
 }
 
+class CustomOptOutButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+
+  const CustomOptOutButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: AppColors.primary,// Text color
+        textStyle: GoogleFonts.poppins(fontSize: 16),
+        minimumSize: const Size(double.infinity, 50),
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: AppColors.placeholder),
+          borderRadius: BorderRadius.circular(5), // Border radius
+        ),
+      ),
+      onPressed: onPressed,
+      child: Text(text),
+    );
+  }
+}
+
 class CustomIconButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String imagePath;

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -23,22 +24,32 @@ class _EventDetailState extends State<EventDetail> {
   late GoogleMapController mapController;
   //String? bookmarkID; // State variable to store bookmarkID
   bool isSaved = false; // State variable to track if the event is bookmarked
+  bool isJoined = false;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
+
+  void _toggleJoinStatus() {
+    setState(() {
+      isJoined = !isJoined;
+    });
+
+    print('toggle called' + isJoined.toString());
+  }
+  
 
   @override
   void initState() {
     
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    _checkIfBookmarked();
+    _checkIfBookmarkedAndJoined();
     });
     
   }
 
-  Future<void> _checkIfBookmarked() async {
+  Future<void> _checkIfBookmarkedAndJoined() async {
     
     final bookmarkProvider =
         Provider.of<BookmarkProvider>(context, listen: false);
@@ -46,9 +57,16 @@ class _EventDetailState extends State<EventDetail> {
    
 
     bool saved = await bookmarkProvider.isProjectBookmarked(eventID);
+
+    final eventProvider =
+        Provider.of<EventProvider>(context, listen: false);
+  
+
+    bool joined = await eventProvider.isActivityJoined(eventID);
     
     setState(() {
       isSaved = saved;
+      isJoined = joined;
     });
   }
   
@@ -106,6 +124,8 @@ class _EventDetailState extends State<EventDetail> {
                     onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
                     parentContext: context,
                     relatedSpeeches: eventProvider.relatedSpeeches,
+                    isJoined: isJoined,
+                    toggleJoinStatus: _toggleJoinStatus,
                   );
                   
                 }

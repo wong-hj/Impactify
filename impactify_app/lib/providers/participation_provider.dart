@@ -42,13 +42,13 @@ class ParticipationProvider with ChangeNotifier {
   }
 
 
-  Future<void> leaveActivity(String activityID, String type) async {
+  Future<void> leaveActivity(String activityID, String type, int impoints) async {
     _isLoading = true;
     notifyListeners();
 
     try {
       await _participationRepository.leaveActivity(
-          _authRepository.currentUser!.uid, activityID, type);
+          _authRepository.currentUser!.uid, activityID, type, impoints);
       //await fetchBookmarksAndProjects();
     } catch (e) {
       print('Error in ParticipationProvider: $e');

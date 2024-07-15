@@ -1,3 +1,4 @@
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,8 @@ class CustomDetailScreen extends StatelessWidget {
   final String? recordingUrl;
   final BuildContext parentContext;
   final List<Speech>? relatedSpeeches;
+  final bool isJoined;
+  final VoidCallback toggleJoinStatus;
 
   const CustomDetailScreen({
     required this.id,
@@ -56,12 +59,14 @@ class CustomDetailScreen extends StatelessWidget {
     this.recordingUrl,
     required this.parentContext,
     this.relatedSpeeches = const [],
+    required this.isJoined,
+    required this.toggleJoinStatus,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    DateTime date = hostDate.toDate();
+    DateTime date =  hostDate.toDate();
     String formattedDate =
         DateFormat('dd MMMM yyyy, HH:mm').format(date).toUpperCase();
     bool isEventOver = date.isBefore(DateTime.now());
@@ -77,12 +82,12 @@ class CustomDetailScreen extends StatelessWidget {
                     height: 300,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(image),
+                        image: NetworkImage( image),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  type == "project"
+                   type == "project"
                       ? Positioned(
                           top: 40,
                           right: 30,
@@ -94,7 +99,7 @@ class CustomDetailScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: NetworkImage(
-                                      "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdg}.jpg"),
+                                      "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${ sdg}.jpg"),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -121,38 +126,38 @@ class CustomDetailScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          type.toUpperCase(),
+                           type.toUpperCase(),
                           style: GoogleFonts.nunito(
                               fontSize: 12, color: AppColors.primary),
                         ),
                         Spacer(),
                         IconButton(
                           icon: Icon(
-                              onSaved ? Icons.bookmark : Icons.bookmark_border),
-                          color: onSaved ? AppColors.primary : Colors.black,
-                          onPressed: onBookmarkToggle,
+                               onSaved ? Icons.bookmark : Icons.bookmark_border),
+                          color:  onSaved ? AppColors.primary : Colors.black,
+                          onPressed:  onBookmarkToggle,
                         ),
                       ],
                     ),
                     Text(
-                      title,
+                       title,
                       style: GoogleFonts.nunito(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    type == "speech"
+                     type == "speech"
                         ? Container(
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.pushNamed(
                                   context,
                                   '/eventDetail',
-                                  arguments: eventID ?? "",
+                                  arguments:  eventID ?? "",
                                 );
                               },
                               child: Text(
-                                eventTitle ?? "",
+                                 eventTitle ?? "",
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -179,7 +184,7 @@ class CustomDetailScreen extends StatelessWidget {
                                 fontSize: 12, color: AppColors.placeholder),
                           ),
                           TextSpan(
-                            text: hoster,
+                            text:  hoster,
                             style: GoogleFonts.nunito(
                                 fontSize: 12,
                                 color: AppColors.primary,
@@ -190,7 +195,7 @@ class CustomDetailScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     CustomIconText(
-                        text: location, icon: Icons.location_on, size: 12),
+                        text:  location, icon: Icons.location_on, size: 12),
                     SizedBox(height: 8),
                     CustomIconText(
                         text: formattedDate,
@@ -207,34 +212,21 @@ class CustomDetailScreen extends StatelessWidget {
                         icon: Icons.info_outlined, text: 'About this Event'),
                     SizedBox(height: 8),
                     Text(
-                      "${aboutDescription} ${type == "project" ? "\n\n**Participation adds ${impointsAdd ?? 0} Impoints!" : ""}",
+                      "${ aboutDescription} ${ type == "project" ? "\n\n**Participation adds ${ impointsAdd ?? 0} Impoints!" : ""}",
                       textAlign: TextAlign.justify,
                       style: GoogleFonts.poppins(
                           fontSize: 12, color: AppColors.placeholder),
                     ),
-                    if (relatedSpeeches!.isNotEmpty) ...[
+                    if ( relatedSpeeches!.isNotEmpty) ...[
                       SizedBox(height: 16),
                       CustomLargeIconText(
                           icon: Icons.record_voice_over_outlined,
-                          text: 'Related Speech / Pitch'),
+                          text: 'Upcoming Related Speech / Pitch'),
                       SizedBox(height: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: relatedSpeeches!.map((speech) {
-                          return
-                              // ListTile(
-                              //   title: Text("${speech.title} at ${DateFormat('dd MMMM, HH:mm')
-                              //         .format(speech.hostDate.toDate())}"),
-                              //   onTap: () {
-                              //     Navigator.pushNamed(
-                              //       context,
-                              //       '/speechDetail',
-                              //       arguments: speech.speechID,
-                              //     );
-                              //   },
-                              // );
-
-                              Padding(
+                        children:  relatedSpeeches!.map((speech) {
+                          return Padding(
                             padding: const EdgeInsets.only(bottom: 5),
                             child: GestureDetector(
                               onTap: () {
@@ -245,12 +237,11 @@ class CustomDetailScreen extends StatelessWidget {
                                 );
                               },
                               child: Text(
-                                "${speech.title} @ ${DateFormat('dd MMMM, HH:mm').format(speech.hostDate.toDate())}",
+                                "${speech.title}   ${DateFormat('dd MMMM, HH:mm').format(speech.hostDate.toDate())}",
                                 textAlign: TextAlign.start,
                                 style: GoogleFonts.poppins(
                                     fontSize: 12,
                                     color: AppColors.placeholder,
-                                    fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline),
                               ),
                             ),
@@ -259,13 +250,13 @@ class CustomDetailScreen extends StatelessWidget {
                       ),
                     ],
                     SizedBox(height: 16),
-                    if (type != "speech") ...[
+                    if ( type != "speech") ...[
                       CustomLargeIconText(
                           icon: Icons.flag_outlined,
                           text: 'Sustainable Development Goals'),
                       SizedBox(height: 8),
                       Text(
-                        'This event tackles SDG ${sdg}',
+                        'This event tackles SDG ${ sdg}',
                         textAlign: TextAlign.justify,
                         style: GoogleFonts.poppins(
                             fontSize: 12, color: AppColors.placeholder),
@@ -275,7 +266,7 @@ class CustomDetailScreen extends StatelessWidget {
                     CustomLargeIconText(
                         icon: Icons.explore_outlined, text: 'Location'),
                     SizedBox(height: 8),
-                    if (center != null && marker != null)
+                    if ( center != null &&  marker != null)
                       Container(
                         height: 200,
                         decoration: BoxDecoration(
@@ -285,54 +276,79 @@ class CustomDetailScreen extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: GoogleMap(
-                            onMapCreated: onMapCreated,
+                            onMapCreated:  onMapCreated,
                             initialCameraPosition: CameraPosition(
-                              target: center!,
+                              target:  center!,
                               zoom: 13.0,
                             ),
-                            markers: {marker!},
+                            markers: { marker!},
                           ),
                         ),
                       ),
                     SizedBox(height: 16),
-                    CustomPrimaryButton(
-                        onPressed: () async {
-                          final participationProvider =
-                              Provider.of<ParticipationProvider>(context,
-                                  listen: false);
-                          try {
-                            await participationProvider.joinActivity(
-                                id, type, impointsAdd ?? 0);
-
-                            AwesomeDialog(
-                              context: parentContext,
-                              animType: AnimType.scale,
-                              dialogType: DialogType.success,
-                              body: Container(
-                                padding: EdgeInsets.all(10),
-                                child: Center(
-                                  child: Text(
-                                    'Successfully joined activity!\nMark your calendar on ${formattedDate}!',
-                                    style: GoogleFonts.poppins(fontSize: 16),
-                                  ),
+                    if(! isJoined)...[
+                      CustomPrimaryButton(
+                          onPressed: () async {
+                            
+                            final participationProvider =
+                                Provider.of<ParticipationProvider>(context,
+                                    listen: false);
+                            try {
+                              await participationProvider.joinActivity(
+                                   id,  type,  impointsAdd ?? 0);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Successfully joined activity!\nMark your calendar on ${formattedDate}!',
+                                      style: GoogleFonts.poppins(fontSize: 16),
+                                    ),
+                                  backgroundColor: Colors.green,
                                 ),
-                              ),
-                              btnOkOnPress: () {
-                                Navigator.of(parentContext).pop();
-                              },
-                              btnOkColor: AppColors.secondary,
-                            )..show();
-                          } catch (e) {
-                            print('Error joining project: $e');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Failed to join project'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                        text: "I'm In!"),
+                              );
+                              toggleJoinStatus();
+
+                            } catch (e) {
+                              print('Error joining project: $e');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to join project'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                          text: "I'm In!"),
+                    ]
+                    else...[
+                      Text("*You are joining this activity, to opt out:", style: GoogleFonts.nunito(color: AppColors.primary)),
+                      SizedBox(height: 2),
+                      CustomOptOutButton(
+                          onPressed: () async {
+                            
+                            final participationProvider =
+                                Provider.of<ParticipationProvider>(context,
+                                    listen: false);
+                            try {
+                              await participationProvider.leaveActivity(
+                                   id,  type,  impointsAdd ?? 0);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Opt out from activity!',
+                                      style: GoogleFonts.poppins(fontSize: 16),
+                                    ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              toggleJoinStatus();
+
+                            } catch (e) {
+                              print('Error opt out project: $e');
+                              
+                            }
+                          },
+                          text: "I wish to Opt Out"),
+                    ]
                   ],
                 ),
               ),
@@ -355,7 +371,7 @@ class CustomDetailScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  if (type == 'speech' || recordingUrl != "")
+                  if ( type == 'speech' ||  recordingUrl != "")
                     SizedBox(height: 5),
                     Text(
                       'To view the recording of the session:',
@@ -372,7 +388,7 @@ class CustomDetailScreen extends StatelessWidget {
                         Navigator.pushNamed(
                           context,
                           '/recording',
-                          arguments: recordingUrl,
+                          arguments:  recordingUrl,
                         );
                       },
                       child: Text(
@@ -392,7 +408,12 @@ class CustomDetailScreen extends StatelessWidget {
           ),
       ],
     );
+
+
+    
   }
+
+  
 }
 
 // Future<void> _saveOrDeleleBookmark(bool onSaved, String eventID) async {

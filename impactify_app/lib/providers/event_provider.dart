@@ -7,10 +7,13 @@ import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/event.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/tag.dart';
+import 'package:impactify_app/repositories/auth_repository.dart';
 import 'package:impactify_app/repositories/event_repository.dart';
 
 class EventProvider with ChangeNotifier {
   final EventRepository _eventRepository = EventRepository();
+  final AuthRepository _authRepository = AuthRepository();
+  
   List<Event> _events = [];
   Event? _event;
   List<Activity>? _activities = [];
@@ -129,6 +132,11 @@ class EventProvider with ChangeNotifier {
   Future<void> fetchSpeechesByEventID(String eventID) async {
     _relatedSpeeches = await _eventRepository.fetchSpeechesByProjectID(eventID);
     notifyListeners();
+  }
+
+  Future<bool> isActivityJoined(String activityID) async {
+    return await _eventRepository.isActivityJoined(
+        _authRepository.currentUser!.uid, activityID);
   }
 
   

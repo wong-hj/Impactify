@@ -136,5 +136,24 @@ class EventRepository {
     }
   }
 
+  Future<bool> isActivityJoined(
+      String userID, String id) async {
+    QuerySnapshot snapshot;
+    try {
+      
+        snapshot = await _firestore
+            .collection('participation')
+            .where('userID', isEqualTo: userID)
+            .where('activityID', isEqualTo: id)
+            .get();
+      
+      bool isJoined = snapshot.docs.isNotEmpty;
+       return isJoined;
+    } catch (e) {
+      print('Error checking bookmark: $e');
+      return false;
+    }
+  }
+
   
 }

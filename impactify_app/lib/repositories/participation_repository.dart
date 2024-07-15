@@ -55,7 +55,7 @@ class ParticipationRepository {
     }
   }
 
-  Future<void> leaveActivity(String userID, String id, String type) async {
+  Future<void> leaveActivity(String userID, String id, String type, int impoints) async {
     QuerySnapshot snapshot;
     try {
       snapshot = await _firestore
@@ -71,6 +71,30 @@ class ParticipationRepository {
       } else {
         throw Exception(
             'No participation found for userID: $userID and activityID: $id');
+      }
+
+      if (type == 'project') {
+        try {
+          DocumentReference userDocRef =
+              _firestore.collection('users').doc(userID);
+
+          // Fetch the current points
+          DocumentSnapshot userDoc = await userDocRef.get();
+          if (!userDoc.exists) {
+            throw Exception("User not found");
+          }
+
+          int currentPoints = userDoc['impoints'] ?? 0;
+          int updatedPoints = currentPoints - impoints;
+
+          // Update the points field
+          await userDocRef.update({'impoints': updatedPoints});
+
+          print('Points updated successfully');
+        } catch (e) {
+          print('Error updating points: $e');
+          throw e;
+        }
       }
     } catch (e) {
       throw Exception('Error deleting participation: $e');
