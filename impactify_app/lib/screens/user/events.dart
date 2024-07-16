@@ -6,6 +6,7 @@ import 'package:impactify_app/models/event.dart';
 import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/screens/user/filterOption.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
+import 'package:impactify_app/util/filter.dart';
 import 'package:impactify_app/widgets/custom_cards.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -62,34 +63,6 @@ class _EventsState extends State<Events> {
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
 
-  void _showFilterOptions() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return FilterOptions(
-          onApplyFilters:
-              (String filter, List<String> tags, List<String> tagIDs, DateTime? startDate, DateTime? endDate,) {
-            setState(() {
-              selectedFilter = filter;
-              selectedTags = tags;
-              selectedTagIDs = tagIDs;
-            selectedStartDate = startDate;
-            selectedEndDate = endDate;
-            });
-            Provider.of<EventProvider>(context, listen: false)
-                .fetchFilteredActivities(filter, tagIDs, startDate, endDate);
-          },
-          selectedFilter: selectedFilter,
-          selectedTags: selectedTags,
-          selectedTagIDs: selectedTagIDs,
-        selectedStartDate: selectedStartDate,
-        selectedEndDate: selectedEndDate,
-        );
-      },
-    );
-  }
-
   void _searchActivities(String text) {
     setState(() {
       searchText = text;
@@ -125,7 +98,33 @@ class _EventsState extends State<Events> {
                               fontWeight: FontWeight.bold),
                         ),
                         IconButton(
-                          onPressed: _showFilterOptions,
+                          onPressed: () {
+                            showFilterOptions(
+                              context: context,
+                              selectedFilter: selectedFilter,
+                              selectedTags: selectedTags,
+                              selectedTagIDs: selectedTagIDs,
+                              selectedStartDate: selectedStartDate,
+                              selectedEndDate: selectedEndDate,
+                              onApplyFilters: (String filter,
+                                  List<String> tags,
+                                  List<String> tagIDs,
+                                  DateTime? startDate,
+                                  DateTime? endDate) {
+                                setState(() {
+                                  selectedFilter = filter;
+                                  selectedTags = tags;
+                                  selectedTagIDs = tagIDs;
+                                  selectedStartDate = startDate;
+                                  selectedEndDate = endDate;
+                                });
+                                Provider.of<EventProvider>(context,
+                                        listen: false)
+                                    .fetchFilteredActivities(
+                                        filter, tagIDs, startDate, endDate);
+                              },
+                            );
+                          },
                           icon: Icon(Icons.filter_list),
                           color: AppColors.primary,
                         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:image_picker/image_picker.dart';
+import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/repositories/auth_repository.dart';
 import '../repositories/user_repository.dart';
@@ -13,9 +14,13 @@ class UserProvider with ChangeNotifier {
 
   auth.User? _firebaseUser;
   User? _userData;
+  bool? _isHistoryLoading;
+  List<Activity>? _history = [];
 
   auth.User? get firebaseUser => _firebaseUser;
-   User? get userData => _userData;
+  User? get userData => _userData;
+  bool? get isHistoryLoading => _isHistoryLoading;
+  List<Activity>? get history => _history;
 
   UserProvider(auth.User? firebaseUser) {
     _firebaseUser = firebaseUser;
@@ -60,4 +65,23 @@ class UserProvider with ChangeNotifier {
     _userData = null;
     notifyListeners();
   }
+
+  Future<void> fetchUserHistory() async {
+    _isHistoryLoading = true;
+      notifyListeners();  
+
+    try {
+      _history  = await _userRepository.fetchUserHistory(_authRepository.currentUser!.uid);
+      
+
+    } catch (e) {
+      _history = [];
+      print('Error in EventProvider: $e');
+    }
+
+    _isHistoryLoading = false;
+    notifyListeners();
+  }
+
+  
 }

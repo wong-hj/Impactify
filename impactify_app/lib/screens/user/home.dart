@@ -96,45 +96,56 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 16),
                         eventProvider.allUserActivities!.isEmpty
-                            ? Container(
-                                padding: EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: AppColors.secondary,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          'assets/fist.png',
-                                          height: 70,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: Text(
-                                            'Hey, you have not participated in any activities yet!',
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      'Be sure to check out the amazing activities in Impactify, Stay Impactful!',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: Colors.white,
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(5.0),
+                                child: Container(
+                                  padding: EdgeInsets.all(16),
+                                  margin: const EdgeInsets.only(bottom: 5.0),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondary,
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 10.0,
                                       ),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            'assets/fist.png',
+                                            height: 70,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: Text(
+                                              'Hey, you have not participated in any activities yet!',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 15),
+                                      Text(
+                                        'Be sure to check out the amazing activities in Impactify, Stay Impactful!',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               )
                             :
@@ -260,7 +271,7 @@ class _HomeState extends State<Home> {
                                                         style:
                                                             GoogleFonts.poppins(
                                                                 fontSize: 10)),
-                                                                Image.network(
+                                                    Image.network(
                                                       article.publisherFavicon,
                                                       width: 20,
                                                       fit: BoxFit.cover,
@@ -284,8 +295,6 @@ class _HomeState extends State<Home> {
                                                               .ellipsis,
                                                           maxLines: 1),
                                                     ),
-                                                    
-                                                    
                                                   ],
                                                 ),
                                                 SizedBox(height: 8),

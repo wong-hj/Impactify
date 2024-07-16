@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +8,7 @@ import 'package:impactify_app/screens/user/editProfile.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -19,7 +19,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
-  
   late TabController _tabController;
 
   @override
@@ -27,9 +26,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userProvider =
-          Provider.of<UserProvider>(context, listen: false);
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
       userProvider.fetchUserData();
+      userProvider.fetchUserHistory();
     });
   }
 
@@ -47,9 +46,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-         await context
-              .read<AuthProvider>()
-              .signOut();
+          await context.read<AuthProvider>().signOut();
           if (context.read<AuthProvider>().user == null) {
             Navigator.pushReplacementNamed(context, '/login');
           }
@@ -102,8 +99,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     ),
                     child: CircleAvatar(
                       radius: 30,
-                      backgroundImage:
-                          NetworkImage(userProvider.userData?.profileImage ?? userPlaceholder),
+                      backgroundImage: NetworkImage(
+                          userProvider.userData?.profileImage ??
+                              userPlaceholder),
                     ),
                   ),
                 ],
@@ -141,7 +139,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          CustomNumberText(number: '${userProvider.userData?.impoints ?? 0}', text: 'Impoints'),
+                          CustomNumberText(
+                              number: '${userProvider.userData?.impoints ?? 0}',
+                              text: 'Impoints'),
                           CustomNumberText(number: '10', text: 'Posts'),
                           CustomNumberText(number: '6', text: 'Participations'),
                           CustomNumberText(number: '4', text: 'Locations'),
@@ -246,94 +246,97 @@ class HistoryContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 200,
-        child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: 3,
-          itemBuilder: (context, index) {
-            return Card(
-              surfaceTintColor: Colors.white,
-              margin: EdgeInsets.only(bottom: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              elevation: 3,
-              child: Container(
-                height: 80,
-                child: Row(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                        ),
-                        image: DecorationImage(
-                          image: NetworkImage('https://tinyurl.com/4ztj48vp'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+    final userProvider = Provider.of<UserProvider>(context);
+
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: userProvider.history!.length,
+      itemBuilder: (context, index) {
+        final history = userProvider.history![index];
+
+        DateTime date = history.hostDate.toDate();
+        String formattedDate = DateFormat('dd MMMM yyyy, HH:mm').format(date);
+        return Card(
+          surfaceTintColor: Colors.white,
+          margin: EdgeInsets.only(bottom: 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          elevation: 3,
+          child: Container(
+            height: 80,
+            child: Row(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Trees Planting',
-                              style: GoogleFonts.nunito(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            Text(
-                              '2024-09-11',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 10, color: AppColors.placeholder),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      ),
+                    image: DecorationImage(
+                      image: NetworkImage(history.image),
+                      fit: BoxFit.cover,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                '+20',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.secondary,
-                                ),
-                              ),
-                              SizedBox(width: 2),
-                              Icon(
-                                Icons.park_rounded,
-                                color: AppColors.secondary,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            );
-          },
-        ));
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          history.title,
+                          style: GoogleFonts.nunito(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        Text(
+                          "You participated this activity on ${formattedDate}!",
+                          style: GoogleFonts.poppins(
+                              fontSize: 12, color: AppColors.placeholder),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       Row(
+                //         children: [
+                //           Text(
+                //             '+20',
+                //             style: GoogleFonts.nunito(
+                //               fontSize: 12,
+                //               fontWeight: FontWeight.bold,
+                //               color: AppColors.secondary,
+                //             ),
+                //           ),
+                //           SizedBox(width: 2),
+                //           Icon(
+                //             Icons.park_rounded,
+                //             color: AppColors.secondary,
+                //             size: 16,
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

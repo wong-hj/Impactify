@@ -20,7 +20,6 @@ class EventProvider with ChangeNotifier {
   List<Activity>? _allActivities = [];
   List<Activity>? _allUserActivities = [];
   List<Activity> _pastActivities = [];
-  
   List<Tag> _tags = [];
   bool _isLoading = false;
   LatLng? _center;

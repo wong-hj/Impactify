@@ -138,7 +138,7 @@ class CommunityPost extends StatelessWidget {
         Text(
           postTitle,
           style: GoogleFonts.nunito(
-            fontSize: 17,
+            fontSize: 19,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -147,7 +147,7 @@ class CommunityPost extends StatelessWidget {
         Text(
           postDescription,
           style: GoogleFonts.poppins(
-            fontSize: 11,
+            fontSize: 13,
             color: AppColors.placeholder,
           ),
         ),

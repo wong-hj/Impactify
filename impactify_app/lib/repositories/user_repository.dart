@@ -4,6 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:impactify_app/models/activity.dart';
+import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/user.dart';
 
 class UserRepository {
@@ -51,5 +54,51 @@ class UserRepository {
       throw e;
     }
   }
+
+  Future<List<Activity>> fetchUserHistory(String userID) async {
+    List<Activity> history = [];
+    try {
+      QuerySnapshot participationSnapshot = await _firestore
+          .collection('participation')
+          .where('userID', isEqualTo: userID)
+          .get();
+
+      // Extract activity IDs from participations
+      List<String> activityIDs = participationSnapshot.docs
+          .map((doc) => doc['activityID'] as String)
+          .toList();
+
+      if (activityIDs.isEmpty) {
+        return history;
+      }
+
+      // Fetch events matching the activity IDs and filter them
+      QuerySnapshot eventSnapshot = await _firestore
+          .collection('events')
+          .where('eventID', whereIn: activityIDs)
+          .where('hostDate', isLessThan: Timestamp.now())
+          .get();
+
+      history.addAll(
+          eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
+
+      // Fetch speeches matching the activity IDs and filter them
+      QuerySnapshot speechSnapshot = await _firestore
+          .collection('speeches')
+          .where('speechID', whereIn: activityIDs)
+          .where('hostDate', isLessThan: Timestamp.now())
+          .get();
+
+      history.addAll(
+          speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
+          
+      return history;
+    } catch (e) {
+      print('Error fetching activities: $e');
+      throw e;
+    }
+  }
+
+  
 
 }

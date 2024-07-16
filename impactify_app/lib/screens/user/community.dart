@@ -5,6 +5,7 @@ import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/screens/user/addPost.dart';
 import 'package:impactify_app/screens/user/filterOption.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
+import 'package:impactify_app/util/filter.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:impactify_app/widgets/custom_posts.dart';
 import 'package:provider/provider.dart';
@@ -31,40 +32,8 @@ class _CommunityState extends State<Community> {
   String selectedFilter = 'All';
   List<String> selectedTags = [];
   List<String> selectedTagIDs = [];
-  String searchText = '';
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
-
-  void _showFilterOptions() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return FilterOptions(
-          onApplyFilters: (
-            String filter,
-            List<String> tags,
-            List<String> tagIDs,
-            DateTime? startDate,
-            DateTime? endDate,
-          ) {
-            setState(() {
-              selectedFilter = filter;
-              selectedTags = tags;
-              selectedTagIDs = tagIDs;
-            });
-            Provider.of<PostProvider>(context, listen: false)
-                .fetchFilteredPosts(filter, tagIDs, startDate, endDate);
-          },
-          selectedFilter: selectedFilter,
-          selectedTags: selectedTags,
-          selectedTagIDs: selectedTagIDs,
-          selectedStartDate: selectedStartDate,
-          selectedEndDate: selectedEndDate,
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +80,32 @@ class _CommunityState extends State<Community> {
                     ),
                   ),
                   IconButton(
-                    onPressed: _showFilterOptions,
+                    onPressed: () {
+                      showFilterOptions(
+                        context: context,
+                        selectedFilter: selectedFilter,
+                        selectedTags: selectedTags,
+                        selectedTagIDs: selectedTagIDs,
+                        selectedStartDate: selectedStartDate,
+                        selectedEndDate: selectedEndDate,
+                        onApplyFilters: (String filter,
+                            List<String> tags,
+                            List<String> tagIDs,
+                            DateTime? startDate,
+                            DateTime? endDate) {
+                          setState(() {
+                            selectedFilter = filter;
+                            selectedTags = tags;
+                            selectedTagIDs = tagIDs;
+                            selectedStartDate = startDate;
+                            selectedEndDate = endDate;
+                          });
+                          Provider.of<PostProvider>(context, listen: false)
+                              .fetchFilteredPosts(
+                                  filter, tagIDs, startDate, endDate);
+                        },
+                      );
+                    },
                     icon: Icon(Icons.filter_list),
                     color: AppColors.primary,
                   ),
