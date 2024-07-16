@@ -96,12 +96,12 @@ class EventProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchFilteredActivities(String filter, List<String> tagIDs) async {
+  Future<void> fetchFilteredActivities(String filter, List<String> tagIDs, DateTime? startDate, DateTime? endDate) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      _activities = await _eventRepository.fetchFilteredActivities(filter, tagIDs);
+      _activities = await _eventRepository.fetchFilteredActivities(filter, tagIDs, startDate, endDate);
     } catch (e) {
       _activities = [];
       print('Error in EventProvider: $e');

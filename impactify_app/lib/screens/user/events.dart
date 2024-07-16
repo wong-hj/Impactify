@@ -59,6 +59,8 @@ class _EventsState extends State<Events> {
   List<String> selectedTags = [];
   List<String> selectedTagIDs = [];
   String searchText = '';
+  DateTime? selectedStartDate;
+  DateTime? selectedEndDate;
 
   void _showFilterOptions() {
     showModalBottomSheet(
@@ -67,18 +69,22 @@ class _EventsState extends State<Events> {
       builder: (context) {
         return FilterOptions(
           onApplyFilters:
-              (String filter, List<String> tags, List<String> tagIDs) {
+              (String filter, List<String> tags, List<String> tagIDs, DateTime? startDate, DateTime? endDate,) {
             setState(() {
               selectedFilter = filter;
               selectedTags = tags;
               selectedTagIDs = tagIDs;
+            selectedStartDate = startDate;
+            selectedEndDate = endDate;
             });
             Provider.of<EventProvider>(context, listen: false)
-                .fetchFilteredActivities(filter, tagIDs);
+                .fetchFilteredActivities(filter, tagIDs, startDate, endDate);
           },
           selectedFilter: selectedFilter,
           selectedTags: selectedTags,
           selectedTagIDs: selectedTagIDs,
+        selectedStartDate: selectedStartDate,
+        selectedEndDate: selectedEndDate,
         );
       },
     );
@@ -118,52 +124,11 @@ class _EventsState extends State<Events> {
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold),
                         ),
-                        //Spacer(),
                         IconButton(
                           onPressed: _showFilterOptions,
                           icon: Icon(Icons.filter_list),
                           color: AppColors.primary,
                         ),
-                        // GestureDetector(
-                        //   onTap: _toggle,
-                        //   child: Container(
-                        //     padding: EdgeInsets.symmetric(
-                        //         vertical: 8.0, horizontal: 5.0),
-                        //     decoration: BoxDecoration(
-                        //       color:
-                        //           nearMe ? AppColors.tertiary : Colors.white,
-                        //       border: Border.all(
-                        //           color: nearMe
-                        //               ? AppColors.tertiary
-                        //               : Colors.black),
-                        //       borderRadius: BorderRadius.circular(30),
-                        //     ),
-                        //     child: Row(
-                        //       mainAxisSize: MainAxisSize.min,
-                        //       children: [
-                        //         Icon(
-                        //           nearMe
-                        //               ? Icons.location_on_outlined
-                        //               : Icons.location_off_outlined,
-                        //           size: 18,
-                        //           color: nearMe
-                        //               ? Colors.black
-                        //               : AppColors.primary,
-                        //         ),
-                        //         SizedBox(width: 3),
-                        //         Text(
-                        //           'Near Me',
-                        //           style: TextStyle(
-                        //             fontSize: 14,
-                        //             color: nearMe
-                        //                 ? Colors.black
-                        //                 : AppColors.primary,
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // )
                       ],
                     ),
                     SizedBox(height: 10),
@@ -231,65 +196,3 @@ class _EventsState extends State<Events> {
     );
   }
 }
-// SizedBox(height: 10),
-//                       // Filtering Pills
-//                       Row(
-//                         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                         children: [
-//                           FilterChip(
-//                             elevation: 3,
-//                             label: Text('All',
-//                                 style: GoogleFonts.poppins(
-//                                     color: _isSelected[0]
-//                                         ? Colors.white
-//                                         : Colors.black)),
-//                             onSelected: (bool value) {
-//                               setState(() {
-//                                 _isSelected[0] = value;
-//                               });
-//                             },
-//                             selected: _isSelected[0],
-//                             checkmarkColor: Colors.white,
-//                             backgroundColor: Colors.white,
-//                             selectedColor: AppColors.primary,
-//                           ),
-//                           SizedBox(width: 5),
-
-//                         ],
-//                       ),
-
-// FilterChip(
-//                             elevation: 3,
-//                             label: Text('Projects',
-//                                 style: GoogleFonts.poppins(
-//                                     color: _isSelected[1]
-//                                         ? Colors.white
-//                                         : Colors.black)),
-//                             onSelected: (bool value) {
-//                               setState(() {
-//                                 _isSelected[1] = value;
-//                               });
-//                             },
-//                             selected: _isSelected[1],
-//                             checkmarkColor: Colors.white,
-//                             backgroundColor: Colors.white,
-//                             selectedColor: AppColors.primary,
-//                           ),
-//                           SizedBox(width: 5),
-//                           FilterChip(
-//                             elevation: 3,
-//                             label: Text('Speech',
-//                                 style: GoogleFonts.poppins(
-//                                     color: _isSelected[2]
-//                                         ? Colors.white
-//                                         : Colors.black)),
-//                             onSelected: (bool value) {
-//                               setState(() {
-//                                 _isSelected[2] = value;
-//                               });
-//                             },
-//                             selected: _isSelected[2],
-//                             checkmarkColor: Colors.white,
-//                             backgroundColor: Colors.white,
-//                             selectedColor: AppColors.primary,
-//                           ),

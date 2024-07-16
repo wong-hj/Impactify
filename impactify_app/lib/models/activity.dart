@@ -10,4 +10,5 @@ abstract class Activity {
   Timestamp get createdAt;
   String get type;
   String get status;
+  List<String> get tags;
 }

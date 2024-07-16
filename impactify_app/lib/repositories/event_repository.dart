@@ -7,7 +7,6 @@ import 'package:impactify_app/models/tag.dart';
 class EventRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
   Future<List<Event>> getAllEvents() async {
     try {
       QuerySnapshot snapshot = await _firestore
@@ -32,7 +31,6 @@ class EventRepository {
       QuerySnapshot snapshot = await _firestore.collection('tags').get();
 
       return snapshot.docs.map((doc) => Tag.fromFirestore(doc)).toList();
-
     } catch (e) {
       print('Error fetching events: $e');
       throw e;
@@ -40,7 +38,6 @@ class EventRepository {
   }
 
   Future<List<Activity>> fetchAllActivities() async {
-    
     //await Future.delayed(Duration(seconds: 1));
     List<Activity> activities = [];
     try {
@@ -54,20 +51,18 @@ class EventRepository {
           eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
 
       QuerySnapshot speechSnapshot = await _firestore
-          
           .collection('speeches')
           .where('status', isEqualTo: 'active')
           .get();
-           
+
       activities.addAll(
           speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
-          
-         
-           // Print each activity
-    activities.forEach((activity) {
-      print(activity.toString());
-    });
-    
+
+      // Print each activity
+      activities.forEach((activity) {
+        print(activity.toString());
+      });
+
       return activities;
     } catch (e) {
       print('Error fetching activities: $e');
@@ -76,7 +71,6 @@ class EventRepository {
   }
 
   Future<List<Activity>> fetchAllActivitiesByUserID(String userID) async {
-    
     List<Activity> activities = [];
     try {
       QuerySnapshot participationSnapshot = await _firestore
@@ -85,69 +79,90 @@ class EventRepository {
           .get();
 
       // Extract activity IDs from participations
-    List<String> activityIDs = participationSnapshot.docs
-        .map((doc) => doc['activityID'] as String)
-        .toList();
+      List<String> activityIDs = participationSnapshot.docs
+          .map((doc) => doc['activityID'] as String)
+          .toList();
 
-    if (activityIDs.isEmpty) {
-      return activities;
-    }
+      if (activityIDs.isEmpty) {
+        return activities;
+      }
 
-    // Fetch events matching the activity IDs and filter them
-    QuerySnapshot eventSnapshot = await _firestore
-        .collection('events')
-        .where('eventID', whereIn: activityIDs)
-        .where('status', isEqualTo: 'active')
-        .where('hostDate', isGreaterThan: Timestamp.now())
-        .get();
+      // Fetch events matching the activity IDs and filter them
+      QuerySnapshot eventSnapshot = await _firestore
+          .collection('events')
+          .where('eventID', whereIn: activityIDs)
+          .where('status', isEqualTo: 'active')
+          .where('hostDate', isGreaterThan: Timestamp.now())
+          .get();
 
       activities.addAll(
-        eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
+          eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
 
       // Fetch speeches matching the activity IDs and filter them
-    QuerySnapshot speechSnapshot = await _firestore
-        .collection('speeches')
-        .where('speechID', whereIn: activityIDs)
-        .where('status', isEqualTo: 'active')
-        .where('hostDate', isGreaterThan: Timestamp.now())
-        .get();
+      QuerySnapshot speechSnapshot = await _firestore
+          .collection('speeches')
+          .where('speechID', whereIn: activityIDs)
+          .where('status', isEqualTo: 'active')
+          .where('hostDate', isGreaterThan: Timestamp.now())
+          .get();
 
-    activities.addAll(
-        speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
+      activities.addAll(
+          speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
 
-    // Print each activity (for debugging purposes)
-    activities.forEach((activity) {
-      print(activity.toString());
-    });
+      // Print each activity (for debugging purposes)
+      activities.forEach((activity) {
+        print(activity.toString());
+      });
 
-    return activities;
+      return activities;
     } catch (e) {
       print('Error fetching activities: $e');
       throw e;
     }
   }
 
-  Future<List<Activity>> fetchFilteredActivities(String filter, List<String> tagIDs) async {
+  Future<List<Activity>> fetchFilteredActivities(String filter,
+      List<String> tagIDs, DateTime? startDate, DateTime? endDate) async {
     List<Activity> activities = [];
     try {
       if (filter == 'All' || filter == 'Project') {
-        Query eventQuery = _firestore.collection('events').where('status', isEqualTo: 'active');
+        Query eventQuery = _firestore
+            .collection('events')
+            .where('status', isEqualTo: 'active');
         if (tagIDs.isNotEmpty) {
           eventQuery = eventQuery.where('tags', arrayContainsAny: tagIDs);
         }
-        QuerySnapshot eventSnapshot = await eventQuery.where('hostDate', isGreaterThan: Timestamp.now()).get();
+        if (startDate != null && endDate != null) {
+          eventQuery = eventQuery.where('hostDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+          eventQuery = eventQuery.where('hostDate',
+              isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        } else {
+          eventQuery =
+              eventQuery.where('hostDate', isGreaterThan: Timestamp.now());
+        }
+        QuerySnapshot eventSnapshot = await eventQuery.get();
         activities.addAll(
             eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
       }
 
       if (filter == 'All' || filter == 'Speech') {
-        Query speechQuery = _firestore.collection('speeches').where('status', isEqualTo: 'active');
+        Query speechQuery = _firestore
+            .collection('speeches')
+            .where('status', isEqualTo: 'active');
         if (tagIDs.isNotEmpty) {
           speechQuery = speechQuery.where('tags', arrayContainsAny: tagIDs);
         }
+        if (startDate != null && endDate != null) {
+          speechQuery = speechQuery.where('hostDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+          speechQuery = speechQuery.where('hostDate',
+              isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        }
         QuerySnapshot speechSnapshot = await speechQuery.get();
-        activities.addAll(
-            speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
+        activities.addAll(speechSnapshot.docs
+            .map((doc) => Speech.fromFirestore(doc))
+            .toList());
       }
 
       return activities;
@@ -180,7 +195,8 @@ class EventRepository {
           .collection('speeches')
           .where('eventID', isEqualTo: eventID)
           .get();
-      speeches = speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList();
+      speeches =
+          speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList();
       return speeches;
     } catch (e) {
       print('Error fetching speeches: $e');
@@ -189,63 +205,61 @@ class EventRepository {
   }
 
   Future<List<Activity>> fetchPastParticipatedActivities(String userID) async {
-  List<Activity> activities = [];
-  Timestamp now = Timestamp.now();
+    List<Activity> activities = [];
+    Timestamp now = Timestamp.now();
 
-  try {
-    // Fetch participations by userID
-    QuerySnapshot participationSnapshot = await FirebaseFirestore.instance
-        .collection('participation')
-        .where('userID', isEqualTo: userID)
-        .get();
+    try {
+      // Fetch participations by userID
+      QuerySnapshot participationSnapshot = await FirebaseFirestore.instance
+          .collection('participation')
+          .where('userID', isEqualTo: userID)
+          .get();
 
-    List<String> activityIDs = participationSnapshot.docs.map((doc) {
-      return doc['activityID'] as String;
-    }).toList();
+      List<String> activityIDs = participationSnapshot.docs.map((doc) {
+        return doc['activityID'] as String;
+      }).toList();
 
-    // Fetch events
-    QuerySnapshot eventSnapshot = await FirebaseFirestore.instance
-        .collection('events')
-        .where('eventID', whereIn: activityIDs)
-        .where('hostDate', isLessThan: now)
-        .get();
+      // Fetch events
+      QuerySnapshot eventSnapshot = await FirebaseFirestore.instance
+          .collection('events')
+          .where('eventID', whereIn: activityIDs)
+          .where('hostDate', isLessThan: now)
+          .get();
 
-    activities.addAll(eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
+      activities.addAll(
+          eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
 
-    // Fetch speeches
-    QuerySnapshot speechSnapshot = await FirebaseFirestore.instance
-        .collection('speeches')
-        .where('speechID', whereIn: activityIDs)
-        .where('hostDate', isLessThan: now)
-        .get();
+      // Fetch speeches
+      QuerySnapshot speechSnapshot = await FirebaseFirestore.instance
+          .collection('speeches')
+          .where('speechID', whereIn: activityIDs)
+          .where('hostDate', isLessThan: now)
+          .get();
 
-    activities.addAll(speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
+      activities.addAll(
+          speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
 
-    return activities;
-  } catch (e) {
-    print('Error fetching activities: $e');
-    return [];
+      return activities;
+    } catch (e) {
+      print('Error fetching activities: $e');
+      return [];
+    }
   }
-}
 
-  Future<bool> isActivityJoined(
-      String userID, String id) async {
+  Future<bool> isActivityJoined(String userID, String id) async {
     QuerySnapshot snapshot;
     try {
-      
-        snapshot = await _firestore
-            .collection('participation')
-            .where('userID', isEqualTo: userID)
-            .where('activityID', isEqualTo: id)
-            .get();
-      
+      snapshot = await _firestore
+          .collection('participation')
+          .where('userID', isEqualTo: userID)
+          .where('activityID', isEqualTo: id)
+          .get();
+
       bool isJoined = snapshot.docs.isNotEmpty;
-       return isJoined;
+      return isJoined;
     } catch (e) {
       print('Error checking bookmark: $e');
       return false;
     }
   }
-
-  
 }

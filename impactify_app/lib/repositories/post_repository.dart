@@ -53,7 +53,8 @@ class PostRepository {
   Future<List<Post>> fetchAllPosts() async {
     try {
       QuerySnapshot snapshot = await _firestore.collection('posts').get();
-      List<Post> posts = snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      List<Post> posts =
+          snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
 
       for (Post post in posts) {
         post.user = await fetchUserByID(post.userID);
@@ -67,9 +68,56 @@ class PostRepository {
     }
   }
 
+  Future<List<Post>> fetchFilteredPosts(String filter, List<String> tagIDs,
+      DateTime? startDate, DateTime? endDate) async {
+    List<Post> posts = [];
+    try {
+      Query postQuery = _firestore.collection('posts');
+
+      // Adding the date range filter
+      if (startDate != null && endDate != null) {
+        postQuery = postQuery
+            .where('createdAt',
+                isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+            .where('createdAt',
+                isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      QuerySnapshot postSnapshot = await postQuery.get();
+      posts = postSnapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      List<Post> postsToRemove = []; // List to keep track of posts to remove
+      for (Post post in posts) {
+        post.user = await fetchUserByID(post.userID);
+
+        // Fetch activity and filter by type and tags if provided
+        Activity? activity = await fetchActivityByID(post.activityID);
+        print(activity);
+        print(filter);
+        
+        if (activity != null &&
+            (filter == 'All' || activity.type == filter.toLowerCase()) &&
+            (tagIDs.isEmpty || activity.tags.any(tagIDs.contains))) {
+          post.activity = activity;
+        } else {
+          // Remove posts that don't match the criteria
+          postsToRemove.add(post);
+        }
+      }
+
+      // Remove posts that don't match the criteria
+      posts.removeWhere((post) => postsToRemove.contains(post));
+
+      return posts;
+    } catch (e) {
+      print('Error fetching filtered posts: $e');
+      throw e;
+    }
+  }
+
   Future<User?> fetchUserByID(String userID) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('users').doc(userID).get();
+      DocumentSnapshot doc =
+          await _firestore.collection('users').doc(userID).get();
       return User.fromFirestore(doc);
     } catch (e) {
       print('Error fetching user by ID: $e');
@@ -80,13 +128,15 @@ class PostRepository {
   Future<Activity?> fetchActivityByID(String activityID) async {
     try {
       // Try fetching from events first
-      DocumentSnapshot eventDoc = await _firestore.collection('events').doc(activityID).get();
+      DocumentSnapshot eventDoc =
+          await _firestore.collection('events').doc(activityID).get();
       if (eventDoc.exists) {
         return Event.fromFirestore(eventDoc);
       }
 
       // If not found, try fetching from speeches
-      DocumentSnapshot speechDoc = await _firestore.collection('speeches').doc(activityID).get();
+      DocumentSnapshot speechDoc =
+          await _firestore.collection('speeches').doc(activityID).get();
       if (speechDoc.exists) {
         return Speech.fromFirestore(speechDoc);
       }

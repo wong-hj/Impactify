@@ -70,4 +70,19 @@ class PostProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> fetchFilteredPosts(String filter, List<String> tagIDs, DateTime? startDate, DateTime? endDate) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      _posts = await _postRepository.fetchFilteredPosts(filter, tagIDs, startDate, endDate);
+    } catch (e) {
+      _posts = [];
+      print('Error in EventProvider: $e');
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
 }

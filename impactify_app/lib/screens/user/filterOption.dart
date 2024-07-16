@@ -4,19 +4,25 @@ import 'package:impactify_app/models/tag.dart';
 import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class FilterOptions extends StatefulWidget {
-  final Function(String, List<String>, List<String>) onApplyFilters;
+  final Function(String, List<String>, List<String>, DateTime?, DateTime?)
+      onApplyFilters;
   final String selectedFilter;
   final List<String> selectedTags;
   final List<String> selectedTagIDs;
+  final DateTime? selectedStartDate;
+  final DateTime? selectedEndDate;
 
   FilterOptions({
     required this.onApplyFilters,
     required this.selectedFilter,
     required this.selectedTags,
     required this.selectedTagIDs,
+    this.selectedStartDate,
+    this.selectedEndDate,
   });
 
   @override
@@ -27,6 +33,8 @@ class _FilterOptionsState extends State<FilterOptions> {
   String _selectedFilter = 'All';
   List<String> _selectedTags = [];
   List<String> _selectedTagIDs = [];
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
 
   @override
   void initState() {
@@ -34,8 +42,17 @@ class _FilterOptionsState extends State<FilterOptions> {
     _selectedFilter = widget.selectedFilter;
     _selectedTags = List.from(widget.selectedTags);
     _selectedTagIDs = List.from(widget.selectedTagIDs);
+    _selectedStartDate = widget.selectedStartDate;
+    _selectedEndDate = widget.selectedEndDate;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<EventProvider>(context, listen: false).fetchAllTags();
+    });
+  }
+
+  void _clearDate() {
+    setState(() {
+      _selectedStartDate = null;
+      _selectedEndDate = null;
     });
   }
 
@@ -45,7 +62,7 @@ class _FilterOptionsState extends State<FilterOptions> {
     final List<Tag> tags = eventProvider.tags;
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
+      height: MediaQuery.of(context).size.height * 0.7,
       padding: EdgeInsets.all(20),
       child: SingleChildScrollView(
         child: Column(
@@ -100,13 +117,84 @@ class _FilterOptionsState extends State<FilterOptions> {
                 );
               }).toList(),
             ),
+            Divider(),
+            Text('Filter by Date Range',
+                style: GoogleFonts.nunito(
+                    fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
-
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: 'Start Date',
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedStartDate ?? DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _selectedStartDate = pickedDate;
+                        });
+                      }
+                    },
+                    controller: TextEditingController(
+                      text: _selectedStartDate != null
+                          ? DateFormat('yyyy-MM-dd').format(_selectedStartDate!)
+                          : '',
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      hintText: 'End Date',
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedEndDate ?? DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _selectedEndDate = pickedDate;
+                        });
+                      }
+                    },
+                    controller: TextEditingController(
+                      text: _selectedEndDate != null
+                          ? DateFormat('yyyy-MM-dd').format(_selectedEndDate!)
+                          : '',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            TextButton(
+              onPressed: _clearDate,
+              child: Text(
+                'Clear Dates',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),),
+            SizedBox(height: 40),
             CustomPrimaryButton(
               text: 'Apply Filters',
               onPressed: () {
-                widget.onApplyFilters(
-                    _selectedFilter, _selectedTags, _selectedTagIDs);
+                widget.onApplyFilters(_selectedFilter, _selectedTags,
+                    _selectedTagIDs, _selectedStartDate, _selectedEndDate);
 
                 Navigator.of(context).pop();
               },
