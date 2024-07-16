@@ -137,8 +137,8 @@ class EventProvider with ChangeNotifier {
   }
 
   Future<void> fetchPastParticipatedActivities() async {
-    // _isLoading = true;
-    // notifyListeners();
+     _isLoading = true;
+     notifyListeners();
 
     try {
       _pastActivities = await _eventRepository.fetchPastParticipatedActivities(_authRepository.currentUser!.uid);
@@ -146,8 +146,8 @@ class EventProvider with ChangeNotifier {
       _pastActivities = [];
       print('Error in EventProvider: $e');
     }
-    // _isLoading = false;
-    // notifyListeners();
+     _isLoading = false;
+     notifyListeners();
   }
 
   void searchActivities(String searchText) {

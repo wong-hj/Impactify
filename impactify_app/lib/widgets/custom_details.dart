@@ -396,36 +396,38 @@ class CustomDetailScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  if (type == 'speech' || recordingUrl != "")
+                  if (type == 'speech' 
+                  || recordingUrl != null)...[
                     SizedBox(height: 5),
-                  Text(
-                    'To view the recording of the session:',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 15),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/recording',
-                        arguments: recordingUrl,
-                      );
-                    },
-                    child: Text(
-                      'Click Here!',
+                    Text(
+                      'To view the recording of the session:',
                       style: GoogleFonts.poppins(
-                          fontSize: 17,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline),
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                       textAlign: TextAlign.center,
                     ),
-                  ),
+                    SizedBox(height: 15),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/recording',
+                          arguments: recordingUrl,
+                        );
+                      },
+                      child: Text(
+                        'Click Here!',
+                        style: GoogleFonts.poppins(
+                            fontSize: 17,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ]
                 ],
               ),
             ),

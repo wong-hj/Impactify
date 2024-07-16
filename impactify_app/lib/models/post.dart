@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:impactify_app/models/activity.dart';
+import 'package:impactify_app/models/user.dart';
 
 class Post {
   final String postID;
@@ -7,8 +9,10 @@ class Post {
   final String description;
   final String activityID;
   final String userID;
-  final int likes;
+  final List<String> likes;
   final Timestamp createdAt;
+  Activity? activity;
+  User? user;
 
   Post({
     required this.postID,
@@ -19,6 +23,8 @@ class Post {
     required this.userID,
     required this.likes,
     required this.createdAt,
+    this.activity,
+    this.user,
   });
 
   // Factory method to create an instance from Firestore data
@@ -32,7 +38,7 @@ class Post {
       description: data['description'] ?? '',
       activityID: data['activityID'] ?? '',
       userID: data['userID'] ?? '',
-      likes: data['likes'] ?? 0,
+      likes: List<String>.from(data['likes'] ?? []),
       createdAt: data['createdAt'] ?? Timestamp.now(),
     );
   }

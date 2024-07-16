@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/providers/event_provider.dart';
+import 'package:impactify_app/providers/post_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
+import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +35,7 @@ class _AddPostState extends State<AddPost> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  String? selectedEvent;
+  String? selectedActivity;
   XFile? _image;
 
   @override
@@ -45,9 +48,24 @@ class _AddPostState extends State<AddPost> {
   @override
   Widget build(BuildContext context) {
     final eventProvider = Provider.of<EventProvider>(context);
+    final postProvider = Provider.of<PostProvider>(context);
 
-    List<String> items = eventProvider.pastActivities.map((activity) {
-      return activity.title;
+    // Create a map of titles and IDs
+    Map<String, String> activityMap = {
+      for (var activity in eventProvider.pastActivities)
+        activity.title: activity.id
+    };
+
+    // Create the list of dropdown items
+    List<DropdownMenuItem<String>> dropdownItems =
+        activityMap.entries.map((entry) {
+      return DropdownMenuItem<String>(
+        value: entry.value,
+        child: Text(
+          entry.key,
+          style: GoogleFonts.nunito(fontSize: 14),
+        ),
+      );
     }).toList();
 
     return Scaffold(
@@ -126,33 +144,56 @@ class _AddPostState extends State<AddPost> {
                   color: Colors.black,
                   thickness: 1,
                 ),
-                DropdownButtonHideUnderline(
-                  child: DropdownButton2<String>(
-                    isExpanded: true,
-                    hint: CustomIconText(
-                        text: 'Event / Project Participated',
-                        icon: Icons.event,
-                        size: 14,
-                        color: AppColors.primary),
-                    items: items
-                        .map((String item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.nunito(
-                                  fontSize: 14,
-                                ),
+                eventProvider.isLoading
+                    ? Padding(
+                        padding: EdgeInsets.fromLTRB(15, 15, 0, 15),
+                        child: 
+                          
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.event,
+                                    size: 20,
+                                    color: AppColors.primary,
+                                  ),
+                                  SizedBox(width: 3),
+                                  Text(
+                                    'Project / Speech Participated',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      color: AppColors.placeholder,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                  
+                                ],
                               ),
-                            ))
-                        .toList(),
-                    value: selectedEvent,
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedEvent = value;
-                      });
-                    },
-                  ),
-                ),
+                              SpinKitCircle(size: 20, color: AppColors.primary)
+                            ],
+                          )
+                        
+                      )
+                    : DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          hint: CustomIconText(
+                              text: 'Project / Speech Participated',
+                              icon: Icons.event,
+                              size: 14,
+                              color: AppColors.primary),
+                          items: dropdownItems,
+                          value: selectedActivity,
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedActivity = value;
+                            });
+                          },
+                        ),
+                      ),
 
                 Divider(
                   color: Colors.black,
@@ -216,8 +257,8 @@ class _AddPostState extends State<AddPost> {
                     onPressed: () {
                       if (_formKey.currentState!.validate() &&
                           _image != null &&
-                          selectedEvent != null) {
-                        // Handle share action
+                          selectedActivity != null) {
+                        _addPost();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -253,5 +294,19 @@ class _AddPostState extends State<AddPost> {
     setState(() {
       _image = image;
     });
+  }
+
+  Future<void> _addPost() async {
+    final postProvider = Provider.of<PostProvider>(context, listen: false);
+
+    await postProvider.addPost(_image, _titleController.text.trim(),
+        _descriptionController.text, selectedActivity!);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Posts Shared!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+    Navigator.pop(context);
   }
 }

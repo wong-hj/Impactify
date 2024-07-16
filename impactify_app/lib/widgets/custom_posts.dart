@@ -1,20 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/providers/post_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CommunityPost extends StatelessWidget {
+  final String postID;
   final String profileImage;
   final String type;
   final String name;
   final String bio;
-  final String date;
+  final Timestamp date;
   final String postImage;
   final String postTitle;
   final String postDescription;
-  final String event;
-  final String points;
+  final String activity;
+  final String activityID;
+  final List<String> likes;
+  final String userID;
 
   const CommunityPost({
+    required this.postID,
     required this.profileImage,
     required this.type,
     required this.name,
@@ -23,13 +31,21 @@ class CommunityPost extends StatelessWidget {
     required this.postImage,
     required this.postTitle,
     required this.postDescription,
-    required this.event,
-    required this.points,
+    required this.activity,
+    required this.activityID,
+    required this.likes,
+    required this.userID,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    DateTime dateTime = date.toDate();
+    String formattedDate = DateFormat('yyyy-mm-dd').format(dateTime);
+
+    final postProvider = Provider.of<PostProvider>(context);
+    final bool isLiked = likes.contains(userID);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -59,20 +75,22 @@ class CommunityPost extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 8), 
+                    SizedBox(width: 8),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 4, vertical: 3),
                       decoration: BoxDecoration(
-                        color:
-                            AppColors.tertiary, 
+                        color: type == 'project'
+                            ? AppColors.tertiary
+                            : Colors.orange,
                         borderRadius: BorderRadius.circular(8),
-                        
                       ),
                       child: Text(
-                        type,
+                        type.toUpperCase(),
                         style: GoogleFonts.nunito(
-                          fontSize: 10,
-                          color: AppColors.primary, // Text color
+                          fontSize: 8,
+                          color: type == 'project'
+                              ? AppColors.primary
+                              : Colors.yellow, // Text color
                         ),
                       ),
                     ),
@@ -96,7 +114,7 @@ class CommunityPost extends StatelessWidget {
               alignment: Alignment.topRight,
               child: Container(
                 child: Text(
-                  date,
+                  formattedDate,
                   style: GoogleFonts.poppins(
                     fontSize: 9,
                     color: AppColors.placeholder,
@@ -140,9 +158,13 @@ class CommunityPost extends StatelessWidget {
             Container(
               width: 250,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context,
+                      type == 'project' ? '/eventDetail' : '/speechDetail',
+                      arguments: activityID);
+                },
                 child: Text(
-                  event,
+                  activity,
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                   ),
@@ -159,18 +181,34 @@ class CommunityPost extends StatelessWidget {
               ),
             ),
             Spacer(),
-            Icon(Icons.park_outlined, color: AppColors.primary),
-            SizedBox(width: 3),
-            Text(
-              points,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: AppColors.primary,
-              ),
-            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('${likes.length}',
+                    style: GoogleFonts.poppins(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15)),
+                InkWell(
+                  splashColor: Colors.transparent,
+                  child: Icon(
+                    isLiked ? Icons.park : Icons.park_outlined,
+                    color: isLiked ? AppColors.primary : Colors.grey,
+                  ),
+                  onTap: () {
+                    if (isLiked) {
+                      postProvider.unlikePost(postID);
+                    } else {
+                      postProvider.likePost(postID);
+                    }
+                  },
+                ),
+              ],
+            )
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
       ],
     );
   }

@@ -1,14 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/providers/post_provider.dart';
+import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/screens/user/addPost.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
+import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:impactify_app/widgets/custom_posts.dart';
+import 'package:provider/provider.dart';
 
-class Community extends StatelessWidget {
+class Community extends StatefulWidget {
   const Community({super.key});
 
   @override
+  State<Community> createState() => _CommunityState();
+}
+
+class _CommunityState extends State<Community> {
+  @override
+  void initState() {
+    super.initState();
+    final postProvider = Provider.of<PostProvider>(context, listen: false);
+    // Fetch posts when the page is loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      postProvider.fetchAllPosts();
+      print(postProvider.posts?.length ?? "NO LENGTH");
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final postProvider = Provider.of<PostProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
@@ -45,27 +68,36 @@ class Community extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 20),
               // Post Content
               Expanded(
-                child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return CommunityPost(
-                      profileImage: 'https://tinyurl.com/4whzdz72',
-                      type: 'Speech',
-                      name: 'June',
-                      bio: 'Loving the Earth!',
-                      date: '2024-09-11',
-                      postImage: 'https://tinyurl.com/4ztj48vp',
-                      postTitle: 'Spent A Great Weekend with the folks!',
-                      postDescription:
-                          'I met new friends during the event and learnt a lot from them! Wish I could join more of these events! ',
-                      event: 'Trees Planting: Healing the Earth',
-                      points: '120',
-                    );
-                  },
-                ),
+                child: postProvider.isLoading
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            CustomLoading(text: 'Fetching interesting Posts!')
+                          ])
+                    : ListView.builder(
+                        itemCount: postProvider.posts?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final post = postProvider.posts![index];
+                          return CommunityPost(
+                            postID: post.postID,
+                            profileImage: post.user!.profileImage,
+                            type: post.activity!.type,
+                            name: post.user!.username,
+                            bio: post.user!.introduction,
+                            date: post.createdAt,
+                            postImage: post.postImage,
+                            postTitle: post.title,
+                            postDescription: post.description,
+                            activity: post.activity!.title,
+                            activityID: post.activityID,
+                            likes: post.likes,
+                            userID: userProvider.userData!.userID,
+                          );
+                        },
+                      ),
               )
             ],
           ),
