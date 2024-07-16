@@ -188,6 +188,46 @@ class EventRepository {
     }
   }
 
+  Future<List<Activity>> fetchPastParticipatedActivities(String userID) async {
+  List<Activity> activities = [];
+  Timestamp now = Timestamp.now();
+
+  try {
+    // Fetch participations by userID
+    QuerySnapshot participationSnapshot = await FirebaseFirestore.instance
+        .collection('participation')
+        .where('userID', isEqualTo: userID)
+        .get();
+
+    List<String> activityIDs = participationSnapshot.docs.map((doc) {
+      return doc['activityID'] as String;
+    }).toList();
+
+    // Fetch events
+    QuerySnapshot eventSnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('eventID', whereIn: activityIDs)
+        .where('hostDate', isLessThan: now)
+        .get();
+
+    activities.addAll(eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
+
+    // Fetch speeches
+    QuerySnapshot speechSnapshot = await FirebaseFirestore.instance
+        .collection('speeches')
+        .where('speechID', whereIn: activityIDs)
+        .where('hostDate', isLessThan: now)
+        .get();
+
+    activities.addAll(speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
+
+    return activities;
+  } catch (e) {
+    print('Error fetching activities: $e');
+    return [];
+  }
+}
+
   Future<bool> isActivityJoined(
       String userID, String id) async {
     QuerySnapshot snapshot;

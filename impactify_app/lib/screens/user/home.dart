@@ -195,6 +195,11 @@ class _HomeState extends State<Home> {
                             } else {
                               return Column(
                                 children: snapshot.data!.take(5).map((article) {
+                                  DateTime dateTime =
+                                      DateTime.parse(article.date);
+                                  String formattedDate =
+                                      DateFormat('dd MMMM yyyy, HH:mm')
+                                          .format(dateTime);
                                   // DateTime dateTime = article.date;
                                   // String formattedDate =
                                   //     DateFormat('MMMM dd, yyyy - HH:mm')
@@ -223,6 +228,7 @@ class _HomeState extends State<Home> {
                                               topRight: Radius.circular(10),
                                             ),
                                             child: Image.network(
+                                                height: 200,
                                                 article.thumbnail,
                                                 width: double.infinity,
                                                 fit: BoxFit.cover),
@@ -239,31 +245,51 @@ class _HomeState extends State<Home> {
                                                         fontWeight:
                                                             FontWeight.bold)),
                                                 SizedBox(height: 8),
-                                                Text(article.excerpt,
-                                                    style: GoogleFonts.poppins(
-                                                        fontSize: 10)),
+                                                Text(
+                                                  article.excerpt,
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 10),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 4,
+                                                ),
                                                 SizedBox(height: 8),
-                                                
                                                 Row(
                                                   children: [
-                                                    Text(
-                                                    'Published by: ',
-                                                    style: GoogleFonts.poppins(
-                                                        fontSize: 10)),
+                                                    Text('Published by: ',
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                fontSize: 10)),
+                                                                Image.network(
+                                                      article.publisherFavicon,
+                                                      width: 20,
+                                                      fit: BoxFit.cover,
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
+                                                        return Image.network(
+                                                          userPlaceholder,
+                                                          width: 20,
+                                                          fit: BoxFit.cover,
+                                                        );
+                                                      },
+                                                    ),
+                                                    SizedBox(width: 2),
+                                                    Expanded(
+                                                      child: Text(
+                                                          article.publisherName,
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontSize: 10),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 1),
+                                                    ),
                                                     
                                                     
-                                                    Text(
-                                                    article.publisherName,
-                                                    style: GoogleFonts.poppins(
-                                                        fontSize: 10),
-                                                        overflow: TextOverflow.ellipsis,
-                                                        maxLines: 1),
-                                                        SizedBox(width: 2),
-                                                        Image.network(article.publisherFavicon, width: 20),
                                                   ],
                                                 ),
                                                 SizedBox(height: 8),
-                                                Text('Date: ${article.date}',
+                                                Text('Date: ${formattedDate}',
                                                     style: GoogleFonts.poppins(
                                                         fontSize: 10)),
                                               ],

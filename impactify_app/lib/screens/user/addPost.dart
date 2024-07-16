@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
+import 'package:provider/provider.dart';
 
 class AddPost extends StatefulWidget {
   const AddPost({super.key});
@@ -16,18 +18,38 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<EventProvider>(context, listen: false)
+          .fetchPastParticipatedActivities();
+    });
+  }
+
   final ImagePicker _picker = ImagePicker();
-  XFile? _image;
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-  ];
+
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   String? selectedEvent;
+  XFile? _image;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final eventProvider = Provider.of<EventProvider>(context);
+
+    List<String> items = eventProvider.pastActivities.map((activity) {
+      return activity.title;
+    }).toList();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -54,126 +76,161 @@ class _AddPostState extends State<AddPost> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _image == null
-                  ? const Text('No image selected.')
-                  : Image.file(
-                      width: double.infinity,
-                      height: 300,
-                      fit: BoxFit.cover,
-                      File(_image!.path),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _image == null
+                    ? const Text('No image selected.')
+                    : Image.file(
+                        width: double.infinity,
+                        height: 300,
+                        fit: BoxFit.cover,
+                        File(_image!.path),
+                      ),
+                Row(
+                  children: [
+                    TextButton.icon(
+                      onPressed: () {
+                        getImage();
+                      },
+                      icon:
+                          Icon(Icons.image_outlined, color: AppColors.primary),
+                      label: Text(
+                        'Pick an Image',
+                        style: GoogleFonts.poppins(
+                            fontSize: 12, color: AppColors.primary),
+                      ),
                     ),
-              Row(
-                children: [
-                  TextButton.icon(
-                    onPressed: () {
-                      getImage();
-                    },
-                    icon: Icon(Icons.image_outlined, color: AppColors.primary),
-                    label: Text(
-                      'Pick an Image',
-                      style: GoogleFonts.poppins(
-                          fontSize: 12, color: AppColors.primary),
+                    Text(
+                      ' or ',
+                      style: GoogleFonts.poppins(fontSize: 12),
                     ),
-                  ),
-                  Text(
-                    ' or ',
-                    style: GoogleFonts.poppins(fontSize: 12),
-                  ),
-                  TextButton.icon(
-                    onPressed: () {
-                      getImageFromCamera();
-                    },
-                    icon: Icon(Icons.camera_alt_outlined,
-                        color: AppColors.primary),
-                    label: Text(
-                      'Take A Picture',
-                      style: GoogleFonts.poppins(
-                          fontSize: 12, color: AppColors.primary),
+                    TextButton.icon(
+                      onPressed: () {
+                        getImageFromCamera();
+                      },
+                      icon: Icon(Icons.camera_alt_outlined,
+                          color: AppColors.primary),
+                      label: Text(
+                        'Take A Picture',
+                        style: GoogleFonts.poppins(
+                            fontSize: 12, color: AppColors.primary),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10), // Add some space before the separator
-              Divider(
-                color: Colors.black,
-                thickness: 1,
-              ),
-              DropdownButtonHideUnderline(
-                child: DropdownButton2<String>(
-                  isExpanded: true,
-                  hint: CustomIconText(
-                      text: 'Event / Project Participated',
-                      icon: Icons.event,
-                      size: 14),
-                  items: items
-                      .map((String item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: GoogleFonts.nunito(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ))
-                      .toList(),
-                  value: selectedEvent,
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedEvent = value;
-                    });
-                  },
+                  ],
                 ),
-              ),
+                SizedBox(height: 10), // Add some space before the separator
+                Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                ),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    isExpanded: true,
+                    hint: CustomIconText(
+                        text: 'Event / Project Participated',
+                        icon: Icons.event,
+                        size: 14,
+                        color: AppColors.primary),
+                    items: items
+                        .map((String item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: GoogleFonts.nunito(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                    value: selectedEvent,
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedEvent = value;
+                      });
+                    },
+                  ),
+                ),
 
-              Divider(
-                color: Colors.black,
-                thickness: 1,
-              ),
-              Container(
-                height: 200,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: TextField(
+                Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                ),
+                Container(
+                  height: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: TextFormField(
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        hintText: 'Your Title Here...',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      style: GoogleFonts.poppins(
+                          fontSize: 12, color: AppColors.placeholder),
+                      maxLines: null,
+                      expands: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a title';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                ),
+                Container(
+                  height: 200,
+                  child: TextFormField(
+                    controller: _descriptionController,
                     decoration: InputDecoration(
-                      hintText: 'Your Title Here...',
+                      hintText: 'Description here...',
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.zero,
                     ),
                     style: GoogleFonts.poppins(
                         fontSize: 12, color: AppColors.placeholder),
-                    maxLines: null,
+                    maxLines: null, // Makes the TextField multiline
                     expands: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a description';
+                      }
+                      return null;
+                    },
                   ),
                 ),
-              ),
-              Divider(
-                color: Colors.black,
-                thickness: 1,
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: 200,
+                Divider(
+                  color: Colors.black,
+                  thickness: 1,
                 ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Description here...',
-                    border: InputBorder.none,
-                  ),
-                  style: GoogleFonts.poppins(
-                      fontSize: 12, color: AppColors.placeholder),
-                  maxLines: null, // Makes the TextField multiline
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-                thickness: 1,
-              ),
-              SizedBox(height: 10),
-              CustomPrimaryButton(onPressed: () {}, text: "Share")
-            ],
+                SizedBox(height: 10),
+                CustomPrimaryButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate() &&
+                          _image != null &&
+                          selectedEvent != null) {
+                        // Handle share action
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'Please fill out all fields and select an image'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    text: "Share")
+              ],
+            ),
           ),
         ),
       ),

@@ -91,11 +91,13 @@ class CustomIconText extends StatelessWidget {
   final String text;
   final IconData icon;
   final double size;
+  final Color? color;
 
   const CustomIconText({
     required this.text,
     required this.icon,
     required this.size,
+    this.color = AppColors.secondary,
     Key? key,
   }) : super(key: key);
 
@@ -106,7 +108,7 @@ class CustomIconText extends StatelessWidget {
         Icon(
           icon,
           size: size + 5,
-          color: AppColors.secondary,
+          color: color,
         ),
         SizedBox(width: 3),
         Expanded(

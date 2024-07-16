@@ -19,6 +19,8 @@ class EventProvider with ChangeNotifier {
   List<Activity>? _activities = [];
   List<Activity>? _allActivities = [];
   List<Activity>? _allUserActivities = [];
+  List<Activity> _pastActivities = [];
+  
   List<Tag> _tags = [];
   bool _isLoading = false;
   LatLng? _center;
@@ -30,6 +32,7 @@ class EventProvider with ChangeNotifier {
   Event? get event => _event;
   List<Activity>? get activities => _activities;
   List<Activity>? get allUserActivities => _allUserActivities;
+  List<Activity> get pastActivities => _pastActivities;
   bool get isLoading => _isLoading;
   LatLng? get center => _center;
   Marker? get marker => _marker;
@@ -131,6 +134,20 @@ class EventProvider with ChangeNotifier {
       print('Error in EventProvider: $e');
       throw Exception('Error fetching event');
     }
+  }
+
+  Future<void> fetchPastParticipatedActivities() async {
+    // _isLoading = true;
+    // notifyListeners();
+
+    try {
+      _pastActivities = await _eventRepository.fetchPastParticipatedActivities(_authRepository.currentUser!.uid);
+    } catch (e) {
+      _pastActivities = [];
+      print('Error in EventProvider: $e');
+    }
+    // _isLoading = false;
+    // notifyListeners();
   }
 
   void searchActivities(String searchText) {
