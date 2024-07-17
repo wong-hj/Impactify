@@ -12,6 +12,7 @@ import 'package:impactify_app/screens/onboarding/onboarding_screen.dart';
 import 'package:impactify_app/screens/user/addPost.dart';
 import 'package:impactify_app/screens/user/bookmark.dart';
 import 'package:impactify_app/screens/user/community.dart';
+import 'package:impactify_app/screens/user/editPost.dart';
 import 'package:impactify_app/screens/user/editProfile.dart';
 import 'package:impactify_app/screens/user/eventDetails.dart';
 import 'package:impactify_app/screens/user/events.dart';
@@ -23,6 +24,7 @@ import 'package:impactify_app/screens/user/recording.dart';
 import 'package:impactify_app/screens/user/signup.dart';
 import 'package:impactify_app/screens/user/schedule.dart';
 import 'package:impactify_app/screens/user/speechDetails.dart';
+import 'package:impactify_app/screens/user/userPost.dart';
 import 'package:provider/provider.dart';
 import 'theming/custom_themes.dart';
 
@@ -77,6 +79,8 @@ class MyApp extends StatelessWidget {
               '/bookmark': (context) => Bookmark(),
               '/speechDetail': (context) => SpeechDetail(),
               '/recording': (context) => Recording(),
+              '/userPost': (context) => UserPost(),
+              '/editPost': (context) => EditPost(),
               //'/schedule': (context) => Schedule(),
             },
           );

@@ -135,14 +135,14 @@ class _HomeState extends State<Home> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 15),
+                                      SizedBox(height: 10),
                                       Text(
                                         'Be sure to check out the amazing activities in Impactify, Stay Impactful!',
                                         style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           color: Colors.white,
                                         ),
-                                        textAlign: TextAlign.start,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ],
                                   ),

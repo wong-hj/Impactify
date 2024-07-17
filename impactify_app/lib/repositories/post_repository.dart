@@ -35,7 +35,7 @@ class PostRepository {
             'title': title,
             'description': description,
             'activityID': activityID,
-            'likes': 0,
+            'likes': [],
             'createdAt': Timestamp.now(),
           },
         );
@@ -46,7 +46,36 @@ class PostRepository {
         });
       }
     } catch (e) {
-      throw Exception('Error adding bookmark: $e');
+      throw Exception('Error adding post: $e');
+    }
+  }
+
+  Future<void> editPost(String postID, XFile? image, String title,
+      String description, String activityID, String userID) async {
+    try {
+      Map<String, dynamic> updatedData = {
+        'title': title,
+        'description': description,
+        'activityID': activityID,
+      };
+
+      if (image != null) {
+        String fileName =
+            'posts/$userID/post_${DateTime.now().millisecondsSinceEpoch}.png';
+        Reference storageRef = _storage.ref().child(fileName);
+        UploadTask uploadTask = storageRef.putFile(File(image.path));
+        TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get download URL
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+        updatedData['postImage'] = downloadUrl;
+      }
+
+      // Update document in the posts collection
+      await _firestore.collection('posts').doc(postID).update(updatedData);
+      
+    } catch (e) {
+      throw Exception('Error updating post: $e');
     }
   }
 
@@ -62,6 +91,45 @@ class PostRepository {
       }
 
       return posts;
+    } catch (e) {
+      print('Error fetching posts: $e');
+      throw e;
+    }
+  }
+
+  Future<List<Post>> fetchAllPostsByUserID(String userID) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('posts')
+          .where('userID', isEqualTo: userID)
+          .get();
+
+      List<Post> posts =
+          snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+
+      for (Post post in posts) {
+        post.user = await fetchUserByID(post.userID);
+        post.activity = await fetchActivityByID(post.activityID);
+      }
+
+      return posts;
+    } catch (e) {
+      print('Error fetching posts: $e');
+      throw e;
+    }
+  }
+
+  Future<Post> fetchPostByPostID(String postID) async {
+    try {
+      DocumentSnapshot doc =
+          await _firestore.collection('posts').doc(postID).get();
+
+      Post post = Post.fromFirestore(doc);
+
+      post.user = await fetchUserByID(post.userID);
+      post.activity = await fetchActivityByID(post.activityID);
+
+      return post;
     } catch (e) {
       print('Error fetching posts: $e');
       throw e;
@@ -93,7 +161,7 @@ class PostRepository {
         Activity? activity = await fetchActivityByID(post.activityID);
         print(activity);
         print(filter);
-        
+
         if (activity != null &&
             (filter == 'All' || activity.type == filter.toLowerCase()) &&
             (tagIDs.isEmpty || activity.tags.any(tagIDs.contains))) {
@@ -160,5 +228,13 @@ class PostRepository {
     await postRef.update({
       'likes': FieldValue.arrayRemove([userID]),
     });
+  }
+
+  Future<void> deletePost(String postID) {
+    try {
+      return _firestore.collection('posts').doc(postID).delete();
+    } catch (e) {
+      throw Exception('Error deleting post: $e');
+    }
   }
 }

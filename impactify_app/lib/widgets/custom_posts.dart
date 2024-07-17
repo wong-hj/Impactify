@@ -20,6 +20,7 @@ class CommunityPost extends StatelessWidget {
   final String activityID;
   final List<String> likes;
   final String userID;
+  final bool? edit;
 
   const CommunityPost({
     required this.postID,
@@ -35,6 +36,7 @@ class CommunityPost extends StatelessWidget {
     required this.activityID,
     required this.likes,
     required this.userID,
+    this.edit = false,
     Key? key,
   }) : super(key: key);
 
@@ -45,7 +47,7 @@ class CommunityPost extends StatelessWidget {
 
     final postProvider = Provider.of<PostProvider>(context);
     final bool isLiked = likes.contains(userID);
-
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -104,7 +106,25 @@ class CommunityPost extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
+            Spacer(),
+            edit! ? 
+              
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/editPost',  arguments: {
+                    'postID': postID,
+                    'currentTitle': postTitle,
+                    'currentDescription': postDescription,
+                    'activityID': activityID,
+                    'postImage': postImage,
+                  },);
+                },
+                child: Icon(Icons.edit, color: Colors.blue, size: 20,))
+            : 
+              SizedBox.shrink()
+
+            
           ],
         ),
         Column(
