@@ -209,107 +209,193 @@ class _HomeState extends State<Home> {
                                   DateTime dateTime =
                                       DateTime.parse(article.date);
                                   String formattedDate =
-                                      DateFormat('dd MMMM yyyy, HH:mm')
+                                      DateFormat('dd MMMM yyyy')
                                           .format(dateTime);
                                   // DateTime dateTime = article.date;
                                   // String formattedDate =
                                   //     DateFormat('MMMM dd, yyyy - HH:mm')
                                   //         .format(dateTime);
-                                  return Card(
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0),
-                                    ),
-                                    margin: EdgeInsets.only(bottom: 10),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        Uri myURI = Uri.parse(article.url);
-                                        if (!await launchUrl(myURI)) {
-                                          throw Exception(
-                                              'Could not launch $myURI');
-                                        }
-                                      },
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(0),
-                                              topRight: Radius.circular(0),
-                                            ),
-                                            child: Image.network(
-                                                height: 200,
-                                                article.thumbnail,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(article.title,
-                                                    style: GoogleFonts.nunito(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                            overflow: TextOverflow.ellipsis,
-                                                            maxLines: 2),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  article.excerpt,
-                                                  style: GoogleFonts.poppins(
-                                                      fontSize: 10),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                ),
-                                                SizedBox(height: 8),
-                                                Row(
-                                                  children: [
-                                                    Text('Published by: ',
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 10)),
-                                                    Image.network(
-                                                      article.publisherFavicon,
-                                                      width: 20,
-                                                      fit: BoxFit.cover,
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        return Image.network(
-                                                          userPlaceholder,
-                                                          width: 20,
-                                                          fit: BoxFit.cover,
-                                                        );
-                                                      },
-                                                    ),
-                                                    SizedBox(width: 2),
-                                                    Expanded(
-                                                      child: Text(
-                                                          article.publisherName,
-                                                          style: GoogleFonts
-                                                              .sansita(
-                                                                  fontSize: 10),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 1),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 8),
-                                                Text('Date: ${formattedDate}',
-                                                    style: GoogleFonts.poppins(
-                                                        fontSize: 10)),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                                  // return Card(
+                                  //   color: Colors.white,
+                                  //   shape: RoundedRectangleBorder(
+                                  //     borderRadius: BorderRadius.circular(0),
+                                  //   ),
+                                  //   margin: EdgeInsets.only(bottom: 10),
+                                  //   child: InkWell(
+                                  //     onTap: () async {
+                                  //       Uri myURI = Uri.parse(article.url);
+                                  //       if (!await launchUrl(myURI)) {
+                                  //         throw Exception(
+                                  //             'Could not launch $myURI');
+                                  //       }
+                                  //     },
+                                  //     child: Column(
+                                  //       crossAxisAlignment:
+                                  //           CrossAxisAlignment.start,
+                                  //       children: [
+                                  //         ClipRRect(
+                                  //           borderRadius: BorderRadius.only(
+                                  //             topLeft: Radius.circular(0),
+                                  //             topRight: Radius.circular(0),
+                                  //           ),
+                                  //           child: Image.network(
+                                  //               height: 200,
+                                  //               article.thumbnail,
+                                  //               width: double.infinity,
+                                  //               fit: BoxFit.cover),
+                                  //         ),
+                                  //         Padding(
+                                  //           padding: const EdgeInsets.all(16.0),
+                                  //           child: Column(
+                                  //             crossAxisAlignment:
+                                  //                 CrossAxisAlignment.start,
+                                  //             children: [
+                                  //               Text(article.title,
+                                  //                   style: GoogleFonts.nunito(
+                                  //                       fontSize: 15,
+                                  //                       fontWeight:
+                                  //                           FontWeight.bold),
+                                  //                           overflow: TextOverflow.ellipsis,
+                                  //                           maxLines: 2),
+                                  //               SizedBox(height: 8),
+                                  //               Text(
+                                  //                 article.excerpt,
+                                  //                 style: GoogleFonts.poppins(
+                                  //                     fontSize: 10),
+                                  //                 overflow:
+                                  //                     TextOverflow.ellipsis,
+                                  //                 maxLines: 2,
+                                  //               ),
+                                  //               SizedBox(height: 8),
+                                  //               Row(
+                                  //                 children: [
+                                  //                   Text('Published by: ',
+                                  //                       style:
+                                  //                           GoogleFonts.poppins(
+                                  //                               fontSize: 10)),
+                                  //                   Image.network(
+                                  //                     article.publisherFavicon,
+                                  //                     width: 20,
+                                  //                     fit: BoxFit.cover,
+                                  //                     errorBuilder: (context,
+                                  //                         error, stackTrace) {
+                                  //                       return Image.network(
+                                  //                         userPlaceholder,
+                                  //                         width: 20,
+                                  //                         fit: BoxFit.cover,
+                                  //                       );
+                                  //                     },
+                                  //                   ),
+                                  //                   SizedBox(width: 2),
+                                  //                   Expanded(
+                                  //                     child: Text(
+                                  //                         article.publisherName,
+                                  //                         style: GoogleFonts
+                                  //                             .poppins(
+                                  //                                 fontSize: 10),
+                                  //                         overflow: TextOverflow
+                                  //                             .ellipsis,
+                                  //                         maxLines: 1),
+                                  //                   ),
+                                  //                 ],
+                                  //               ),
+                                  //               SizedBox(height: 8),
+                                  //               Text('Date: ${formattedDate}',
+                                  //                   style: GoogleFonts.poppins(
+                                  //                       fontSize: 10)),
+                                  //             ],
+                                  //           ),
+                                  //         ),
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // );
+                                  return Container(
+  margin: EdgeInsets.only(bottom: 10),
+  child: Row(
+    children: [
+      Image.network(
+          article.thumbnail,
+          height: 120,
+          width: 120,
+          fit: BoxFit.cover,
+        ),
+      
+      SizedBox(width: 10),
+      Expanded(
+        child: 
+        // Card(
+        //   color: Colors.white,
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(0),
+        //   ),
+        //   child: 
+          Padding(
+            padding: const EdgeInsets.all(0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  article.title,
+                  style: GoogleFonts.nunito(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                SizedBox(height: 4),
+                Text(
+                  article.excerpt,
+                  style: GoogleFonts.poppins(fontSize: 10),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    
+                    Image.network(
+                      article.publisherFavicon,
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          userPlaceholder,
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
+                    SizedBox(width: 2),
+                    Expanded(
+                      child: Text(
+                        article.publisherName,
+                        style: GoogleFonts.poppins(fontSize: 10),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '${formattedDate}',
+                  style: GoogleFonts.poppins(fontSize: 10),
+                ),
+              ],
+            ),
+          ),
+        ),
+      //),
+    ],
+  ),
+);
+
+
+
                                 }).toList(),
                               );
                             }
