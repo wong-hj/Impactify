@@ -92,7 +92,7 @@ class _EventsState extends State<Events> {
                       children: [
                         Text(
                           'Discover',
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.merriweather(
                               fontSize: 24,
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold),
@@ -168,7 +168,7 @@ class _EventsState extends State<Events> {
               SliverFillRemaining(
                   child: Center(
                 child: Text("No Activities after Filtered.\nPlease try again.",
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.merriweather(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary)),

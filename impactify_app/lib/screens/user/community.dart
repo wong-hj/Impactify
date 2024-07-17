@@ -67,11 +67,11 @@ class _CommunityState extends State<Community> {
                       children: [
                         TextSpan(
                           text: 'The ',
-                          style: GoogleFonts.nunito(fontSize: 24),
+                          style: GoogleFonts.merriweather(fontSize: 24),
                         ),
                         TextSpan(
                           text: 'Community',
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.merriweather(
                               fontSize: 24,
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold),
@@ -125,7 +125,7 @@ class _CommunityState extends State<Community> {
               else if (postProvider.posts!.isEmpty)
                 Center(
                   child: Text('No Posts after Filtered.\nPlease Try Again.',
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.merriweather(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary)),

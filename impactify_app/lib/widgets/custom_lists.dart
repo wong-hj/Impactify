@@ -73,7 +73,7 @@ class CustomList extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.merriweather(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),

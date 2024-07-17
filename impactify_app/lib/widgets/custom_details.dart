@@ -126,7 +126,7 @@ class CustomDetailScreen extends StatelessWidget {
                       children: [
                         Text(
                           type.toUpperCase(),
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.merriweather(
                               fontSize: 12, color: AppColors.primary),
                         ),
                         Spacer(),
@@ -140,7 +140,7 @@ class CustomDetailScreen extends StatelessWidget {
                     ),
                     Text(
                       title,
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.merriweather(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -179,12 +179,12 @@ class CustomDetailScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: 'Hosted by ',
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.merriweather(
                                 fontSize: 12, color: AppColors.placeholder),
                           ),
                           TextSpan(
                             text: hoster,
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.merriweather(
                                 fontSize: 12,
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold),
@@ -317,7 +317,7 @@ class CustomDetailScreen extends StatelessWidget {
                           text: "I'm In!"),
                     ] else ...[
                       Text("*You are joining this activity, to opt out:",
-                          style: GoogleFonts.nunito(color: AppColors.primary)),
+                          style: GoogleFonts.merriweather(color: AppColors.primary)),
                       SizedBox(height: 2),
                       CustomOptOutButton(
                           onPressed: () async {

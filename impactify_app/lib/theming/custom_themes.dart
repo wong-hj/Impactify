@@ -10,12 +10,12 @@ class AppColors {
 }
 
 class AppTextStyles {
-  static final TextStyle authHead = GoogleFonts.nunito(
+  static final TextStyle authHead = GoogleFonts.merriweather(
       fontSize: 32.0,
       //fontWeight: FontWeight.bold,
       color: Colors.black);
 
-  static final TextStyle displayLarge = GoogleFonts.nunito(
+  static final TextStyle displayLarge = GoogleFonts.merriweather(
     fontSize: 15.0,
     fontWeight: FontWeight.bold,
     color: AppColors.primary,

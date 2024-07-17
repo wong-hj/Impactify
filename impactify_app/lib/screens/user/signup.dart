@@ -151,7 +151,7 @@ class SignUp extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       Text("Registering...",
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.merriweather(
                               color: AppColors.primary, fontSize: 20))
                     ],
                   ),

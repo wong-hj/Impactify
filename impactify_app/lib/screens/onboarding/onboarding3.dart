@@ -32,7 +32,7 @@ class Onboarding3 extends StatelessWidget {
             Image.asset("assets/onboard3.png"),
             const SizedBox(height: 20),
             Text("Browse Events",
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.merriweather(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                 )),

@@ -21,7 +21,7 @@ class CustomLoading extends StatelessWidget {
         ),
         SizedBox(height: 20),
         Text(text,
-            style: GoogleFonts.nunito(color: AppColors.primary, fontSize: 20))
+            style: GoogleFonts.merriweather(color: AppColors.primary, fontSize: 20))
       ],
     );
   }

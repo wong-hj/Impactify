@@ -72,7 +72,7 @@ class CommunityPost extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.merriweather(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -88,7 +88,7 @@ class CommunityPost extends StatelessWidget {
                       ),
                       child: Text(
                         type.toUpperCase(),
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.merriweather(
                           fontSize: 8,
                           color: type == 'project'
                               ? AppColors.primary
@@ -157,7 +157,7 @@ class CommunityPost extends StatelessWidget {
         SizedBox(height: 10),
         Text(
           postTitle,
-          style: GoogleFonts.nunito(
+          style: GoogleFonts.merriweather(
             fontSize: 19,
             fontWeight: FontWeight.bold,
           ),

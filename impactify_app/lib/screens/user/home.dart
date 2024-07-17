@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
                                 SizedBox(width: 8),
                                 Text(
                                   'Hello, ${userProvider.userData!.username}!',
-                                  style: GoogleFonts.nunito(fontSize: 15),
+                                  style: GoogleFonts.merriweather(fontSize: 15),
                                 ),
                               ],
                             ),
@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
                         // My Events Text
                         Text(
                           'My Events',
-                          style: GoogleFonts.nunito(fontSize: 20),
+                          style: GoogleFonts.merriweather(fontSize: 20),
                         ),
                         SizedBox(height: 16),
                         eventProvider.allUserActivities!.isEmpty
@@ -181,7 +181,7 @@ class _HomeState extends State<Home> {
 
                         Text(
                           'SDG Related Articles',
-                          style: GoogleFonts.nunito(fontSize: 20),
+                          style: GoogleFonts.merriweather(fontSize: 20),
                         ),
 
                         SizedBox(height: 20),
@@ -251,7 +251,7 @@ class _HomeState extends State<Home> {
                                   //                 CrossAxisAlignment.start,
                                   //             children: [
                                   //               Text(article.title,
-                                  //                   style: GoogleFonts.nunito(
+                                  //                   style: GoogleFonts.merriweather(
                                   //                       fontSize: 15,
                                   //                       fontWeight:
                                   //                           FontWeight.bold),
@@ -311,91 +311,106 @@ class _HomeState extends State<Home> {
                                   //   ),
                                   // );
                                   return Container(
-  margin: EdgeInsets.only(bottom: 10),
-  child: Row(
-    children: [
-      Image.network(
-          article.thumbnail,
-          height: 120,
-          width: 120,
-          fit: BoxFit.cover,
-        ),
-      
-      SizedBox(width: 10),
-      Expanded(
-        child: 
-        // Card(
-        //   color: Colors.white,
-        //   shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.circular(0),
-        //   ),
-        //   child: 
-          Padding(
-            padding: const EdgeInsets.all(0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  article.title,
-                  style: GoogleFonts.nunito(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-                SizedBox(height: 4),
-                Text(
-                  article.excerpt,
-                  style: GoogleFonts.poppins(fontSize: 10),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    
-                    Image.network(
-                      article.publisherFavicon,
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.network(
-                          userPlaceholder,
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.cover,
-                        );
-                      },
-                    ),
-                    SizedBox(width: 2),
-                    Expanded(
-                      child: Text(
-                        article.publisherName,
-                        style: GoogleFonts.poppins(fontSize: 10),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '${formattedDate}',
-                  style: GoogleFonts.poppins(fontSize: 10),
-                ),
-              ],
-            ),
-          ),
-        ),
-      //),
-    ],
-  ),
-);
-
-
-
+                                    margin: EdgeInsets.only(bottom: 20),
+                                    child: InkWell(
+                                      
+                                      onTap: () async {
+                                        Uri myURI = Uri.parse(article.url);
+                                        if (!await launchUrl(myURI)) {
+                                          throw Exception(
+                                              'Could not launch $myURI');
+                                        }
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Image.network(
+                                            article.thumbnail,
+                                            height: 120,
+                                            width: 120,
+                                            fit: BoxFit.cover,
+                                          ),
+                                      
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child:
+                                                // Card(
+                                                //   color: Colors.white,
+                                                //   shape: RoundedRectangleBorder(
+                                                //     borderRadius: BorderRadius.circular(0),
+                                                //   ),
+                                                //   child:
+                                                Padding(
+                                              padding: const EdgeInsets.all(0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    article.title,
+                                                    style: GoogleFonts.merriweather(
+                                                      fontSize: 13,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                    article.excerpt,
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 10),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Row(
+                                                    children: [
+                                                      Image.network(
+                                                        article.publisherFavicon,
+                                                        width: 20,
+                                                        height: 20,
+                                                        fit: BoxFit.cover,
+                                                        errorBuilder: (context,
+                                                            error, stackTrace) {
+                                                          return Image.network(
+                                                            userPlaceholder,
+                                                            width: 20,
+                                                            height: 20,
+                                                            fit: BoxFit.cover,
+                                                          );
+                                                        },
+                                                      ),
+                                                      SizedBox(width: 2),
+                                                      Expanded(
+                                                        child: Text(
+                                                          article.publisherName,
+                                                          style:
+                                                              GoogleFonts.poppins(
+                                                                  fontSize: 10),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 1,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    '${formattedDate}',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 10),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          //),
+                                        ],
+                                      ),
+                                    ),
+                                  );
                                 }).toList(),
                               );
                             }

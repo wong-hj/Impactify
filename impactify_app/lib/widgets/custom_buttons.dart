@@ -91,7 +91,7 @@ class CustomIconButton extends StatelessWidget {
             height: 25.0,
           ),
           SizedBox(width: 10),
-          Text(text, style: GoogleFonts.nunito(color: Colors.black))
+          Text(text, style: GoogleFonts.merriweather(color: Colors.black))
         ],
       ),
     );

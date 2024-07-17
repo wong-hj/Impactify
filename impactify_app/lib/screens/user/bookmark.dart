@@ -58,11 +58,11 @@ class _BookmarkState extends State<Bookmark>
                         children: [
                           TextSpan(
                             text: 'My ',
-                            style: GoogleFonts.nunito(fontSize: 24),
+                            style: GoogleFonts.merriweather(fontSize: 24),
                           ),
                           TextSpan(
                             text: 'Bookmark',
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.merriweather(
                                 fontSize: 24,
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold),

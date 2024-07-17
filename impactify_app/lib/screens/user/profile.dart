@@ -78,13 +78,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     children: [
                       Text(
                         'You Yourself,',
-                        style: GoogleFonts.nunito(fontSize: 17),
+                        style: GoogleFonts.merriweather(fontSize: 17),
                       ),
                       Row(
                         children: [
                           Text(
                             userProvider.userData?.fullName ?? "",
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.merriweather(
                                 fontSize: 25, color: AppColors.primary),
                           ),
                           IconButton(
@@ -135,7 +135,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                           SizedBox(width: 8),
                           Text(
                             'My Proudly Stats',
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.merriweather(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -239,7 +239,7 @@ class PostContent extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Text(
             'No Posts Added Yet.\nLooking forward for your first post in Impactify!',
-            style: GoogleFonts.nunito(
+            style: GoogleFonts.merriweather(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary)),
@@ -288,7 +288,7 @@ class HistoryContent extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Text(
             'Oops! Looks like you have not participated in any activities yet.',
-            style: GoogleFonts.nunito(
+            style: GoogleFonts.merriweather(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary)),
@@ -340,7 +340,7 @@ class HistoryContent extends StatelessWidget {
                           children: [
                             Text(
                               history.title,
-                              style: GoogleFonts.nunito(
+                              style: GoogleFonts.merriweather(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -368,7 +368,7 @@ class HistoryContent extends StatelessWidget {
                     //         children: [
                     //           Text(
                     //             '+20',
-                    //             style: GoogleFonts.nunito(
+                    //             style: GoogleFonts.merriweather(
                     //               fontSize: 12,
                     //               fontWeight: FontWeight.bold,
                     //               color: AppColors.secondary,

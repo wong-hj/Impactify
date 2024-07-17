@@ -30,7 +30,7 @@ class Onboarding1 extends StatelessWidget {
             Image.asset("assets/onboard1.png"),
             const SizedBox(height: 20),
             Text("Connecting People",
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.merriweather(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                 )),

@@ -150,7 +150,7 @@ class CustomLargeIconText extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: GoogleFonts.nunito(
+            style: GoogleFonts.merriweather(
               fontSize: 20,
               color: Colors.black,
             ),

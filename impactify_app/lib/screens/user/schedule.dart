@@ -107,11 +107,11 @@
 //             children: [
 //               TextSpan(
 //                 text: 'My ',
-//                 style: GoogleFonts.nunito(fontSize: 24),
+//                 style: GoogleFonts.merriweather(fontSize: 24),
 //               ),
 //               TextSpan(
 //                 text: 'Schedules',
-//                 style: GoogleFonts.nunito(
+//                 style: GoogleFonts.merriweather(
 //                     fontSize: 24,
 //                     color: AppColors.primary,
 //                     fontWeight: FontWeight.bold),

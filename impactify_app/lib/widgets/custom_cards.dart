@@ -55,7 +55,7 @@ class CustomVerticalCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.merriweather(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
@@ -150,7 +150,7 @@ class CustomHorizontalCard extends StatelessWidget {
                       ),
                       child: Text(
                         'SEPT\n11',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.merriweather(
                           fontSize: 10,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -169,7 +169,7 @@ class CustomHorizontalCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.merriweather(
                           fontSize: 14, fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis, // Ensure text wraps
                       maxLines: 2,
@@ -263,7 +263,7 @@ class CustomEventCard extends StatelessWidget {
                     ),
                     child: Text(
                       formattedDate,
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.merriweather(
                         fontSize: 12,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -285,7 +285,7 @@ class CustomEventCard extends StatelessWidget {
                     ),
                     child: Text(
                       type.toUpperCase(),
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.merriweather(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: type == 'project'
@@ -304,7 +304,7 @@ class CustomEventCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.merriweather(
                         fontSize: 16, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2, // Ensure text wraps

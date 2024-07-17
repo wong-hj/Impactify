@@ -69,7 +69,7 @@ class _FilterOptionsState extends State<FilterOptions> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Filter by Type',
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.merriweather(
                     fontSize: 18, fontWeight: FontWeight.bold)),
             Column(
               children: ['All', 'Project', 'Speech'].map((String filter) {
@@ -88,7 +88,7 @@ class _FilterOptionsState extends State<FilterOptions> {
             ),
             Divider(),
             Text('Filter by Tags',
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.merriweather(
                     fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
             Wrap(
@@ -119,7 +119,7 @@ class _FilterOptionsState extends State<FilterOptions> {
             ),
             Divider(),
             Text('Filter by Date Range',
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.merriweather(
                     fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
             Row(

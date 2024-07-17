@@ -63,7 +63,7 @@ class _AddPostState extends State<AddPost> {
         value: entry.value,
         child: Text(
           entry.key,
-          style: GoogleFonts.nunito(fontSize: 14),
+          style: GoogleFonts.merriweather(fontSize: 14),
         ),
       );
     }).toList();
@@ -77,11 +77,11 @@ class _AddPostState extends State<AddPost> {
             children: [
               TextSpan(
                 text: 'Share your ',
-                style: GoogleFonts.nunito(fontSize: 24),
+                style: GoogleFonts.merriweather(fontSize: 24),
               ),
               TextSpan(
                 text: 'Thoughts!',
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.merriweather(
                     fontSize: 24,
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold),
