@@ -218,7 +218,7 @@ class _HomeState extends State<Home> {
                                   return Card(
                                     color: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(0),
                                     ),
                                     margin: EdgeInsets.only(bottom: 10),
                                     child: InkWell(
@@ -235,8 +235,8 @@ class _HomeState extends State<Home> {
                                         children: [
                                           ClipRRect(
                                             borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(0),
+                                              topRight: Radius.circular(0),
                                             ),
                                             child: Image.network(
                                                 height: 200,
@@ -254,7 +254,9 @@ class _HomeState extends State<Home> {
                                                     style: GoogleFonts.nunito(
                                                         fontSize: 15,
                                                         fontWeight:
-                                                            FontWeight.bold)),
+                                                            FontWeight.bold),
+                                                            overflow: TextOverflow.ellipsis,
+                                                            maxLines: 2),
                                                 SizedBox(height: 8),
                                                 Text(
                                                   article.excerpt,
@@ -262,7 +264,7 @@ class _HomeState extends State<Home> {
                                                       fontSize: 10),
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  maxLines: 4,
+                                                  maxLines: 2,
                                                 ),
                                                 SizedBox(height: 8),
                                                 Row(
@@ -289,7 +291,7 @@ class _HomeState extends State<Home> {
                                                       child: Text(
                                                           article.publisherName,
                                                           style: GoogleFonts
-                                                              .poppins(
+                                                              .sansita(
                                                                   fontSize: 10),
                                                           overflow: TextOverflow
                                                               .ellipsis,

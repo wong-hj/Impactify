@@ -55,6 +55,74 @@ class UserRepository {
     }
   }
 
+  Future<String> fetchPostCount(String userID) async {
+    String postCount = '0';
+
+    try {
+      QuerySnapshot postSnapshot = await _firestore
+          .collection('posts')
+          .where('userID', isEqualTo: userID)
+          .get();
+
+      postCount = postSnapshot.size.toString();
+
+    } catch(e) {
+
+      print('Error fetching postCount: $e');
+
+    }
+
+
+    return postCount;
+  }
+
+  Future<String> fetchLikeCount(String userID) async {
+    String likeCount = '0';
+    int likeCounts = 0;
+
+    try {
+      QuerySnapshot postSnapshot = await _firestore
+          .collection('posts')
+          .where('userID', isEqualTo: userID)
+          .get();
+
+      for (var doc in postSnapshot.docs) {
+      List<dynamic> likes = doc['likes'];
+      likeCounts += likes.length;
+      likeCount = likeCounts.toString();
+    }
+
+    } catch(e) {
+
+      print('Error fetching postCount: $e');
+
+    }
+
+
+    return likeCount;
+  }
+
+  Future<String> fetchParticipationCount(String userID) async {
+    String participationCount = '0';
+
+    try {
+      QuerySnapshot participationSnapshot = await _firestore
+          .collection('participation')
+          .where('userID', isEqualTo: userID)
+          .get();
+      participationCount = participationSnapshot.size.toString();
+
+    } catch(e) {
+
+      print('Error fetching postCount: $e');
+      
+    }
+
+
+    return participationCount;
+  }
+
+
   Future<List<Activity>> fetchUserHistory(String userID) async {
     List<Activity> history = [];
     try {

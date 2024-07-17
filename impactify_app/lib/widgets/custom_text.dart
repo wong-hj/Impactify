@@ -34,7 +34,7 @@ class CustomTextField extends StatelessWidget {
           border: const OutlineInputBorder(),
           focusedBorder: const OutlineInputBorder(
               borderSide:
-                  BorderSide(color: AppColors.placeholder, width: 2.0))),
+                  BorderSide(color: AppColors.secondary, width: 2.0))),
       obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,

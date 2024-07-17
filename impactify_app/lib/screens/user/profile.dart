@@ -30,7 +30,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       userProvider.fetchUserData();
-      userProvider.fetchUserHistory();
       final postProvider = Provider.of<PostProvider>(context, listen: false);
       postProvider.fetchAllPostsByUserID();
     });
@@ -40,6 +39,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleRefresh() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.fetchUserData();
   }
 
   @override
@@ -137,18 +141,32 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          Spacer(),
+                          //IconButton(onPressed: _handleRefresh, icon: Icon(Icons.refresh)),
+                          InkWell(
+                            onTap: _handleRefresh,
+                            child: Icon(Icons.autorenew),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            splashColor: AppColors.secondary,
+                          )
                         ],
                       ),
                       SizedBox(height: 16),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CustomNumberText(
                               number: '${userProvider.userData?.impoints ?? 0}',
                               text: 'Impoints'),
-                          CustomNumberText(number: '10', text: 'Posts'),
-                          CustomNumberText(number: '6', text: 'Participations'),
-                          CustomNumberText(number: '4', text: 'Locations'),
+                          CustomNumberText(
+                              number: '${userProvider.postCount ?? 0}',
+                              text: 'Posts'),
+                          CustomNumberText(
+                              number: '${userProvider.likeCount ?? 0}',
+                              text: 'Likes'),
+                          CustomNumberText(
+                              number: '${userProvider.participationCount ?? 0}',
+                              text: 'Participations'),
                         ],
                       ),
                     ],
@@ -201,6 +219,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
+
+      //),
     );
   }
 }
@@ -215,11 +235,12 @@ class PostContent extends StatelessWidget {
     if (postProvider.isLoading) {
       return Center(child: CustomLoading(text: "Fetching Posts..."));
     } else if (postProvider.postsByUserID!.isEmpty) {
-      return Center(
+      return Padding(
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Text(
             'No Posts Added Yet.\nLooking forward for your first post in Impactify!',
             style: GoogleFonts.nunito(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary)),
       );
@@ -238,7 +259,8 @@ class PostContent extends StatelessWidget {
             final post = postProvider.postsByUserID![index];
             return InkWell(
               onTap: () {
-                Navigator.pushNamed(context, '/userPost', arguments: post.postID);
+                Navigator.pushNamed(context, '/userPost',
+                    arguments: post.postID);
               },
               child: Ink.image(
                 fit: BoxFit.cover,
@@ -259,101 +281,117 @@ class HistoryContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: ListView.builder(
-        padding: const EdgeInsets.only(top: 15),
-        scrollDirection: Axis.vertical,
-        itemCount: userProvider.history!.length,
-        itemBuilder: (context, index) {
-          final history = userProvider.history![index];
-      
-          DateTime date = history.hostDate.toDate();
-          String formattedDate = DateFormat('dd MMMM yyyy, HH:mm').format(date);
-          return Card(
-            color: Colors.white,
-            surfaceTintColor: Colors.white,
-            margin: EdgeInsets.symmetric(vertical: 5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            elevation: 3,
-            child: Container(
-              height: 80,
-              child: Row(
-                children: [
-                  Container(
-                    width: 90,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                      ),
-                      image: DecorationImage(
-                        image: NetworkImage(history.image),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            history.title,
-                            style: GoogleFonts.nunito(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            "** You participated this activity on ${formattedDate}!",
-                            style: GoogleFonts.poppins(
-                                fontSize: 12, color: AppColors.placeholder),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.end,
-                  //     children: [
-                  //       Row(
-                  //         children: [
-                  //           Text(
-                  //             '+20',
-                  //             style: GoogleFonts.nunito(
-                  //               fontSize: 12,
-                  //               fontWeight: FontWeight.bold,
-                  //               color: AppColors.secondary,
-                  //             ),
-                  //           ),
-                  //           SizedBox(width: 2),
-                  //           Icon(
-                  //             Icons.park_rounded,
-                  //             color: AppColors.secondary,
-                  //             size: 16,
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // )
-                ],
+    if (userProvider.isHistoryLoading ?? false) {
+      return Center(child: CustomLoading(text: "Fetching History..."));
+    } else if (userProvider.history!.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+        child: Text(
+            'Oops! Looks like you have not participated in any activities yet.',
+            style: GoogleFonts.nunito(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary)),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: ListView.builder(
+          padding: const EdgeInsets.only(top: 15),
+          scrollDirection: Axis.vertical,
+          itemCount: userProvider.history!.length,
+          itemBuilder: (context, index) {
+            final history = userProvider.history![index];
+
+            DateTime date = history.hostDate.toDate();
+            String formattedDate =
+                DateFormat('dd MMMM yyyy, HH:mm').format(date);
+            return Card(
+              color: Colors.white,
+              surfaceTintColor: Colors.white,
+              margin: EdgeInsets.symmetric(vertical: 5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-            ),
-          );
-        },
-      ),
-    );
+              elevation: 3,
+              child: Container(
+                height: 80,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          bottomLeft: Radius.circular(10),
+                        ),
+                        image: DecorationImage(
+                          image: NetworkImage(history.image),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 5.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              history.title,
+                              style: GoogleFonts.nunito(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              "** You participated this activity on ${formattedDate}!",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12, color: AppColors.placeholder),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
+                    //   child: Column(
+                    //     mainAxisAlignment: MainAxisAlignment.end,
+                    //     children: [
+                    //       Row(
+                    //         children: [
+                    //           Text(
+                    //             '+20',
+                    //             style: GoogleFonts.nunito(
+                    //               fontSize: 12,
+                    //               fontWeight: FontWeight.bold,
+                    //               color: AppColors.secondary,
+                    //             ),
+                    //           ),
+                    //           SizedBox(width: 2),
+                    //           Icon(
+                    //             Icons.park_rounded,
+                    //             color: AppColors.secondary,
+                    //             size: 16,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // )
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
   }
 }

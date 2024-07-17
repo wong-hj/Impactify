@@ -3,10 +3,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:impactify_app/models/post.dart';
 import 'package:impactify_app/repositories/auth_repository.dart';
 import 'package:impactify_app/repositories/post_repository.dart';
+import 'package:impactify_app/repositories/user_repository.dart';
 
 class PostProvider with ChangeNotifier {
   final PostRepository _postRepository = PostRepository();
   final AuthRepository _authRepository = AuthRepository();
+  final UserRepository _userRepository = UserRepository();
 
   bool _isLoading = false;
   List<Post>? _posts;
@@ -47,7 +49,7 @@ class PostProvider with ChangeNotifier {
     try {
       await _postRepository.editPost(postID, imageFile,
           title, description, activityID, _authRepository.currentUser!.uid);
-          
+
       await fetchAllPosts();
       await fetchAllPostsByUserID();
 
@@ -105,7 +107,6 @@ class PostProvider with ChangeNotifier {
 
   Future<void> deletePost(String postID) async {
     
-
     try {
       await _postRepository.deletePost(postID);
       await fetchAllPostsByUserID();
@@ -117,11 +118,13 @@ class PostProvider with ChangeNotifier {
 
   Future<void> likePost(String postID) async {
     await _postRepository.likePost(postID, _authRepository.currentUser!.uid);
+    await _userRepository.getUserData(_authRepository.currentUser!.uid);
     _updatePostLikes(postID, _authRepository.currentUser!.uid, true);
   }
 
   Future<void> unlikePost(String postID) async {
     await _postRepository.unlikePost(postID, _authRepository.currentUser!.uid);
+    await _userRepository.getUserData(_authRepository.currentUser!.uid);
     _updatePostLikes(postID, _authRepository.currentUser!.uid, false);
   }
 
