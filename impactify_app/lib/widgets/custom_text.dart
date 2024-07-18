@@ -151,7 +151,7 @@ class CustomLargeIconText extends StatelessWidget {
           child: Text(
             text,
             style: GoogleFonts.merriweather(
-              fontSize: 20,
+              fontSize: 16,
               color: Colors.black,
             ),
           ),

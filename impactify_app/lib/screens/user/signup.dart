@@ -36,7 +36,7 @@ class SignUp extends StatelessWidget {
                     Text("Greetings, Register Now to be Part of Us!",
                         style: AppTextStyles.authHead),
                     const SizedBox(height: 70),
-                    CustomTextField(
+                    CustomTextFormField(
                       controller: _usernameController,
                       placeholderText: 'Username',
                       keyboardType: TextInputType.text,
@@ -45,7 +45,7 @@ class SignUp extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 20),
-                    CustomTextField(
+                    CustomTextFormField(
                       controller: _fullnameController,
                       placeholderText: 'Fullname',
                       keyboardType: TextInputType.text,
@@ -54,7 +54,7 @@ class SignUp extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 20),
-                    CustomTextField(
+                    CustomTextFormField(
                       controller: _emailController,
                       placeholderText: 'Email',
                       keyboardType: TextInputType.emailAddress,
@@ -63,7 +63,7 @@ class SignUp extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 20),
-                    CustomTextField(
+                    CustomTextFormField(
                       controller: _passwordController,
                       placeholderText: 'Password',
                       keyboardType: TextInputType.visiblePassword,
