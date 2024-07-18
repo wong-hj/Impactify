@@ -96,22 +96,14 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 16),
                         eventProvider.allUserActivities!.isEmpty
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(5.0),
-                                child: Container(
-                                  padding: EdgeInsets.all(16),
-                                  margin: const EdgeInsets.only(bottom: 5.0),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.secondary,
-                                    borderRadius: BorderRadius.circular(15),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 10.0,
-                                      ),
-                                    ],
-                                  ),
+                            ? Card(
+                                elevation: 7,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                color: AppColors.secondary,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
                                   child: Column(
                                     children: [
                                       Row(
@@ -135,7 +127,7 @@ class _HomeState extends State<Home> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10),
+                                      SizedBox(height: 16),
                                       Text(
                                         'Be sure to check out the amazing activities in Impactify, Stay Impactful!',
                                         style: GoogleFonts.poppins(
@@ -164,6 +156,7 @@ class _HomeState extends State<Home> {
                                       imageUrl: activity.image,
                                       title: activity.title,
                                       location: activity.location,
+                                      date1: activity.hostDate,
                                       onTap: () {
                                         Navigator.pushNamed(
                                             context,
@@ -313,7 +306,6 @@ class _HomeState extends State<Home> {
                                   return Container(
                                     margin: EdgeInsets.only(bottom: 20),
                                     child: InkWell(
-                                      
                                       onTap: () async {
                                         Uri myURI = Uri.parse(article.url);
                                         if (!await launchUrl(myURI)) {
@@ -329,7 +321,7 @@ class _HomeState extends State<Home> {
                                             width: 120,
                                             fit: BoxFit.cover,
                                           ),
-                                      
+
                                           SizedBox(width: 10),
                                           Expanded(
                                             child:
@@ -347,9 +339,11 @@ class _HomeState extends State<Home> {
                                                 children: [
                                                   Text(
                                                     article.title,
-                                                    style: GoogleFonts.merriweather(
+                                                    style: GoogleFonts
+                                                        .merriweather(
                                                       fontSize: 13,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -368,7 +362,8 @@ class _HomeState extends State<Home> {
                                                   Row(
                                                     children: [
                                                       Image.network(
-                                                        article.publisherFavicon,
+                                                        article
+                                                            .publisherFavicon,
                                                         width: 20,
                                                         height: 20,
                                                         fit: BoxFit.cover,
@@ -386,8 +381,8 @@ class _HomeState extends State<Home> {
                                                       Expanded(
                                                         child: Text(
                                                           article.publisherName,
-                                                          style:
-                                                              GoogleFonts.poppins(
+                                                          style: GoogleFonts
+                                                              .poppins(
                                                                   fontSize: 10),
                                                           overflow: TextOverflow
                                                               .ellipsis,

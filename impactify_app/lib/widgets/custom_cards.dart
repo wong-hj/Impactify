@@ -86,18 +86,24 @@ class CustomHorizontalCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String location;
+  final Timestamp date1;
   final VoidCallback onTap;
 
   const CustomHorizontalCard({
     required this.imageUrl,
     required this.title,
     required this.location,
+    required this.date1,
     required this.onTap,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    DateTime date = date1.toDate();
+                    String formattedDate = DateFormat('dd MMMM')
+                        .format(date);
     return Container(
       margin: EdgeInsets.only(bottom: 10, right: 16),
       width: 200,
@@ -149,7 +155,7 @@ class CustomHorizontalCard extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        'SEPT\n11',
+                        formattedDate,
                         style: GoogleFonts.merriweather(
                           fontSize: 10,
                           color: Colors.white,

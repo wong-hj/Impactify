@@ -43,7 +43,7 @@ class CommunityPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime dateTime = date.toDate();
-    String formattedDate = DateFormat('yyyy-mm-dd').format(dateTime);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
 
     final postProvider = Provider.of<PostProvider>(context);
     final bool isLiked = likes.contains(userID);
