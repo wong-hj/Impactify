@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/post.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
 
 import 'package:impactify_app/providers/event_provider.dart';
+import 'package:impactify_app/providers/post_provider.dart';
 import 'package:impactify_app/providers/speech_provider.dart';
 
 import 'package:impactify_app/widgets/custom_details.dart';
@@ -23,14 +25,14 @@ class SpeechDetail extends StatefulWidget {
 class _SpeechDetailState extends State<SpeechDetail> {
   late GoogleMapController mapController;
   //String? bookmarkID; // State variable to store bookmarkID
-  bool isSaved = false; 
+  bool isSaved = false;
   bool isJoined = false;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
-  void _toggleJoinStatus() {
+  Future<void> _toggleJoinStatus() async {
     setState(() {
       isJoined = !isJoined;
     });
@@ -40,7 +42,9 @@ class _SpeechDetailState extends State<SpeechDetail> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkIfBookmarkedAndJoined();
+      
+        _checkIfBookmarkedAndJoined();
+      
     });
   }
 
@@ -52,9 +56,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
 
     bool saved = await bookmarkProvider.isSpeechBookmarked(speechID); //
 
-    final eventProvider =
-        Provider.of<EventProvider>(context, listen: false);
-  
+    final eventProvider = Provider.of<EventProvider>(context, listen: false);
 
     bool joined = await eventProvider.isActivityJoined(speechID);
 
@@ -64,11 +66,16 @@ class _SpeechDetailState extends State<SpeechDetail> {
     });
   }
 
+
+
+
+  
+
   @override
   Widget build(BuildContext context) {
-    final String speechID =
-        ModalRoute.of(context)!.settings.arguments as String;
     final speechProvider = Provider.of<SpeechProvider>(context, listen: false);
+    final String speechID = ModalRoute.of(context)!.settings.arguments as String;
+    final postProvider = Provider.of<PostProvider>(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -76,8 +83,11 @@ class _SpeechDetailState extends State<SpeechDetail> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: FutureBuilder<Speech>(
-        future: speechProvider.getSpeechByID(speechID),
+      body: 
+      //Text("hi")
+      FutureBuilder<Speech?>(
+        future: //postProvider.fetchPostByPostID(speechID),
+         speechProvider.getSpeechByID(speechID),
         builder: (pageContext, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CustomLoading(text: 'Loading Details...'));
@@ -87,6 +97,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
             return Center(child: Text('Speech not found'));
           } else {
             Speech speech = snapshot.data!;
+            
             return FutureBuilder<Map<String, String>>(
                 future: speechProvider.fetchProjectIDAndName(speech.eventID),
                 builder: (context, projectSnapshot) {
@@ -100,6 +111,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
                     return Center(child: Text('Speech not found'));
                   } else {
                     Map<String, String> project = projectSnapshot.data!;
+                    
                     return CustomDetailScreen(
                       id: speech.speechID,
                       image: speech.image,
@@ -113,36 +125,18 @@ class _SpeechDetailState extends State<SpeechDetail> {
                       onMapCreated: _onMapCreated,
                       center: speechProvider.center,
                       onSaved: isSaved,
-                      onBookmarkToggle: () => _saveOrDeleteBookmark(speechID),
+                      onBookmarkToggle: 
+                      () => _saveOrDeleteBookmark(speechID),
                       recordingUrl: speech.recording ?? "",
                       eventID: project['projectID'],
                       eventTitle: project['title'],
                       parentContext: pageContext,
                       isJoined: isJoined,
-                      toggleJoinStatus: _toggleJoinStatus,
+                      toggleJoinStatus:_toggleJoinStatus,
                     );
                   }
-
-                  // } else {
-                  // return CustomDetailScreen(
-                  //         eventID: event.eventID,
-                  //         image: event.image,
-                  //         type: event.type.toUpperCase(),
-                  //         title: event.title,
-                  //         hoster: event.organizer,
-                  //         location: event.location,
-                  //         hostDate: event.hostDate,
-                  //         aboutDescription: event.description,
-                  //         impointsAdd: event.impointsAdd,
-                  //         marker: eventProvider.marker,
-                  //         onMapCreated: _onMapCreated,
-                  //         center: eventProvider.center,
-                  //         sdg: event.sdg,
-                  //         onSaved: isSaved,
-                  //         onBookmarkToggle: () => _saveOrDeleteBookmark(eventID),
-                  //       );
-                  //}
-                });
+                }
+                );
           }
         },
       ),

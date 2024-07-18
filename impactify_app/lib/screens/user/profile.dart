@@ -234,7 +234,7 @@ class PostContent extends StatelessWidget {
 
     if (postProvider.isLoading) {
       return Center(child: CustomLoading(text: "Fetching Posts..."));
-    } else if (postProvider.postsByUserID!.isEmpty) {
+    } else if (postProvider.postsByUserID?.isEmpty ?? false) {
       return Padding(
         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Text(
@@ -254,7 +254,7 @@ class PostContent extends StatelessWidget {
             crossAxisSpacing: 7.0, // Horizontal spacing between images
             mainAxisSpacing: 7.0, // Vertical spacing between images
           ),
-          itemCount: postProvider.postsByUserID!.length,
+          itemCount: postProvider.postsByUserID?.length ?? 0,
           itemBuilder: (context, index) {
             final post = postProvider.postsByUserID![index];
             return InkWell(
@@ -283,7 +283,7 @@ class HistoryContent extends StatelessWidget {
 
     if (userProvider.isHistoryLoading ?? false) {
       return Center(child: CustomLoading(text: "Fetching History..."));
-    } else if (userProvider.history!.isEmpty) {
+    } else if (userProvider.history?.isEmpty ?? false) {
       return Padding(
         padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Text(
@@ -299,7 +299,7 @@ class HistoryContent extends StatelessWidget {
         child: ListView.builder(
           padding: const EdgeInsets.only(top: 15),
           scrollDirection: Axis.vertical,
-          itemCount: userProvider.history!.length,
+          itemCount: userProvider.history?.length ?? 0,
           itemBuilder: (context, index) {
             final history = userProvider.history![index];
 

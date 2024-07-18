@@ -122,7 +122,7 @@ class _CommunityState extends State<Community> {
                     ],
                   ),
                 )
-              else if (postProvider.posts!.isEmpty)
+              else if (postProvider.posts?.isEmpty ?? false)
                 Center(
                   child: Text('No Posts after Filtered.\nPlease Try Again.',
                       style: GoogleFonts.merriweather(

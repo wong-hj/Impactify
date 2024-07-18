@@ -35,9 +35,8 @@ class SpeechProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Speech> getSpeechByID(String speechID) async {
-    _isLoading = true;
-    notifyListeners();
+  Future<Speech?> getSpeechByID(String speechID) async {
+    
 
     try {
       _speech = await _speechRepository.getSpeechById(speechID);
@@ -50,32 +49,26 @@ class SpeechProvider with ChangeNotifier {
           title: _speech!.location,
         ),
       );
-      _isLoading = false;
-      notifyListeners();
-      return _speech!;
+      return _speech;
+
     } catch (e) {
-      _isLoading = false;
-      notifyListeners();
+
       print('Error in SpeechProvider: $e');
       throw Exception('Error fetching speech');
+
     }
   }
 
   Future<Map<String, String>> fetchProjectIDAndName(String projectID) async {
-    _isLoading = true;
-    notifyListeners();
+    
 
     try {
       Event event = await _speechRepository.getProjectById(projectID);
-      _isLoading = false;
-      notifyListeners();
       return {
         'projectID': event.eventID,
         'title': event.title,
       };
     } catch (e) {
-      _isLoading = false;
-      notifyListeners();
       throw Exception('Error fetching project details: $e');
     }
   }

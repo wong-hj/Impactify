@@ -110,8 +110,7 @@ class EventProvider with ChangeNotifier {
   }
 
   Future<Event> fetchEventByID(String eventID) async {
-    _isLoading = true;
-    notifyListeners();
+    
 
     try {
       _event = await _eventRepository.getEventById(eventID);
@@ -124,12 +123,8 @@ class EventProvider with ChangeNotifier {
           title: _event!.location,
         ),
       );
-      _isLoading = false;
-      notifyListeners();
       return _event!;
     } catch (e) {
-      _isLoading = false;
-      notifyListeners();
       print('Error in EventProvider: $e');
       throw Exception('Error fetching event');
     }
