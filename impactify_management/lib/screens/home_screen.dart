@@ -6,6 +6,7 @@ import 'package:impactify_management/providers/user_provider.dart';
 import 'package:impactify_management/screens/dashboard.dart';
 import 'package:impactify_management/screens/profile.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
+import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -54,7 +55,11 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.tertiary,
       ),
       drawer: Drawer(
-        child: ListView(
+        child: 
+        userProvider.isLoading ?
+        CustomLoading(text: 'Fetching Data...')
+        :
+        ListView(
           padding: const EdgeInsets.all(0),
           children: <Widget>[
             DrawerHeader(
@@ -83,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      '${userProvider.user?.organizationName} ${userProvider.user?.ssm ?? null}',
+                      '${userProvider.user?.organizationName} ${userProvider.user?.ssm ?? ''}',
                       style: GoogleFonts.poppins(fontSize: 12),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,

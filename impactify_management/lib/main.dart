@@ -5,6 +5,7 @@ import 'package:impactify_management/providers/user_provider.dart';
 import 'package:impactify_management/screens/dashboard.dart';
 import 'package:impactify_management/screens/home_screen.dart';
 import 'package:impactify_management/screens/login.dart';
+import 'package:impactify_management/screens/pdfviewer.dart';
 import 'package:impactify_management/screens/profile.dart';
 import 'package:impactify_management/screens/signup.dart';
 import 'package:impactify_management/screens/terms.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           theme: CustomTheme.lightTheme,
           darkTheme: CustomTheme.darkTheme,
-          initialRoute: '/signup',
+          initialRoute: '/login',
           routes: {
             '/login': (context) => Login(),
             '/signup': (context) => SignUp(),
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
             '/homeScreen': (context) => HomeScreen(),
             '/dashboard': (context) => Dashboard(),
             '/profile': (context) => Profile(),
+            '/pdfViewer': (context) => PDFViewerCachedFromUrl(),
 
 
 
