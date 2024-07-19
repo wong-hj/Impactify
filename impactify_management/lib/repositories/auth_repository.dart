@@ -10,6 +10,20 @@ class AuthRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+  Future<User?> signInWithEmail(String email, String password) async {
+    try {
+      final UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return userCredential.user;
+    } catch (e) {
+      print('Error signing in with email: $e');
+      return null;
+    }
+  }
+
+
   // Sign up with email and password and save user info in Firestore
   Future<User?> signUpWithEmail(
       String email,
@@ -68,5 +82,14 @@ class AuthRepository {
       return null;
     }
     return null;
+  }
+
+  // Sign out
+  Future<void> logout() async {
+    try {
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      print('Error signing out: $e');
+    }
   }
 }

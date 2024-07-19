@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:impactify_management/constants/placeholderURL.dart';
 
 class Organizer {
   final String organizerID;
@@ -31,7 +32,7 @@ class Organizer {
       fullName: data['fullName'],
       username: data['username'],
       email: data['email'],
-      profileImage: data['profileImage'],
+      profileImage: data['profileImage'] != "userPlaceholder" ? data['profileImage'] : userPlaceholder,
       organizationName: data['organizationName'],
       ssm: data['ssm'],
       ssmURL: data['ssmURL'],

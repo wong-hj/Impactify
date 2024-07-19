@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/providers/auth_provider.dart';
-import 'package:impactify_management/theming/custom_buttons.dart';
+import 'package:impactify_management/widgets/custom_buttons.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
@@ -224,13 +224,9 @@ class _SignUpState extends State<SignUp> {
                           // Proceed with registration logic
                           await authProvider.signUpWithEmail(email, password, fullname, username, organization, ssmNumber, ssmPdfFile?.xFile);
                           if(authProvider.firebaseUser != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'POG'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
+                            Navigator.pushReplacementNamed(
+                            context, '/homeScreen');
+                          
                           }
                         } else {
                           // Show error message
