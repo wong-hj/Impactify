@@ -4,6 +4,7 @@ import 'package:impactify_management/constants/placeholderURL.dart';
 import 'package:impactify_management/providers/auth_provider.dart';
 import 'package:impactify_management/providers/user_provider.dart';
 import 'package:impactify_management/screens/dashboard.dart';
+import 'package:impactify_management/screens/manage_project.dart';
 import 'package:impactify_management/screens/profile.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_loading.dart';
@@ -187,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         children: <Widget>[
           Dashboard(),
-          Center(child: Text("Dashboard1")),
+          ManageProject(),
 
           Center(child: Text("Dashboard2")),
 

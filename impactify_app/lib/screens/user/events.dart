@@ -132,29 +132,66 @@ class _EventsState extends State<Events> {
                     ),
                     SizedBox(height: 10),
                     // Search Bar
-                    TextField(
-                      onChanged: (text) {
-                        _searchActivities(text);
-                      },
-                      onTapOutside: ((event) {
-                        FocusScope.of(context).unfocus();
-                      }),
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        prefixIcon: Icon(Icons.search),
-                        filled: true,
-                        fillColor: Colors.white,
-                        focusColor: AppColors.tertiary,
-                        contentPadding: EdgeInsets.symmetric(vertical: 10.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.primary),
-                          borderRadius: BorderRadius.circular(30),
+                    // TextField(
+                    //   onChanged: (text) {
+                    //     _searchActivities(text);
+                    //   },
+                    //   onTapOutside: ((event) {
+                    //     FocusScope.of(context).unfocus();
+                    //   }),
+                    //   decoration: InputDecoration(
+                    //     hintText: 'Search',
+                    //     prefixIcon: Icon(Icons.search),
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     focusColor: AppColors.tertiary,
+                    //     contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                    //     border: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(30),
+                    //     ),
+                    //     focusedBorder: OutlineInputBorder(
+                    //       borderSide: BorderSide(color: AppColors.primary),
+                    //       borderRadius: BorderRadius.circular(30),
+                    //     ),
+                    //   ),
+                    // ),
+                    Expanded(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight:
+                            40, // Adjust this value to set the desired height
+                      ),
+                      child: TextField(
+                        onChanged: (text) {
+                          _searchActivities(text);
+                        },
+                        onTapOutside: ((event) {
+                          FocusScope.of(context).unfocus();
+                        }),
+                        decoration: InputDecoration(
+                          hintText: 'Search',
+                          hintStyle: GoogleFonts.poppins(
+                              fontSize: 12), // Smaller font size
+                          suffixIcon:
+                              Icon(Icons.search, size: 20), // Smaller icon size
+                          filled: true,
+                          isDense: true,
+                          fillColor: Colors.white,
+                          focusColor: AppColors.tertiary,
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                              vertical: 8.0), // Reduced padding
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.primary),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
                       ),
                     ),
+                  ),
                   ],
                 ),
               ),
