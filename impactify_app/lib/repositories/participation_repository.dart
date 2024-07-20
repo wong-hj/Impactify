@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:impactify_app/models/bookmark.dart';
-import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/models/participation.dart';
 import 'package:impactify_app/models/speech.dart';
 

@@ -34,5 +34,7 @@ class UserProvider with ChangeNotifier {
       await fetchOrganizer();
     
   }
+
+  
   
 }

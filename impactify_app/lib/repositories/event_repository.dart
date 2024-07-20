@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/tag.dart';
 

@@ -1,13 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/providers/auth_provider.dart';
 import 'package:impactify_management/providers/user_provider.dart';
+import 'package:impactify_management/screens/attendees.dart';
 import 'package:impactify_management/screens/dashboard.dart';
 import 'package:impactify_management/screens/home_screen.dart';
 import 'package:impactify_management/screens/login.dart';
 import 'package:impactify_management/screens/manage_project.dart';
 import 'package:impactify_management/screens/pdfviewer.dart';
 import 'package:impactify_management/screens/profile.dart';
+import 'package:impactify_management/screens/projectDetails.dart';
 import 'package:impactify_management/screens/signup.dart';
 import 'package:impactify_management/screens/terms.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
@@ -28,6 +31,7 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (_) => AuthProvider()),
           ChangeNotifierProvider(create: (_) => UserProvider()),
+          ChangeNotifierProvider(create: (_) => ActivityProvider()),
         ],
         child: MaterialApp(
           theme: CustomTheme.lightTheme,
@@ -42,6 +46,8 @@ class MyApp extends StatelessWidget {
             '/profile': (context) => Profile(),
             '/pdfViewer': (context) => PDFViewerCachedFromUrl(),
             '/manageProject': (context) => ManageProject(),
+            '/projectDetail': (context) => ProjectDetail(),
+            '/attendees': (context) => Attendees(),
 
 
 

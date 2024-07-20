@@ -6,6 +6,7 @@ class Event implements Activity {
   final String image;
   final String title;
   final String organizer;
+  final String organizerID;
   final String location;
   final Timestamp hostDate;
   final String description;
@@ -21,6 +22,7 @@ class Event implements Activity {
     required this.image,
     required this.title,
     required this.organizer,
+    required this.organizerID,
     required this.location,
     required this.hostDate,
     required this.description,
@@ -65,6 +67,7 @@ class Event implements Activity {
       image: data['image'] ?? '',
       title: data['title'] ?? '',
       organizer: data['organizer'] ?? '',
+      organizerID: data['organizerID'] ?? '',
       location: data['location'] ?? '',
       hostDate: data['hostDate'] ?? Timestamp.now(),
       description: data['description'] ?? '',
@@ -84,6 +87,7 @@ class Event implements Activity {
       'image': image,
       'title': title,
       'organizer': organizer,
+      'organizerID': organizerID,
       'location': location,
       'hostDate': hostDate,
       'description': description,

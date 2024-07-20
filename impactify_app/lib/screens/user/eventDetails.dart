@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
 
 import 'package:impactify_app/providers/event_provider.dart';

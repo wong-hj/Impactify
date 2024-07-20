@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:impactify_app/models/bookmark.dart';
-import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/repositories/auth_repository.dart';
 import 'package:impactify_app/repositories/bookmark_repository.dart';

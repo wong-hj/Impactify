@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/user.dart';
 

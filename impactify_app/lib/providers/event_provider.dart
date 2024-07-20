@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/models/event.dart';
+import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/tag.dart';
 import 'package:impactify_app/repositories/auth_repository.dart';
