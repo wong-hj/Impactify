@@ -8,10 +8,13 @@ import 'package:impactify_management/screens/dashboard.dart';
 import 'package:impactify_management/screens/home_screen.dart';
 import 'package:impactify_management/screens/login.dart';
 import 'package:impactify_management/screens/manage_project.dart';
+import 'package:impactify_management/screens/manage_speech.dart';
 import 'package:impactify_management/screens/pdfviewer.dart';
 import 'package:impactify_management/screens/profile.dart';
 import 'package:impactify_management/screens/projectDetails.dart';
+import 'package:impactify_management/screens/recording.dart';
 import 'package:impactify_management/screens/signup.dart';
+import 'package:impactify_management/screens/speechDetails.dart';
 import 'package:impactify_management/screens/terms.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:provider/provider.dart';
@@ -46,8 +49,11 @@ class MyApp extends StatelessWidget {
             '/profile': (context) => Profile(),
             '/pdfViewer': (context) => PDFViewerCachedFromUrl(),
             '/manageProject': (context) => ManageProject(),
+            '/manageSpeech': (context) => ManageSpeech(),
             '/projectDetail': (context) => ProjectDetail(),
+            '/speechDetail': (context) => SpeechDetail(),
             '/attendees': (context) => Attendees(),
+            '/recording': (context) => Recording(),
 
 
 

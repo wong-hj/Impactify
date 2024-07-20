@@ -1,30 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
+import 'package:intl/intl.dart';
 
 class CustomList extends StatelessWidget {
   final String? projectID;
   final String? speechID;
   final String title;
-  final String date;
+  final Timestamp date1;
   final String image;
   final String location;
+  final bool? hasRecording;
 
   const CustomList({
     this.projectID,
     this.speechID,
     required this.title,
-    required this.date,
+    required this.date1,
     required this.image,
     required this.location,
+    this.hasRecording = false,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print((speechID != null).toString() + hasRecording!.toString() + (date1.compareTo(Timestamp.now()) < 0).toString() );
+    DateTime date = date1.toDate();
+    String formattedDate = DateFormat('dd MMMM yyyy, HH:mm')
+        .format(date)
+        .toUpperCase();
+
     return Column(
       children: [
         Padding(
@@ -71,41 +81,55 @@ class CustomList extends StatelessWidget {
                         arguments: speechID,
                       );
               },
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Stack(
                 children: [
-                  Image.network(
-                    image,
-                    width: 100,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: GoogleFonts.merriweather(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        image,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: GoogleFonts.merriweather(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            CustomIconText(
+                                text: location,
+                                icon: Icons.pin_drop_outlined,
+                                size: 12,
+                                color: AppColors.primary),
+                            SizedBox(height: 2),
+                            CustomIconText(
+                                text: formattedDate,
+                                icon: Icons.calendar_month,
+                                size: 12,
+                                color: AppColors.primary),
+                          ],
                         ),
-                        SizedBox(height: 8),
-                        CustomIconText(
-                            text: location,
-                            icon: Icons.pin_drop_outlined,
-                            size: 12,
-                            color: AppColors.primary),
-                        SizedBox(height: 2),
-                        CustomIconText(
-                            text: date,
-                            icon: Icons.calendar_month,
-                            size: 12,
-                            color: AppColors.primary),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                  
+                  if ((speechID != null) && !hasRecording! && date1.compareTo(Timestamp.now()) < 0 )
+                    Positioned(
+                      bottom: 1,
+                      right: 1,
+                      child: Tooltip(
+                        message: 'Add Recording for this Speech!',
+                        child: Icon(Icons.videocam_outlined, color: Colors.blue),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -137,18 +161,17 @@ class CustomAttendeesList extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              
               Container(
-                      padding: EdgeInsets.all(2.0), // Border width
-                      decoration: BoxDecoration(
-                        color: AppColors.primary, // Border color
-                        shape: BoxShape.circle,
-                      ),
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(user.profileImage),
-                      ),
-                    ),
+                padding: EdgeInsets.all(2.0), // Border width
+                decoration: BoxDecoration(
+                  color: AppColors.primary, // Border color
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(user.profileImage),
+                ),
+              ),
               SizedBox(width: 12),
               Expanded(
                 child: Column(

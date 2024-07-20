@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
@@ -24,7 +26,10 @@ class CustomDetailScreen extends StatelessWidget {
   final String? eventID;
   final String? eventTitle;
   final String? recordingUrl;
+  final String? videoName;
   final List<User> attendees;
+  final Function? onPickVideo;
+  final Function? onUploadVideo;
 
   const CustomDetailScreen({
     required this.id,
@@ -44,6 +49,9 @@ class CustomDetailScreen extends StatelessWidget {
     this.eventID,
     this.eventTitle,
     this.recordingUrl,
+    this.videoName,
+    this.onPickVideo,
+    this.onUploadVideo,
     Key? key,
   }) : super(key: key);
 
@@ -106,16 +114,11 @@ class CustomDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                   
-                     
-                      Text(
-                        type.toUpperCase(),
-                        style: GoogleFonts.merriweather(
-                            fontSize: 12, color: AppColors.primary),
-                      ),
-                        
-                      
-                    
+                    Text(
+                      type.toUpperCase(),
+                      style: GoogleFonts.merriweather(
+                          fontSize: 12, color: AppColors.primary),
+                    ),
                     Text(
                       title,
                       style: GoogleFonts.merriweather(
@@ -123,35 +126,6 @@ class CustomDetailScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    type == "speech"
-                        ? Container(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/eventDetail',
-                                  arguments: eventID ?? "",
-                                );
-                              },
-                              child: Text(
-                                eventTitle ?? "",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.tertiary,
-                                foregroundColor: AppColors.primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                minimumSize: Size(100, 30),
-                              ),
-                            ),
-                          )
-                        : SizedBox(height: 10),
                     Text.rich(
                       TextSpan(
                         children: [
@@ -178,7 +152,6 @@ class CustomDetailScreen extends StatelessWidget {
                         text: formattedDate,
                         icon: Icons.calendar_month,
                         size: 12),
-                    
                     SizedBox(height: 16),
                     CustomLargeIconText(
                         icon: Icons.info_outlined, text: 'About this Event'),
@@ -190,7 +163,6 @@ class CustomDetailScreen extends StatelessWidget {
                           fontSize: 12, color: AppColors.placeholder),
                     ),
                     SizedBox(height: 8),
-                    
                     if (type != "speech") ...[
                       CustomLargeIconText(
                           icon: Icons.flag_outlined,
@@ -203,7 +175,71 @@ class CustomDetailScreen extends StatelessWidget {
                             fontSize: 12, color: AppColors.placeholder),
                       ),
                       SizedBox(height: 16),
+                    ] else ...[
+                      CustomLargeIconText(
+                          icon: Icons.videocam_outlined,
+                          text: 'Recording',
+                          color: recordingUrl!.isEmpty
+                              ? Colors.red
+                              : Colors.black),
+                       SizedBox(height: 8),
+                      if (recordingUrl!.isEmpty) ...[
+                        Text(
+                          "Add recording of the speech for users' reference!",
+                          style: GoogleFonts.poppins(
+                              fontSize: 12, color: AppColors.placeholder),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => onPickVideo!(),
+                                  child: Text(
+                                    videoName == ''
+                                        ? 'Upload Recording'
+                                        : 'Recording - ${videoName}',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12, color: AppColors.primary),
+                                    overflow: TextOverflow
+                                        .ellipsis, // Add ellipsis to handle overflow
+                                  ),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => onUploadVideo!(),
+                              icon: Icon(
+                                Icons.upload,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        )
+                      ] else ...[
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/recording',
+                                arguments: recordingUrl,
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              'View Recording >',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 14, color: AppColors.primary),
+                            )),
+                      ],
                     ],
+                    SizedBox(height: 8),
+
                     CustomLargeIconText(
                         icon: Icons.explore_outlined, text: 'Location'),
                     SizedBox(height: 8),
@@ -227,25 +263,29 @@ class CustomDetailScreen extends StatelessWidget {
                         ),
                       ),
                     SizedBox(height: 8),
-                    
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: CustomLargeIconText(
-                          icon: Icons.people, text: 'Attendees (${attendees.length})'),
+                              icon: Icons.people,
+                              text: 'Attendees (${attendees.length})'),
                         ),
-                        TextButton(onPressed: () {
-                          Navigator.pushNamed(context, '/attendees', arguments: attendees);
-                        }, child: Text('View More', style: GoogleFonts.poppins(color: Colors.blue)))
-                    ],)
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/attendees',
+                                  arguments: attendees);
+                            },
+                            child: Text('View More',
+                                style: GoogleFonts.poppins(color: Colors.blue)))
+                      ],
+                    )
                   ],
                 ),
               ),
             ],
           ),
         ),
-        
       ],
     );
   }

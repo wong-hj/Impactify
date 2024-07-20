@@ -140,10 +140,12 @@ class CustomIconText extends StatelessWidget {
 class CustomLargeIconText extends StatelessWidget {
   final String text;
   final IconData icon;
+  final Color? color;
 
   const CustomLargeIconText({
     required this.text,
     required this.icon,
+    this.color = Colors.black,
     Key? key,
   }) : super(key: key);
 
@@ -162,7 +164,7 @@ class CustomLargeIconText extends StatelessWidget {
             text,
             style: GoogleFonts.merriweather(
               fontSize: 16,
-              color: Colors.black,
+              color: color,
             ),
           ),
         ),

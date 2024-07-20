@@ -10,14 +10,14 @@ import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class ManageProject extends StatefulWidget {
-  const ManageProject({super.key});
+class ManageSpeech extends StatefulWidget {
+  const ManageSpeech({super.key});
 
   @override
-  State<ManageProject> createState() => _ManageProjectState();
+  State<ManageSpeech> createState() => _ManageSpeechState();
 }
 
-class _ManageProjectState extends State<ManageProject> {
+class _ManageSpeechState extends State<ManageSpeech> {
   @override
   void initState() {
     super.initState();
@@ -25,7 +25,7 @@ class _ManageProjectState extends State<ManageProject> {
         Provider.of<ActivityProvider>(context, listen: false);
     // Fetch posts when the page is loaded
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      activityProvider.fetchAllProjectsByOrganizer();
+      activityProvider.fetchAllSpeechesByOrganizer();
     });
   }
 
@@ -35,7 +35,7 @@ class _ManageProjectState extends State<ManageProject> {
     setState(() {
       searchText = text;
     });
-    Provider.of<ActivityProvider>(context, listen: false).searchProjects(text);
+    Provider.of<ActivityProvider>(context, listen: false).searchSpeeches(text);
   }
 
   @override
@@ -45,7 +45,9 @@ class _ManageProjectState extends State<ManageProject> {
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+
+        },
         backgroundColor: AppColors.tertiary,
         foregroundColor: Colors.black,
         elevation: 10,
@@ -56,7 +58,7 @@ class _ManageProjectState extends State<ManageProject> {
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: 
         activityProvider.isLoading ?
-        CustomLoading(text: 'Fetching Projects...')
+        CustomLoading(text: 'Fetching Speeches...')
         :
         Column(crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
@@ -64,7 +66,7 @@ class _ManageProjectState extends State<ManageProject> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                'Manage\nProjects',
+                'Manage\nSpeeches',
                 style:
                     GoogleFonts.merriweather(fontSize: 24, color: Colors.black),
               ),
@@ -109,25 +111,26 @@ class _ManageProjectState extends State<ManageProject> {
           ),
           SizedBox(height: 20),
           Expanded(
-            child: activityProvider.projects.isEmpty
+            child: activityProvider.speeches.isEmpty
                 ? Center(
                     child: Text(
-                      'No Projects Found.',
+                      'No Speeches Found.',
                       style: GoogleFonts.poppins(
                           color: AppColors.primary, fontSize: 18),
                     ),
                   )
                 : ListView.builder(
-                    itemCount: activityProvider.projects.length,
+                    itemCount: activityProvider.speeches.length,
                     itemBuilder: (context, index) {
-                      final project = activityProvider.projects[index];
+                      final speech = activityProvider.speeches[index];
                       
                       return CustomList(
-                        projectID: project.eventID,
-                        title: project.title,
-                        date1: project.hostDate,
-                        image: project.image,
-                        location: project.location,
+                        speechID: speech.speechID,
+                        title: speech.title,
+                        date1: speech.hostDate,
+                        image: speech.image,
+                        location: speech.location,
+                        hasRecording: speech.recording!.isEmpty ? false : true,
                       );
                     }),
           )

@@ -5,6 +5,7 @@ import 'package:impactify_management/providers/auth_provider.dart';
 import 'package:impactify_management/providers/user_provider.dart';
 import 'package:impactify_management/screens/dashboard.dart';
 import 'package:impactify_management/screens/manage_project.dart';
+import 'package:impactify_management/screens/manage_speech.dart';
 import 'package:impactify_management/screens/profile.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_loading.dart';
@@ -156,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text('My Profile',
                   style: GoogleFonts.poppins(
                       fontWeight:
-                          _selectedPageIndex == 3 ? FontWeight.bold : null)),
+                          _selectedPageIndex == 4 ? FontWeight.bold : null)),
               onTap: () => _onDrawerItemTapped(4),
               iconColor:
                   _selectedPageIndex == 4 ? AppColors.primary : Colors.black,
@@ -190,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Dashboard(),
           ManageProject(),
 
-          Center(child: Text("Dashboard2")),
+          ManageSpeech(),
 
           Center(child: Text("Dashboard3")),
 
