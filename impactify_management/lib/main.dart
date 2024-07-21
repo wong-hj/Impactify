@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/providers/auth_provider.dart';
+import 'package:impactify_management/providers/post_provider.dart';
 import 'package:impactify_management/providers/user_provider.dart';
 import 'package:impactify_management/screens/attendees.dart';
 import 'package:impactify_management/screens/dashboard.dart';
@@ -16,6 +17,7 @@ import 'package:impactify_management/screens/recording.dart';
 import 'package:impactify_management/screens/signup.dart';
 import 'package:impactify_management/screens/speechDetails.dart';
 import 'package:impactify_management/screens/terms.dart';
+import 'package:impactify_management/screens/view_post.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +37,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => AuthProvider()),
           ChangeNotifierProvider(create: (_) => UserProvider()),
           ChangeNotifierProvider(create: (_) => ActivityProvider()),
+          ChangeNotifierProvider(create: (_) => PostProvider()),
         ],
         child: MaterialApp(
           theme: CustomTheme.lightTheme,
@@ -54,6 +57,7 @@ class MyApp extends StatelessWidget {
             '/speechDetail': (context) => SpeechDetail(),
             '/attendees': (context) => Attendees(),
             '/recording': (context) => Recording(),
+            '/viewPost': (context) => ViewPost(),
 
 
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:impactify_management/models/activity.dart';
 import 'package:impactify_management/models/project.dart';
 import 'package:impactify_management/models/speech.dart';
 import 'package:impactify_management/models/user.dart';
@@ -108,24 +109,51 @@ class ActivityRepository {
   }
 
   Future<void> uploadRecording(XFile? video, String speechID) async {
-  try {
-    if (video == null) {
-      throw Exception('No video selected');
+    try {
+      if (video == null) {
+        throw Exception('No video selected');
+      }
+      
+      String fileName =
+          'recordings/$speechID/${DateTime.now().millisecondsSinceEpoch}.mp4';
+      Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
+      UploadTask uploadTask = storageRef.putFile(File(video.path));
+      TaskSnapshot taskSnapshot = await uploadTask;
+
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+      await _firestore.collection('speeches').doc(speechID).update({'recording': downloadUrl});
+      
+    } catch (e) {
+      throw Exception('Error uploading Recording: $e');
     }
-    
-    String fileName =
-        'recordings/$speechID/${DateTime.now().millisecondsSinceEpoch}.mp4';
-    Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
-    UploadTask uploadTask = storageRef.putFile(File(video.path));
-    TaskSnapshot taskSnapshot = await uploadTask;
-
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-
-    await _firestore.collection('speeches').doc(speechID).update({'recording': downloadUrl});
-    
-  } catch (e) {
-    throw Exception('Error uploading Recording: $e');
   }
-}
+
+  Future<List<Activity>> fetchAllActivities(String organizerID) async {
+    //await Future.delayed(Duration(seconds: 1));
+    List<Activity> activities = [];
+    try {
+      QuerySnapshot projectSnapshot = await _firestore
+          .collection('events')
+          .where('organizerID', isEqualTo: organizerID)
+          .get();
+
+      activities.addAll(
+          projectSnapshot.docs.map((doc) => Project.fromFirestore(doc)).toList());
+
+      QuerySnapshot speechSnapshot = await _firestore
+          .collection('speeches')
+          .where('organizerID', isEqualTo: organizerID)
+          .get();
+
+      activities.addAll(
+          speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList());
+
+      return activities;
+    } catch (e) {
+      print('Error fetching activities: $e');
+      throw e;
+    }
+  }
 
 }

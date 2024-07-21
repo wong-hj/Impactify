@@ -7,6 +7,7 @@ import 'package:impactify_management/screens/dashboard.dart';
 import 'package:impactify_management/screens/manage_project.dart';
 import 'package:impactify_management/screens/manage_speech.dart';
 import 'package:impactify_management/screens/profile.dart';
+import 'package:impactify_management/screens/view_post.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:provider/provider.dart';
@@ -181,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: PageView(
+        physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
@@ -190,18 +192,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           Dashboard(),
           ManageProject(),
-
           ManageSpeech(),
-
-          Center(child: Text("Dashboard3")),
-
+          ViewPost(),
           Profile(),
-
-          //Home(),
-          //Events(),
-          //Bookmark(),
-          //Community(),
-          //Profile(),
         ],
       ),
     );

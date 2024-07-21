@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:impactify_management/models/activity.dart';
 import 'package:impactify_management/models/project.dart';
 import 'package:impactify_management/models/speech.dart';
 import 'package:impactify_management/models/user.dart';
@@ -19,6 +20,7 @@ class ActivityProvider with ChangeNotifier {
   List<Speech> _speeches = [];
   List<Speech> _allSpeeches = [];
   List<User> _attendees = [];
+  List<Activity> _activities = [];
   Project? _project;
   Speech? _speech;
   LatLng? _center;
@@ -33,6 +35,7 @@ class ActivityProvider with ChangeNotifier {
   List<Speech> get speeches => _speeches;
   List<Speech> get allSpeeches => _allSpeeches;
   List<User> get attendees => _attendees;
+  List<Activity> get activities => _activities;
   LatLng? get center => _center;
   Marker? get marker => _marker;
 
@@ -150,4 +153,21 @@ class ActivityProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> fetchAllActivities() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      _activities  = await _activityRepository.fetchAllActivities(_firebaseAuth.currentUser!.uid);
+      
+
+    } catch (e) {
+      _activities = [];
+      print('Error in ActivityProvider: $e');
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
 }
