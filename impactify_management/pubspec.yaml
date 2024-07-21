@@ -52,6 +52,8 @@ dependencies:
   flutter_cached_pdfview: ^0.4.2
   google_maps_flutter: ^2.7.0
   dropdown_button2: ^2.3.9
+  filter_list: ^1.0.3
+  flutter_datetime_picker_plus: ^2.2.0
 
 dev_dependencies:
   flutter_test:

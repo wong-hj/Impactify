@@ -45,7 +45,9 @@ class _ManageProjectState extends State<ManageProject> {
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/addProject');
+        },
         backgroundColor: AppColors.tertiary,
         foregroundColor: Colors.black,
         elevation: 10,

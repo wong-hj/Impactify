@@ -4,6 +4,7 @@ import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/providers/auth_provider.dart';
 import 'package:impactify_management/providers/post_provider.dart';
 import 'package:impactify_management/providers/user_provider.dart';
+import 'package:impactify_management/screens/add_project.dart';
 import 'package:impactify_management/screens/attendees.dart';
 import 'package:impactify_management/screens/dashboard.dart';
 import 'package:impactify_management/screens/home_screen.dart';
@@ -12,10 +13,10 @@ import 'package:impactify_management/screens/manage_project.dart';
 import 'package:impactify_management/screens/manage_speech.dart';
 import 'package:impactify_management/screens/pdfviewer.dart';
 import 'package:impactify_management/screens/profile.dart';
-import 'package:impactify_management/screens/projectDetails.dart';
+import 'package:impactify_management/screens/project_details.dart';
 import 'package:impactify_management/screens/recording.dart';
 import 'package:impactify_management/screens/signup.dart';
-import 'package:impactify_management/screens/speechDetails.dart';
+import 'package:impactify_management/screens/speech_details.dart';
 import 'package:impactify_management/screens/terms.dart';
 import 'package:impactify_management/screens/view_post.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
             '/attendees': (context) => Attendees(),
             '/recording': (context) => Recording(),
             '/viewPost': (context) => ViewPost(),
+            '/addProject': (context) => AddProject(),
 
 
 

@@ -26,6 +26,15 @@ class CustomTheme {
         scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent
       ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.primary;
+          }
+          return null;
+        }),
+        checkColor: WidgetStateProperty.all(Colors.white),
+      )
       
       
     );

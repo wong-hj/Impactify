@@ -2,6 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:impactify_management/models/activity.dart';
 
 
+class User1 {
+  final String? name;
+  final String? avatar;
+  User1({this.name, this.avatar});
+}
+
 class Project implements Activity {
   final String eventID;
   final String image;

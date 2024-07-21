@@ -75,7 +75,7 @@ class CustomTextFormField extends StatelessWidget {
       decoration: InputDecoration(
           prefixIcon: icon != null ? Icon(icon) : null,
           labelText: placeholderText,
-          labelStyle: const TextStyle(color: Colors.black),
+          labelStyle: GoogleFonts.poppins(color: Colors.black),
           border: const UnderlineInputBorder(),
           focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.primary, width: 2.0))),
@@ -203,6 +203,53 @@ class CustomNumberText extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CustomMultiLineTextForm extends StatelessWidget {
+  final TextEditingController controller;
+  final String placeholderText;
+  
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onChanged;
+  final String? errorText;
+
+  const CustomMultiLineTextForm({
+    super.key,
+    required this.controller,
+    required this.placeholderText,
+    this.keyboardType = TextInputType.multiline,
+    this.textInputAction,
+    this.onChanged,
+    this.errorText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      keyboardType: keyboardType,
+      cursorColor: Colors.black,
+      controller: controller,
+      decoration: InputDecoration(
+          alignLabelWithHint: true,
+          labelText: placeholderText,
+          labelStyle: GoogleFonts.poppins(color: Colors.black),
+          border: const UnderlineInputBorder(),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                  color: AppColors.primary, width: 2.0))),
+      style: GoogleFonts.poppins(
+          fontSize: 12, color: AppColors.placeholder),
+      maxLines: null,
+      expands: true,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return errorText;
+        }
+        return null;
+      },
     );
   }
 }
