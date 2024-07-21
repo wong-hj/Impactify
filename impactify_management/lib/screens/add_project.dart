@@ -1,15 +1,21 @@
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:impactify_management/constants/impoints.dart';
 import 'package:impactify_management/constants/sdg.dart';
 import 'package:impactify_management/models/project.dart';
+import 'package:impactify_management/models/tag.dart';
 import 'package:impactify_management/models/user.dart';
+import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_buttons.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
 import 'package:filter_list/filter_list.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/custom_tag_pill.dart';
 
@@ -21,41 +27,38 @@ class AddProject extends StatefulWidget {
 }
 
 class _AddProjectState extends State<AddProject> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ActivityProvider>(context, listen: false).fetchAllTags();
+    });
+  }
+
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _venueController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+
   String? selectedImpoints;
   String? selectedSdg;
   DateTime? selectedDateTime;
-  List<User1>? selectedUserList = [];
+  List<Tag>? selectedTags = [];
 
-  List<User1> userList = [
-    User1(name: "Jon", avatar: ""),
-    User1(name: "Lindsey ", avatar: ""),
-    User1(name: "Valarie ", avatar: ""),
-    User1(name: "Elyse ", avatar: ""),
-    User1(name: "Ethel ", avatar: ""),
-    User1(name: "Emelyan ", avatar: ""),
-    User1(name: "Catherine ", avatar: ""),
-    User1(name: "Stepanida  ", avatar: ""),
-    User1(name: "Carolina ", avatar: ""),
-    User1(name: "Nail  ", avatar: ""),
-    User1(name: "Kamil ", avatar: ""),
-    User1(name: "Mariana ", avatar: ""),
-    User1(name: "Katerina ", avatar: ""),
-  ];
-
-  void _removeTag(User1 tag) {
+  void _removeTag(Tag tag) {
     setState(() {
-      selectedUserList!.remove(tag);
+      selectedTags!.remove(tag);
     });
   }
 
   void openFilterDelegate() async {
-    await FilterListDelegate.show<User1>(
+    final activityProvider =
+        Provider.of<ActivityProvider>(context, listen: false);
+    await FilterListDelegate.show<Tag>(
       context: context,
-      list: userList,
-      selectedListData: selectedUserList,
+      list: activityProvider.tags,
+      selectedListData: selectedTags,
       theme: FilterListDelegateThemeData(
         listTileTheme: ListTileThemeData(
           dense: true,
@@ -67,15 +70,15 @@ class _AddProjectState extends State<AddProject> {
           titleTextStyle: GoogleFonts.poppins(),
         ),
       ),
-      onItemSearch: (user, query) {
-        return user.name!.toLowerCase().contains(query.toLowerCase());
+      onItemSearch: (tag, query) {
+        return tag.name.toLowerCase().contains(query.toLowerCase());
       },
-      tileLabel: (user) => user!.name,
-      emptySearchChild: Center(child: Text('No user found')),
+      tileLabel: (tag) => tag!.name,
+      emptySearchChild: Center(child: Text('No tags found')),
       searchFieldHint: 'Search Here..',
       onApplyButtonClick: (list) {
         setState(() {
-          selectedUserList = list;
+          selectedTags = list;
         });
       },
     );
@@ -114,22 +117,61 @@ class _AddProjectState extends State<AddProject> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InkWell(
-                onTap: () {
-                  // Handle image picking
-                },
+              _image == null
+                  ? SizedBox.shrink()
+                  : Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              20) // Adjust the radius as needed
+                          ),
+                      child: Image.file(
+                        width: double.infinity,
+                        height: 300,
+                        fit: BoxFit.cover,
+                        File(_image!.path),
+                      ),
+                    ),
+              SizedBox(height: 10),
+              Container(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                decoration: BoxDecoration(
+                  color: AppColors.tertiary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Row(
                   children: [
-                    Icon(Icons.image_outlined, color: Colors.black),
-                    SizedBox(width: 8),
+                    TextButton.icon(
+                      onPressed: () {
+                        getImage();
+                      },
+                      icon:
+                          Icon(Icons.image_outlined, color: AppColors.primary),
+                      label: Text(
+                        'Pick an Image',
+                        style: GoogleFonts.poppins(
+                            fontSize: 12, color: AppColors.primary),
+                      ),
+                    ),
                     Text(
-                      'Pick an Image...',
+                      ' or ',
                       style: GoogleFonts.poppins(fontSize: 12),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        getImageFromCamera();
+                      },
+                      icon: Icon(Icons.camera_alt_outlined,
+                          color: AppColors.primary),
+                      label: Text(
+                        'Take A Picture',
+                        style: GoogleFonts.poppins(
+                            fontSize: 12, color: AppColors.primary),
+                      ),
                     ),
                   ],
                 ),
               ),
-              Divider(),
               SizedBox(height: 10),
               Container(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -185,7 +227,9 @@ class _AddProjectState extends State<AddProject> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        selectedDateTime != null ? 'Host Date - ${selectedDateTime}' : 'Host Date',
+                        selectedDateTime != null
+                            ? 'Host Date - ${selectedDateTime}'
+                            : 'Host Date',
                         style: GoogleFonts.poppins(color: Colors.black),
                       ),
                     ],
@@ -274,10 +318,18 @@ class _AddProjectState extends State<AddProject> {
                   // Handle tap
                 ),
               ),
+              SizedBox(height: 5),
+              GestureDetector(
+                  onTap: _showAddTagDialog,
+                  child: CustomIconText(
+                      text: "Couldn't find the tag you want? Add Here!",
+                      icon: Icons.info_outline,
+                      size: 13,
+                      color: Colors.blue)),
               SizedBox(height: 10),
-              if (selectedUserList!.isNotEmpty)
+              if (selectedTags!.isNotEmpty)
                 TagPills(
-                  tags: selectedUserList,
+                  tags: selectedTags,
                   onRemove: _removeTag,
                 ),
               SizedBox(height: 20),
@@ -286,6 +338,74 @@ class _AddProjectState extends State<AddProject> {
           ),
         ),
       ),
+    );
+  }
+
+  Future getImage() async {
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future getImageFromCamera() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  void _showAddTagDialog() {
+    final TextEditingController _tagController = TextEditingController();
+    final activityProvider =
+        Provider.of<ActivityProvider>(context, listen: false);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Tag', style: GoogleFonts.poppins(fontSize: 18)),
+          content: CustomTextField(
+              controller: _tagController, placeholderText: 'Tag'),
+          actions: [
+            TextButton(
+              child:
+                  Text('Cancel', style: GoogleFonts.poppins(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child:
+                  Text('Add', style: GoogleFonts.poppins(color: Colors.green)),
+              onPressed: () async {
+                if (_tagController.text.isNotEmpty) {
+                  await activityProvider.addTag(_tagController.text.trim());
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text(
+                        'Please Enter a tag.',
+                        style: GoogleFonts.poppins(color: Colors.white),
+                      ),
+                      showCloseIcon: true,
+                    ),
+                  );
+                }
+                setState(() {
+                  
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          elevation: 24,
+        );
+      },
     );
   }
 }

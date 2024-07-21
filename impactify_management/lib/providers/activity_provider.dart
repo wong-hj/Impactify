@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:impactify_management/models/activity.dart';
 import 'package:impactify_management/models/project.dart';
 import 'package:impactify_management/models/speech.dart';
+import 'package:impactify_management/models/tag.dart';
 import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/repositories/activity_repository.dart';
 
@@ -21,6 +22,7 @@ class ActivityProvider with ChangeNotifier {
   List<Speech> _allSpeeches = [];
   List<User> _attendees = [];
   List<Activity> _activities = [];
+  List<Tag> _tags = [];
   Project? _project;
   Speech? _speech;
   LatLng? _center;
@@ -36,6 +38,7 @@ class ActivityProvider with ChangeNotifier {
   List<Speech> get allSpeeches => _allSpeeches;
   List<User> get attendees => _attendees;
   List<Activity> get activities => _activities;
+  List<Tag> get tags => _tags;
   LatLng? get center => _center;
   Marker? get marker => _marker;
 
@@ -169,5 +172,29 @@ class ActivityProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> fetchAllTags() async {
+    notifyListeners();
+    try {
+      _tags = await _activityRepository.fetchAllTags();
+    } catch (e) {
+      _tags = [];
+      print('Error in ActivityProvider: $e');
+    }
+    notifyListeners();
+  }
+
+   Future<void> addTag(String tagName) async {
+    notifyListeners();
+    try {
+      await _activityRepository.addTag(tagName);
+      await fetchAllTags();
+    } catch (e) {
+      
+      print('Error in ActivityProvider: $e');
+    }
+    notifyListeners();
+  }
+
 
 }

@@ -6,13 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:impactify_management/models/activity.dart';
 import 'package:impactify_management/models/project.dart';
 import 'package:impactify_management/models/speech.dart';
+import 'package:impactify_management/models/tag.dart';
 import 'package:impactify_management/models/user.dart';
 
 class ActivityRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
-
-  
 
   Future<List<Project>> fetchAllProjectsByOrganizer(String organizerID) async {
     List<Project> projects = [];
@@ -21,8 +20,9 @@ class ActivityRepository {
           .collection('events')
           .where('organizerID', isEqualTo: organizerID)
           .get();
-      projects =
-          projectSnapshot.docs.map((doc) => Project.fromFirestore(doc)).toList();
+      projects = projectSnapshot.docs
+          .map((doc) => Project.fromFirestore(doc))
+          .toList();
       return projects;
     } catch (e) {
       print('Error fetching Projects: $e');
@@ -47,34 +47,33 @@ class ActivityRepository {
   }
 
   Future<List<User>> fetchAttendeesByProjectID(String projectID) async {
-  List<User> users = [];
-  try {
-    // Fetch participation documents where activityID equals projectID
-    QuerySnapshot attendeesSnapshot = await _firestore
-        .collection('participation')
-        .where('activityID', isEqualTo: projectID)
-        .get();
+    List<User> users = [];
+    try {
+      // Fetch participation documents where activityID equals projectID
+      QuerySnapshot attendeesSnapshot = await _firestore
+          .collection('participation')
+          .where('activityID', isEqualTo: projectID)
+          .get();
 
-    // Extract userID from each document
-    List<String> userIDs = attendeesSnapshot.docs
-        .map((doc) => doc['userID'] as String)
-        .toList();
+      // Extract userID from each document
+      List<String> userIDs =
+          attendeesSnapshot.docs.map((doc) => doc['userID'] as String).toList();
 
-    // Fetch user data for each userID
-    for (String userID in userIDs) {
-      DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(userID).get();
-      if (userDoc.exists) {
-        users.add(User.fromFirestore(userDoc));
+      // Fetch user data for each userID
+      for (String userID in userIDs) {
+        DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(userID).get();
+        if (userDoc.exists) {
+          users.add(User.fromFirestore(userDoc));
+        }
       }
-    }
 
-    return users;
-  } catch (e) {
-    print('Error fetching attendees: $e');
-    throw e;
+      return users;
+    } catch (e) {
+      print('Error fetching attendees: $e');
+      throw e;
+    }
   }
-}
 
   Future<Project> fetchProjectByID(String projectID) async {
     try {
@@ -113,7 +112,7 @@ class ActivityRepository {
       if (video == null) {
         throw Exception('No video selected');
       }
-      
+
       String fileName =
           'recordings/$speechID/${DateTime.now().millisecondsSinceEpoch}.mp4';
       Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
@@ -122,8 +121,10 @@ class ActivityRepository {
 
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-      await _firestore.collection('speeches').doc(speechID).update({'recording': downloadUrl});
-      
+      await _firestore
+          .collection('speeches')
+          .doc(speechID)
+          .update({'recording': downloadUrl});
     } catch (e) {
       throw Exception('Error uploading Recording: $e');
     }
@@ -138,8 +139,9 @@ class ActivityRepository {
           .where('organizerID', isEqualTo: organizerID)
           .get();
 
-      activities.addAll(
-          projectSnapshot.docs.map((doc) => Project.fromFirestore(doc)).toList());
+      activities.addAll(projectSnapshot.docs
+          .map((doc) => Project.fromFirestore(doc))
+          .toList());
 
       QuerySnapshot speechSnapshot = await _firestore
           .collection('speeches')
@@ -155,5 +157,38 @@ class ActivityRepository {
       throw e;
     }
   }
+
+  Future<List<Tag>> fetchAllTags() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection('tags').get();
+
+      return snapshot.docs.map((doc) => Tag.fromFirestore(doc)).toList();
+    } catch (e) {
+      print('Error fetching tags: $e');
+      throw e;
+    }
+  }
+
+  Future<void> addTag(String tagName) async {
+  try {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    DocumentReference docRef = _firestore.collection('tags').doc();
+
+    // Create the tag data
+    Map<String, dynamic> tagData = {
+      'tagID': docRef.id,  
+      'name': tagName,
+    };
+
+    // Set the document with the tag data
+    await docRef.set(tagData);
+
+    print('Tag added successfully with ID: ${docRef.id}');
+  } catch (e) {
+    print('Error adding tag: $e');
+    throw e;  
+  }
+}
 
 }

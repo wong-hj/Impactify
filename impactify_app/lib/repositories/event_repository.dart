@@ -32,7 +32,7 @@ class EventRepository {
 
       return snapshot.docs.map((doc) => Tag.fromFirestore(doc)).toList();
     } catch (e) {
-      print('Error fetching events: $e');
+      print('Error fetching tags: $e');
       throw e;
     }
   }

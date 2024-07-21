@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/models/project.dart';
+import 'package:impactify_management/models/tag.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 
 class TagPills extends StatelessWidget {
-  final List<User1>? tags;
-  final Function(User1) onRemove;
+  final List<Tag>? tags;
+  final Function(Tag) onRemove;
 
   TagPills({required this.tags, required this.onRemove});
 
@@ -21,7 +22,7 @@ class TagPills extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
           label: Text(
-            tag.name!,
+            tag.name,
             style: GoogleFonts.poppins(
               fontSize: 12,
               color: Colors.black,
