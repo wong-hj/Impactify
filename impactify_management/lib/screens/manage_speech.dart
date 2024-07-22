@@ -110,30 +110,31 @@ class _ManageSpeechState extends State<ManageSpeech> {
             ],
           ),
           SizedBox(height: 20),
-          Expanded(
-            child: activityProvider.speeches.isEmpty
-                ? Center(
-                    child: Text(
-                      'No Speeches Found.',
-                      style: GoogleFonts.poppins(
-                          color: AppColors.primary, fontSize: 18),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: activityProvider.speeches.length,
-                    itemBuilder: (context, index) {
-                      final speech = activityProvider.speeches[index];
+          // // Expanded(
+          // //   child: activityProvider.speeches.isEmpty
+          // //       ? Center(
+          // //           child: Text(
+          // //             'No Speeches Found.',
+          // //             style: GoogleFonts.poppins(
+          // //                 color: AppColors.primary, fontSize: 18),
+          // //           ),
+          // //         )
+          // //       : ListView.builder(
+          // //           itemCount: activityProvider.speeches.length,
+          // //           itemBuilder: (context, index) {
+          // //             final speech = activityProvider.speeches[index];
                       
-                      return CustomList(
-                        speechID: speech.speechID,
-                        title: speech.title,
-                        date1: speech.hostDate,
-                        image: speech.image,
-                        location: speech.location,
-                        hasRecording: speech.recording!.isEmpty ? false : true,
-                      );
-                    }),
-          )
+          // //             return CustomList(
+          // //               speechID: speech.speechID,
+          // //               title: speech.title,
+          // //               date1: speech.hostDate,
+          // //               image: speech.image,
+          // //               location: speech.location,
+          // //               hasRecording: speech.recording!.isEmpty ? false : true,
+          // //               deleteFunction: (),
+          // //             );
+          // //           }),
+          // )
         ]),
       ),
     );

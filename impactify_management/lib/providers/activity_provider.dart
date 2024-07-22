@@ -79,13 +79,12 @@ class ActivityProvider with ChangeNotifier {
   }
 
   Future<Project?> fetchProjectByID(String projectID) async {
-    _isLoading = true;
     _errorLocation = null;
     _project = null; // Reset project details
     _center = null; // Reset center
     _marker = null; // Reset marker
     _attendees = []; // Reset attendees list
-    notifyListeners();
+    
 
     try {
       _project = await _activityRepository.fetchProjectByID(projectID);
@@ -109,8 +108,6 @@ class ActivityProvider with ChangeNotifier {
       _attendees =
           await _activityRepository.fetchAttendeesByProjectID(projectID);
 
-      _isLoading = false;
-      notifyListeners();
 
       return _project;
     } catch (e) {
@@ -228,10 +225,22 @@ class ActivityProvider with ChangeNotifier {
     try {
       await _activityRepository.addProject(
           organizer.organizerID, organizer.organizationName, data, imageFile);
+      await fetchAllProjectsByOrganizer();
     } catch (e) {
       print('Error in ActivityProvider: $e');
     }
 
+    notifyListeners();
+  }
+
+  Future<void> deleteProject(String projectID) async {
+
+    try {
+      await _activityRepository.deleteProject(projectID);
+      //await fetchAllProjectsByOrganizer();
+    } catch (e) {
+      print('Error in ActivityProvider: $e');
+    }
     notifyListeners();
   }
 }

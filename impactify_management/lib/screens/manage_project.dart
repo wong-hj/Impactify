@@ -30,7 +30,7 @@ class _ManageProjectState extends State<ManageProject> {
   }
 
   String searchText = '';
-  
+
   void _searchActivities(String text) {
     setState(() {
       searchText = text;
@@ -56,85 +56,139 @@ class _ManageProjectState extends State<ManageProject> {
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-        child: 
-        activityProvider.isLoading ?
-        CustomLoading(text: 'Fetching Projects...')
-        :
-        Column(crossAxisAlignment: CrossAxisAlignment.start, 
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'Manage\nProjects',
-                style:
-                    GoogleFonts.merriweather(fontSize: 24, color: Colors.black),
-              ),
-              SizedBox(width: 7),
-              Expanded(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight:
-                        40, // Adjust this value to set the desired height
-                  ),
-                  child: TextField(
-                    onChanged: (text) {
-                      _searchActivities(text);
-                    },
-                    onTapOutside: ((event) {
-                      FocusScope.of(context).unfocus();
-                    }),
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      hintStyle: GoogleFonts.poppins(
-                          fontSize: 12), // Smaller font size
-                      suffixIcon:
-                          Icon(Icons.search, size: 20), // Smaller icon size
-                      filled: true,
-                      isDense: true,
-                      fillColor: Colors.white,
-                      focusColor: AppColors.tertiary,
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 8.0), // Reduced padding
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+        child: activityProvider.isLoading
+            ? CustomLoading(text: 'Fetching Projects...')
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Manage\nProjects',
+                        style: GoogleFonts.merriweather(
+                            fontSize: 24, color: Colors.black),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primary),
-                        borderRadius: BorderRadius.circular(30),
+                      SizedBox(width: 7),
+                      Expanded(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight:
+                                40, // Adjust this value to set the desired height
+                          ),
+                          child: TextField(
+                            onChanged: (text) {
+                              _searchActivities(text);
+                            },
+                            onTapOutside: ((event) {
+                              FocusScope.of(context).unfocus();
+                            }),
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              hintStyle: GoogleFonts.poppins(
+                                  fontSize: 12), // Smaller font size
+                              suffixIcon: Icon(Icons.search,
+                                  size: 20), // Smaller icon size
+                              filled: true,
+                              isDense: true,
+                              fillColor: Colors.white,
+                              focusColor: AppColors.tertiary,
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10.0,
+                                  vertical: 8.0), // Reduced padding
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: AppColors.primary),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Expanded(
-            child: activityProvider.projects.isEmpty
-                ? Center(
-                    child: Text(
-                      'No Projects Found.',
-                      style: GoogleFonts.poppins(
-                          color: AppColors.primary, fontSize: 18),
-                    ),
+                  SizedBox(height: 20),
+                  Expanded(
+                    child: activityProvider.projects.isEmpty
+                        ? Center(
+                            child: Text(
+                              'No Projects Found.',
+                              style: GoogleFonts.poppins(
+                                  color: AppColors.primary, fontSize: 18),
+                            ),
+                          )
+                        : RefreshIndicator(
+                          onRefresh: () async {
+                            await activityProvider.fetchAllProjectsByOrganizer();
+                          },
+                          child: ListView.builder(
+                              itemCount: activityProvider.projects.length,
+                              itemBuilder: (context, index) {
+                                final project = activityProvider.projects[index];
+                          
+                                return CustomList(
+                                  projectID: project.eventID,
+                                  title: project.title,
+                                  date1: project.hostDate,
+                                  image: project.image,
+                                  location: project.location,
+                                  deleteFunction: (projectID) => _showDeleteDialog(project.eventID),
+                                );
+                              }),
+                        ),
                   )
-                : ListView.builder(
-                    itemCount: activityProvider.projects.length,
-                    itemBuilder: (context, index) {
-                      final project = activityProvider.projects[index];
-                      
-                      return CustomList(
-                        projectID: project.eventID,
-                        title: project.title,
-                        date1: project.hostDate,
-                        image: project.image,
-                        location: project.location,
-                      );
-                    }),
-          )
-        ]),
+                ],
+              ),
       ),
+    );
+  }
+
+  void _showDeleteDialog(String projectID) async {
+    final activityProvider =
+        Provider.of<ActivityProvider>(context, listen: false);
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.background,
+          title: Text('Confirm Delete'),
+          content: Text('Are you sure you want to Delete this Project?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('Cancel', style: TextStyle(color: AppColors.placeholder)),
+            ),
+            TextButton(
+              onPressed: () async {
+                try {
+                  await activityProvider.deleteProject(projectID);
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            'Sucessfully deleted the project.'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                } catch (e) {
+                  print('Error delete project: $e');
+                }
+
+
+                Navigator.of(context).pop();
+              },
+              child: Text('Confirm', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

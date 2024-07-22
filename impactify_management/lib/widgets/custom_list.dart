@@ -15,6 +15,7 @@ class CustomList extends StatelessWidget {
   final String image;
   final String location;
   final bool? hasRecording;
+  final Function(String projectID) deleteFunction;
 
   const CustomList({
     this.projectID,
@@ -23,6 +24,7 @@ class CustomList extends StatelessWidget {
     required this.date1,
     required this.image,
     required this.location,
+    required this.deleteFunction,
     this.hasRecording = false,
     Key? key,
   }) : super(key: key);
@@ -30,9 +32,8 @@ class CustomList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime date = date1.toDate();
-    String formattedDate = DateFormat('dd MMMM yyyy, HH:mm')
-        .format(date.toUtc().toLocal())
-        .toUpperCase();
+    String formattedDate =
+        DateFormat('dd MMMM yyyy, HH:mm').format(date).toUpperCase();
 
     return Column(
       children: [
@@ -58,7 +59,11 @@ class CustomList extends StatelessWidget {
               motion: ScrollMotion(),
               children: [
                 SlidableAction(
-                  onPressed: (context) {},
+                  onPressed: (context) {
+                    if (projectID != null) {
+                      deleteFunction(projectID!);
+                    }
+                  },
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
                   icon: Icons.delete,
@@ -119,14 +124,16 @@ class CustomList extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
-                  if ((speechID != null) && !hasRecording! && date1.compareTo(Timestamp.now()) < 0 )
+                  if ((speechID != null) &&
+                      !hasRecording! &&
+                      date1.compareTo(Timestamp.now()) < 0)
                     Positioned(
                       bottom: 1,
                       right: 1,
                       child: Tooltip(
                         message: 'Add Recording for this Speech!',
-                        child: Icon(Icons.videocam_outlined, color: Colors.blue),
+                        child:
+                            Icon(Icons.videocam_outlined, color: Colors.blue),
                       ),
                     ),
                 ],

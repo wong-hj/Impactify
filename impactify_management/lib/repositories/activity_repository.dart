@@ -19,6 +19,7 @@ class ActivityRepository {
       QuerySnapshot projectSnapshot = await _firestore
           .collection('events')
           .where('organizerID', isEqualTo: organizerID)
+          .where('status', isEqualTo: 'active')
           .get();
       projects = projectSnapshot.docs
           .map((doc) => Project.fromFirestore(doc))
@@ -36,6 +37,7 @@ class ActivityRepository {
       QuerySnapshot speechSnapshot = await _firestore
           .collection('speeches')
           .where('organizerID', isEqualTo: organizerID)
+          .where('status', isEqualTo: 'active')
           .get();
       speeches =
           speechSnapshot.docs.map((doc) => Speech.fromFirestore(doc)).toList();
@@ -137,6 +139,7 @@ class ActivityRepository {
       QuerySnapshot projectSnapshot = await _firestore
           .collection('events')
           .where('organizerID', isEqualTo: organizerID)
+          .where('status', isEqualTo: 'active')
           .get();
 
       activities.addAll(projectSnapshot.docs
@@ -146,6 +149,7 @@ class ActivityRepository {
       QuerySnapshot speechSnapshot = await _firestore
           .collection('speeches')
           .where('organizerID', isEqualTo: organizerID)
+          .where('status', isEqualTo: 'active')
           .get();
 
       activities.addAll(
@@ -223,6 +227,19 @@ class ActivityRepository {
       }
     } catch (e) {
       throw Exception('Error adding project: $e');
+    }
+  }
+
+  Future<void> deleteProject(String projectID) async {
+    try {
+
+
+      DocumentReference docRef = await _firestore.collection('events').doc(projectID);
+
+      await docRef.update({'status': 'inactive'});
+
+    } catch (e) {
+      throw Exception('Error Deleting project: $e');
     }
   }
 
