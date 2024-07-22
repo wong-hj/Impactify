@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/constants/placeholderURL.dart';
 import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
+import 'package:impactify_management/widgets/custom_empty.dart';
 import 'package:impactify_management/widgets/custom_list.dart';
 import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:provider/provider.dart';
@@ -113,13 +114,7 @@ class _ManageSpeechState extends State<ManageSpeech> {
                   SizedBox(height: 20),
                   Expanded(
                     child: activityProvider.speeches.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No Speeches Found.',
-                              style: GoogleFonts.poppins(
-                                  color: AppColors.primary, fontSize: 18),
-                            ),
-                          )
+                        ? EmptyWidget(text: 'No Speech Found :(', image: 'assets/speechEmpty.png')
                         : RefreshIndicator(
                             onRefresh: () async {
                               await activityProvider

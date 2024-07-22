@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/constants/placeholderURL.dart';
 import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
+import 'package:impactify_management/widgets/custom_empty.dart';
 import 'package:impactify_management/widgets/custom_list.dart';
 import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:provider/provider.dart';
@@ -113,29 +114,26 @@ class _ManageProjectState extends State<ManageProject> {
                   SizedBox(height: 20),
                   Expanded(
                     child: activityProvider.projects.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No Projects Found.',
-                              style: GoogleFonts.poppins(
-                                  color: AppColors.primary, fontSize: 18),
-                            ),
-                          )
+                        ? EmptyWidget(text: 'No Project Found :(', image: 'assets/projectEmpty.png')
                         : RefreshIndicator(
-                          onRefresh: () async {
-                            await activityProvider.fetchAllProjectsByOrganizer();
-                          },
-                          child: ListView.builder(
+                            onRefresh: () async {
+                              await activityProvider
+                                  .fetchAllProjectsByOrganizer();
+                            },
+                            child: ListView.builder(
                               itemCount: activityProvider.projects.length,
                               itemBuilder: (context, index) {
-                                final project = activityProvider.projects[index];
-                          
+                                final project =
+                                    activityProvider.projects[index];
                                 return CustomProjectList(
                                   projectID: project.eventID,
                                   project: project,
-                                  deleteFunction: (projectID) => _showDeleteDialog(project.eventID),
+                                  deleteFunction: (projectID) =>
+                                      _showDeleteDialog(project.eventID),
                                 );
-                              }),
-                        ),
+                              },
+                            ),
+                          ),
                   )
                 ],
               ),
@@ -153,31 +151,30 @@ class _ManageProjectState extends State<ManageProject> {
         return AlertDialog(
           backgroundColor: AppColors.background,
           title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to Delete this Project?\n*Highly Not Recommended if attendees have enrolled in this activity.'),
+          content: Text(
+              'Are you sure you want to Delete this Project?\n*Highly Not Recommended if attendees have enrolled in this activity.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel', style: TextStyle(color: AppColors.placeholder)),
+              child: Text('Cancel',
+                  style: TextStyle(color: AppColors.placeholder)),
             ),
             TextButton(
               onPressed: () async {
                 try {
                   await activityProvider.deleteProject(projectID);
-                  
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            'Sucessfully deleted the project.'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
 
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Sucessfully deleted the project.'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
                 } catch (e) {
                   print('Error delete project: $e');
                 }
-
 
                 Navigator.of(context).pop();
               },
@@ -189,3 +186,5 @@ class _ManageProjectState extends State<ManageProject> {
     );
   }
 }
+
+

@@ -337,4 +337,71 @@ class ActivityRepository {
     }
   }
 
+  Future<Map<String, int>> fetchProjectsStats(String organizerID) async {
+  try {
+    QuerySnapshot snapshot = await _firestore
+        .collection('events')
+        .where('hostDate', isGreaterThan: Timestamp.now())
+        .where('organizerID', isEqualTo: organizerID)
+        .get();
+
+    List<Project> ongoingProjects = snapshot.docs
+        .map((doc) => Project.fromFirestore(doc))
+        .toList();
+
+    QuerySnapshot completedProjectSnapshot = await _firestore
+        .collection('events')
+        .where('hostDate', isLessThanOrEqualTo: Timestamp.now())
+        .where('organizerID', isEqualTo: organizerID)
+        .get();
+
+    List<Project> completedProjects = completedProjectSnapshot.docs
+        .map((doc) => Project.fromFirestore(doc))
+        .toList();
+
+    return {
+      'ongoingProjects': ongoingProjects.length,
+      'completedProjects': completedProjects.length,
+    };
+
+  } catch (e) {
+    print('Error fetching ongoing projects: $e');
+    throw e;
+  }
+}
+
+Future<Map<String, int>> fetchSpeechesStats(String organizerID) async {
+  try {
+    QuerySnapshot snapshot = await _firestore
+        .collection('speeches')
+        .where('hostDate', isGreaterThan: Timestamp.now())
+        .where('organizerID', isEqualTo: organizerID)
+        .get();
+
+    List<Project> ongoingSpeeches = snapshot.docs
+        .map((doc) => Project.fromFirestore(doc))
+        .toList();
+
+    QuerySnapshot completedSpeechSnapshot = await _firestore
+        .collection('speeches')
+        .where('hostDate', isLessThanOrEqualTo: Timestamp.now())
+        .where('organizerID', isEqualTo: organizerID)
+        .get();
+
+    List<Project> completedSpeeches = completedSpeechSnapshot.docs
+        .map((doc) => Project.fromFirestore(doc))
+        .toList();
+
+    return {
+      'ongoingSpeeches': ongoingSpeeches.length,
+      'completedSpeeches': completedSpeeches.length,
+    };
+
+  } catch (e) {
+    print('Error fetching Speeches Stats: $e');
+    throw e;
+  }
+}
+
+
 }

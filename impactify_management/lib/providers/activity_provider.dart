@@ -25,6 +25,11 @@ class ActivityProvider with ChangeNotifier {
   List<User> _attendees = [];
   List<Activity> _activities = [];
   List<Tag> _tags = [];
+  int? _ongoingProjects = 0;
+  int? _completedProject = 0;
+  int? _ongoingSpeeches = 0;
+  int? _completedSpeeches = 0;
+  
   Project? _project;
   Speech? _speech;
   LatLng? _center;
@@ -41,6 +46,10 @@ class ActivityProvider with ChangeNotifier {
   List<Speech> get allSpeeches => _allSpeeches;
   List<User> get attendees => _attendees;
   List<Activity> get activities => _activities;
+  int? get ongoingProjects => _ongoingProjects;
+  int? get completedProject => _completedProject;
+  int? get ongoingSpeeches => _ongoingSpeeches;
+  int? get completedSpeeches => _completedSpeeches;
   List<Tag> get tags => _tags;
   LatLng? get center => _center;
   Marker? get marker => _marker;
@@ -190,6 +199,30 @@ class ActivityProvider with ChangeNotifier {
           .fetchAllActivities(_firebaseAuth.currentUser!.uid);
     } catch (e) {
       _activities = [];
+      print('Error in ActivityProvider: $e');
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+
+  Future<void> fetchAllActivitiesStats() async {
+    _isLoading = true;
+    notifyListeners();
+    Map<String, int>? _projectStats;
+    Map<String, int>? _speechStats;
+    try {
+      
+      _projectStats = await _activityRepository.fetchProjectsStats(_firebaseAuth.currentUser!.uid);
+      _speechStats = await _activityRepository.fetchSpeechesStats(_firebaseAuth.currentUser!.uid);
+
+      _ongoingProjects = _projectStats['ongoingProjects'];
+      _completedProject = _projectStats['completedProjects'];
+      _ongoingSpeeches = _speechStats['ongoingSpeeches'];
+      _completedSpeeches = _speechStats['completedSpeeches'];
+
+    } catch (e) {
+      
       print('Error in ActivityProvider: $e');
     }
     _isLoading = false;

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/providers/post_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
+import 'package:impactify_management/widgets/custom_empty.dart';
 import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:impactify_management/widgets/custom_post.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
@@ -104,14 +105,8 @@ class _ViewPostState extends State<ViewPost> {
                 
               )
             else if (postProvider.posts?.isEmpty ?? false)
-              Expanded(
-                child: Center(
-                  child: Text(
-                    'No Posts after Filtered.\nPlease Try Again.',
-                    style: GoogleFonts.merriweather(fontSize: 20, color: AppColors.primary),
-                  ),
-                ),
-              )
+              Expanded(child: EmptyWidget(text: 'No Posts after Filtered.\nPlease Try Again.', image: 'assets/no-filter.png'))
+              
             else
             
               Expanded(
