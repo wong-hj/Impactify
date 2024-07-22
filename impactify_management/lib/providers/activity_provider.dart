@@ -8,10 +8,12 @@ import 'package:impactify_management/models/project.dart';
 import 'package:impactify_management/models/speech.dart';
 import 'package:impactify_management/models/tag.dart';
 import 'package:impactify_management/models/user.dart';
+import 'package:impactify_management/providers/user_provider.dart';
 import 'package:impactify_management/repositories/activity_repository.dart';
 
 class ActivityProvider with ChangeNotifier {
   final ActivityRepository _activityRepository = ActivityRepository();
+  final UserProvider _userProvider = UserProvider();
   final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
 
   bool _isLoading = false;
@@ -27,6 +29,7 @@ class ActivityProvider with ChangeNotifier {
   Speech? _speech;
   LatLng? _center;
   Marker? _marker;
+  String? _errorLocation;
 
   bool get isLoading => _isLoading;
   bool get isUploadLoading => _isUploadLoading;
@@ -41,6 +44,7 @@ class ActivityProvider with ChangeNotifier {
   List<Tag> get tags => _tags;
   LatLng? get center => _center;
   Marker? get marker => _marker;
+  String? get errorLocation => _errorLocation;
 
   Future<void> fetchAllProjectsByOrganizer() async {
     _isLoading = true;
@@ -65,8 +69,8 @@ class ActivityProvider with ChangeNotifier {
   }
 
   Future<void> uploadRecording(XFile? video, String speechID) async {
-     _isUploadLoading = true;
-     notifyListeners();
+    _isUploadLoading = true;
+    notifyListeners();
 
     await _activityRepository.uploadRecording(video, speechID);
     await fetchSpeechByID(speechID);
@@ -76,61 +80,80 @@ class ActivityProvider with ChangeNotifier {
 
   Future<Project?> fetchProjectByID(String projectID) async {
     _isLoading = true;
+    _errorLocation = null;
+    _project = null; // Reset project details
+    _center = null; // Reset center
+    _marker = null; // Reset marker
+    _attendees = []; // Reset attendees list
     notifyListeners();
+
     try {
       _project = await _activityRepository.fetchProjectByID(projectID);
-      
-      List<Location> locations = await locationFromAddress(_project!.location);
-      _center = LatLng(locations.first.latitude, locations.first.longitude);
-      _marker = Marker(
-        markerId: MarkerId(_project!.location),
-        position: _center!,
-        infoWindow: InfoWindow(
-          title: _project!.location,
-        ),
-      );
 
-      _attendees = await _activityRepository.fetchAttendeesByProjectID(projectID);
+      try {
+        List<Location> locations =
+            await locationFromAddress(_project!.location);
+        _center = LatLng(locations.first.latitude, locations.first.longitude);
+        _marker = Marker(
+          markerId: MarkerId(_project!.location),
+          position: _center!,
+          infoWindow: InfoWindow(
+            title: _project!.location,
+          ),
+        );
+      } catch (e) {
+        // Handle address lookup failure
+        _errorLocation = 'Could not find any result for the given address.';
+      }
+
+      _attendees =
+          await _activityRepository.fetchAttendeesByProjectID(projectID);
 
       _isLoading = false;
       notifyListeners();
 
       return _project;
-    
     } catch (e) {
+      // _isLoading = false;
+      // _errorLocation = 'Error fetching Project';
+      // notifyListeners();
       print('Error in ProjectProvider: $e');
       throw Exception('Error fetching Project');
     }
-
-    
   }
 
   Future<Speech?> fetchSpeechByID(String speechID) async {
-    
+    _isLoading = true;
+    _errorLocation = null;
+    _project = null; // Reset project details
+    _center = null; // Reset center
+    _marker = null; // Reset marker
+    _attendees = []; // Reset attendees list
     try {
       _speech = await _activityRepository.fetchSpeechByID(speechID);
-      
-      List<Location> locations = await locationFromAddress(_speech!.location);
-      _center = LatLng(locations.first.latitude, locations.first.longitude);
-      _marker = Marker(
-        markerId: MarkerId(_speech!.location),
-        position: _center!,
-        infoWindow: InfoWindow(
-          title: _speech!.location,
-        ),
-      );
+      try {
+        List<Location> locations = await locationFromAddress(_speech!.location);
+        _center = LatLng(locations.first.latitude, locations.first.longitude);
+        _marker = Marker(
+          markerId: MarkerId(_speech!.location),
+          position: _center!,
+          infoWindow: InfoWindow(
+            title: _speech!.location,
+          ),
+        );
+      } catch (e) {
+        // Handle address lookup failure
+        _errorLocation = 'Could not find any result for the given address.';
+      }
 
-      _attendees = await _activityRepository.fetchAttendeesByProjectID(speechID);
-
+      _attendees =
+          await _activityRepository.fetchAttendeesByProjectID(speechID);
 
       return _speech;
-    
     } catch (e) {
       print('Error in ProjectProvider: $e');
       throw Exception('Error fetching Project');
     }
-
-    
   }
 
   void searchProjects(String searchText) {
@@ -138,8 +161,10 @@ class ActivityProvider with ChangeNotifier {
       _projects = _allProjects;
     } else {
       _projects = _allProjects.where((activity) {
-        return activity.title.toLowerCase().contains(searchText.toLowerCase()) ||
-               activity.location.toLowerCase().contains(searchText.toLowerCase());
+        return activity.title
+                .toLowerCase()
+                .contains(searchText.toLowerCase()) ||
+            activity.location.toLowerCase().contains(searchText.toLowerCase());
       }).toList();
     }
     notifyListeners();
@@ -150,8 +175,10 @@ class ActivityProvider with ChangeNotifier {
       _speeches = _allSpeeches;
     } else {
       _speeches = _allSpeeches.where((activity) {
-        return activity.title.toLowerCase().contains(searchText.toLowerCase()) ||
-               activity.location.toLowerCase().contains(searchText.toLowerCase());
+        return activity.title
+                .toLowerCase()
+                .contains(searchText.toLowerCase()) ||
+            activity.location.toLowerCase().contains(searchText.toLowerCase());
       }).toList();
     }
     notifyListeners();
@@ -162,9 +189,8 @@ class ActivityProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      _activities  = await _activityRepository.fetchAllActivities(_firebaseAuth.currentUser!.uid);
-      
-
+      _activities = await _activityRepository
+          .fetchAllActivities(_firebaseAuth.currentUser!.uid);
     } catch (e) {
       _activities = [];
       print('Error in ActivityProvider: $e');
@@ -184,17 +210,28 @@ class ActivityProvider with ChangeNotifier {
     notifyListeners();
   }
 
-   Future<void> addTag(String tagName) async {
+  Future<void> addTag(String tagName) async {
     notifyListeners();
     try {
       await _activityRepository.addTag(tagName);
       await fetchAllTags();
     } catch (e) {
-      
       print('Error in ActivityProvider: $e');
     }
     notifyListeners();
   }
 
+  Future<void> addProject(XFile? imageFile, Map<String, dynamic> data) async {
+    await _userProvider.fetchOrganizer();
+    final organizer = _userProvider.user!;
 
+    try {
+      await _activityRepository.addProject(
+          organizer.organizerID, organizer.organizationName, data, imageFile);
+    } catch (e) {
+      print('Error in ActivityProvider: $e');
+    }
+
+    notifyListeners();
+  }
 }

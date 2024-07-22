@@ -189,6 +189,41 @@ class ActivityRepository {
     print('Error adding tag: $e');
     throw e;  
   }
-}
+
+
+  
+
+  }
+
+  Future<void> addProject(String organizerID, String organizerName, Map<String, dynamic> data, XFile? imageFile) async {
+    DocumentReference docRef;
+    try {
+      if (imageFile != null) {
+        String fileName =
+            'projects/$organizerID/project_${DateTime.now().millisecondsSinceEpoch}.png';
+        Reference storageRef = _storage.ref().child(fileName);
+        UploadTask uploadTask = storageRef.putFile(File(imageFile.path));
+        TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get download URL
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+        data['image'] = downloadUrl;
+        data['organizerID'] = organizerID;
+        data['organizer'] = organizerName;
+
+        
+        // Create a new document in the posts collection
+        docRef = await _firestore.collection('events').add(data);
+
+        // Update the document with the document ID as the bookmarkID
+        await docRef.update({
+          'eventID': docRef.id,
+        });
+      }
+    } catch (e) {
+      throw Exception('Error adding project: $e');
+    }
+  }
 
 }

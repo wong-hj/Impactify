@@ -29,10 +29,9 @@ class CustomList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print((speechID != null).toString() + hasRecording!.toString() + (date1.compareTo(Timestamp.now()) < 0).toString() );
     DateTime date = date1.toDate();
     String formattedDate = DateFormat('dd MMMM yyyy, HH:mm')
-        .format(date)
+        .format(date.toUtc().toLocal())
         .toUpperCase();
 
     return Column(

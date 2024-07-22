@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
@@ -15,6 +16,7 @@ import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_buttons.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
 import 'package:filter_list/filter_list.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/custom_tag_pill.dart';
@@ -34,6 +36,7 @@ class _AddProjectState extends State<AddProject> {
       Provider.of<ActivityProvider>(context, listen: false).fetchAllTags();
     });
   }
+  final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _venueController = TextEditingController();
@@ -44,7 +47,7 @@ class _AddProjectState extends State<AddProject> {
   String? selectedImpoints;
   String? selectedSdg;
   DateTime? selectedDateTime;
-  List<Tag>? selectedTags = [];
+  List<Tag>? selectedTags;
 
   void _removeTag(Tag tag) {
     setState(() {
@@ -114,227 +117,247 @@ class _AddProjectState extends State<AddProject> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _image == null
-                  ? SizedBox.shrink()
-                  : Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              20) // Adjust the radius as needed
-                          ),
-                      child: Image.file(
-                        width: double.infinity,
-                        height: 300,
-                        fit: BoxFit.cover,
-                        File(_image!.path),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _image == null
+                    ? SizedBox.shrink()
+                    : Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                20) // Adjust the radius as needed
+                            ),
+                        child: Image.file(
+                          width: double.infinity,
+                          height: 300,
+                          fit: BoxFit.cover,
+                          File(_image!.path),
+                        ),
                       ),
-                    ),
-              SizedBox(height: 10),
-              Container(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                decoration: BoxDecoration(
-                  color: AppColors.tertiary,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        getImage();
-                      },
-                      icon:
-                          Icon(Icons.image_outlined, color: AppColors.primary),
-                      label: Text(
-                        'Pick an Image',
-                        style: GoogleFonts.poppins(
-                            fontSize: 12, color: AppColors.primary),
-                      ),
-                    ),
-                    Text(
-                      ' or ',
-                      style: GoogleFonts.poppins(fontSize: 12),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        getImageFromCamera();
-                      },
-                      icon: Icon(Icons.camera_alt_outlined,
-                          color: AppColors.primary),
-                      label: Text(
-                        'Take A Picture',
-                        style: GoogleFonts.poppins(
-                            fontSize: 12, color: AppColors.primary),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                decoration: BoxDecoration(
-                  color: AppColors.tertiary,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomTextFormField(
-                      controller: _titleController,
-                      placeholderText: 'Title',
-                      errorText: 'Please Insert Title.',
-                      onChanged: (value) {
-                        // Handle text field changes
-                      },
-                    ),
-                    CustomTextFormField(
-                      controller: _venueController,
-                      placeholderText: 'Venue',
-                      errorText: 'Please Insert Venue.',
-                      onChanged: (value) {
-                        // Handle text field changes
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  DatePicker.showDateTimePicker(context,
-                      showTitleActions: true,
-                      minTime: DateTime.now(),
-                      maxTime: DateTime(2030, 12, 31), onChanged: (date) {
-                    print('change $date');
-                  }, onConfirm: (date) {
-                    print('confirm $date');
-                    setState(() {
-                      selectedDateTime = date;
-                    });
-                  }, currentTime: DateTime.now(), locale: LocaleType.en);
-                },
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.tertiary,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        selectedDateTime != null
-                            ? 'Host Date - ${selectedDateTime}'
-                            : 'Host Date',
-                        style: GoogleFonts.poppins(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                  decoration: BoxDecoration(
-                    color: AppColors.tertiary,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  height: 200,
-                  child: CustomMultiLineTextForm(
-                      controller: _aboutController,
-                      placeholderText: 'Project Description',
-                      errorText: 'Please insert project description.')),
-              SizedBox(height: 10),
-              Container(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                decoration: BoxDecoration(
-                  color: AppColors.tertiary,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton2<String>(
-                    barrierColor: Colors.black.withAlpha(100),
-                    isExpanded: true,
-                    hint: Text(
-                      'Impoints',
-                      style: GoogleFonts.poppins(color: Colors.black),
-                    ),
-                    items: impointsDropdownItems,
-                    value: selectedImpoints,
-                    onChanged: (String? value) async {
-                      setState(() {
-                        selectedImpoints = value!;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                decoration: BoxDecoration(
-                  color: AppColors.tertiary,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton2<String>(
-                    barrierColor: Colors.black.withAlpha(100),
-                    isExpanded: true,
-                    hint: Text(
-                      'Sustainable Development Goals',
-                      style: GoogleFonts.poppins(color: Colors.black),
-                    ),
-                    items: sdgDropdownItems,
-                    value: selectedSdg,
-                    onChanged: (String? value) async {
-                      setState(() {
-                        selectedSdg = value!;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              GestureDetector(
-                onTap: openFilterDelegate,
-                child: Container(
-                  padding: EdgeInsets.all(20),
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   decoration: BoxDecoration(
                     color: AppColors.tertiary,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Click to add tags', style: GoogleFonts.poppins()),
-                      Icon(Icons.tag)
+                      TextButton.icon(
+                        onPressed: () {
+                          getImage();
+                        },
+                        icon:
+                            Icon(Icons.image_outlined, color: AppColors.primary),
+                        label: Text(
+                          'Pick an Image',
+                          style: GoogleFonts.poppins(
+                              fontSize: 12, color: AppColors.primary),
+                        ),
+                      ),
+                      Text(
+                        ' or ',
+                        style: GoogleFonts.poppins(fontSize: 12),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {
+                          getImageFromCamera();
+                        },
+                        icon: Icon(Icons.camera_alt_outlined,
+                            color: AppColors.primary),
+                        label: Text(
+                          'Take A Picture',
+                          style: GoogleFonts.poppins(
+                              fontSize: 12, color: AppColors.primary),
+                        ),
+                      ),
                     ],
                   ),
-
-                  // Handle tap
                 ),
-              ),
-              SizedBox(height: 5),
-              GestureDetector(
-                  onTap: _showAddTagDialog,
-                  child: CustomIconText(
-                      text: "Couldn't find the tag you want? Add Here!",
-                      icon: Icons.info_outline,
-                      size: 13,
-                      color: Colors.blue)),
-              SizedBox(height: 10),
-              if (selectedTags!.isNotEmpty)
-                TagPills(
-                  tags: selectedTags,
-                  onRemove: _removeTag,
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  decoration: BoxDecoration(
+                    color: AppColors.tertiary,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomTextFormField(
+                        controller: _titleController,
+                        placeholderText: 'Title',
+                        errorText: 'Please Insert Title.',
+                        onChanged: (value) {
+                          // Handle text field changes
+                        },
+                      ),
+                      CustomTextFormField(
+                        controller: _venueController,
+                        placeholderText: 'Venue',
+                        errorText: 'Please Insert Venue.',
+                        onChanged: (value) {
+                          // Handle text field changes
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              SizedBox(height: 20),
-              CustomPrimaryButton(text: 'List Project', onPressed: () {})
-            ],
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    DatePicker.showDateTimePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime.now(),
+                        maxTime: DateTime(2030, 12, 31), onChanged: (date) {
+                      print('change $date');
+                    }, onConfirm: (date) {
+                      print('confirm $date');
+                      setState(() {
+                        selectedDateTime = date;
+                      });
+                    }, currentTime: DateTime.now(), locale: LocaleType.en);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.tertiary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          selectedDateTime != null
+                              ? 'Host Date - ${DateFormat('dd MMMM yyyy, HH:mm').format(selectedDateTime!).toUpperCase()}'
+                              : 'Host Date',
+                          style: GoogleFonts.poppins(color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    decoration: BoxDecoration(
+                      color: AppColors.tertiary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    height: 200,
+                    child: CustomMultiLineTextForm(
+                        controller: _aboutController,
+                        placeholderText: 'Project Description',
+                        errorText: 'Please insert project description.')),
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.tertiary,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      barrierColor: Colors.black.withAlpha(100),
+                      isExpanded: true,
+                      hint: Text(
+                        'Impoints',
+                        style: GoogleFonts.poppins(color: Colors.black),
+                      ),
+                      items: impointsDropdownItems,
+                      value: selectedImpoints,
+                      onChanged: (String? value) async {
+                        setState(() {
+                          selectedImpoints = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.tertiary,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      barrierColor: Colors.black.withAlpha(100),
+                      isExpanded: true,
+                      hint: Text(
+                        'Sustainable Development Goals',
+                        style: GoogleFonts.poppins(color: Colors.black),
+                      ),
+                      items: sdgDropdownItems,
+                      value: selectedSdg,
+                      onChanged: (String? value) async {
+                        setState(() {
+                          selectedSdg = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: openFilterDelegate,
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.tertiary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Click to add tags (Optional)', style: GoogleFonts.poppins()),
+                        Icon(Icons.tag)
+                      ],
+                    ),
+            
+                    // Handle tap
+                  ),
+                ),
+                SizedBox(height: 5),
+                GestureDetector(
+                    onTap: _showAddTagDialog,
+                    child: CustomIconText(
+                        text: "Couldn't find the tag you want? Add Here!",
+                        icon: Icons.info_outline,
+                        size: 13,
+                        color: Colors.blue)),
+                SizedBox(height: 10),
+                if (selectedTags != null)
+                  TagPills(
+                    tags: selectedTags,
+                    onRemove: _removeTag,
+                  ),
+                SizedBox(height: 20),
+                CustomPrimaryButton(text: 'List Project', onPressed: () async {
+                  if (
+                    _formKey.currentState!.validate() 
+                    &&
+                      _image != null &&
+                      selectedImpoints != null && selectedDateTime != null && selectedSdg !=null) {
+                    //print("::: REACH1");
+                    _addProject();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            'Please fill out all fields and select an image'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                })
+              ],
+            ),
           ),
         ),
       ),
@@ -358,6 +381,46 @@ class _AddProjectState extends State<AddProject> {
       _image = image;
     });
   }
+
+  Future<void> _addProject() async {
+    print("::: REACH");
+    final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
+
+    List<String>? tagIDs;
+    
+    if (selectedTags != null) {
+      tagIDs = selectedTags!.map((tag) => tag.tagID).toList();
+    }
+
+    final data = {
+      'title': _titleController.text.trim(),
+      'location': _venueController.text.trim(),
+      'description': _aboutController.text,
+      'impointsAdd': int.parse(selectedImpoints!),
+      'sdg': selectedSdg,
+      'tags': tagIDs ?? null,
+      'hostDate': Timestamp.fromDate(selectedDateTime ?? DateTime.now()),
+      'createdAt': Timestamp.now(),
+      'status' : 'active',
+      'type': 'project'
+    };
+    print("::: ${data}");
+    try {
+await activityProvider.addProject(_image, data);
+    } catch (e) {
+      print("::: ERROR $e");
+    }
+    
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Project Listed!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+    Navigator.pop(context);
+  }
+
 
   void _showAddTagDialog() {
     final TextEditingController _tagController = TextEditingController();

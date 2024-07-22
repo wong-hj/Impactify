@@ -70,6 +70,7 @@ class _SpeechDetailState extends State<SpeechDetail> {
               onPickVideo: _pickVideo,
               onUploadVideo: _uploadVideo,
               videoName: videoName,
+              errorLocation: activityProvider.errorLocation
             );
           }
         },

@@ -77,7 +77,8 @@ class _ProjectDetailState extends State<ProjectDetail> {
                   onMapCreated: _onMapCreated,
                   center: activityProvider.center,
                   sdg: project.sdg,
-                  attendees: activityProvider.attendees
+                  attendees: activityProvider.attendees,
+                  errorLocation: activityProvider.errorLocation
                 );
               }
             }));

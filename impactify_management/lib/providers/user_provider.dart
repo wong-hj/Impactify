@@ -26,6 +26,14 @@ class UserProvider with ChangeNotifier {
 
   }
 
+  // Future<void> fetchCurrentUser() async {
+    
+  //   _user = await _userRepository.fetchOrganizer(_firebaseAuth.currentUser!.uid);
+
+  //   notifyListeners();
+    
+  // }
+
   Future<void> updateUserData(Map<String, dynamic> data, XFile? imageFile, XFile? ssmPdfFile) async {
     
     

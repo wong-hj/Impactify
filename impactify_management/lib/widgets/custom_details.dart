@@ -30,6 +30,8 @@ class CustomDetailScreen extends StatelessWidget {
   final List<User> attendees;
   final Function? onPickVideo;
   final Function? onUploadVideo;
+  final String? errorLocation;
+
 
   const CustomDetailScreen({
     required this.id,
@@ -52,6 +54,7 @@ class CustomDetailScreen extends StatelessWidget {
     this.videoName,
     this.onPickVideo,
     this.onUploadVideo,
+    this.errorLocation,
     Key? key,
   }) : super(key: key);
 
@@ -60,7 +63,6 @@ class CustomDetailScreen extends StatelessWidget {
     DateTime date = hostDate.toDate();
     String formattedDate =
         DateFormat('dd MMMM yyyy, HH:mm').format(date).toUpperCase();
-    bool isEventOver = date.isBefore(DateTime.now());
     return Stack(
       children: [
         SingleChildScrollView(
@@ -239,29 +241,35 @@ class CustomDetailScreen extends StatelessWidget {
                       ],
                     ],
                     SizedBox(height: 8),
-
                     CustomLargeIconText(
-                        icon: Icons.explore_outlined, text: 'Location'),
-                    SizedBox(height: 8),
-                    if (center != null && marker != null)
-                      Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: GoogleMap(
-                            onMapCreated: onMapCreated,
-                            initialCameraPosition: CameraPosition(
-                              target: center!,
-                              zoom: 13.0,
+                          icon: Icons.explore_outlined, text: 'Location'),
+                    if (errorLocation == null)...[
+                      
+                      SizedBox(height: 8),
+                      if (center != null && marker != null)
+                        Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: GoogleMap(
+                              onMapCreated: onMapCreated,
+                              initialCameraPosition: CameraPosition(
+                                target: center!,
+                                zoom: 13.0,
+                              ),
+                              markers: {marker!},
                             ),
-                            markers: {marker!},
                           ),
                         ),
-                      ),
+                      
+                    ] else...[ 
+                      Text(errorLocation!, style: GoogleFonts.poppins(
+                          fontSize: 12, color: AppColors.placeholder),)
+                    ],
                     SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
