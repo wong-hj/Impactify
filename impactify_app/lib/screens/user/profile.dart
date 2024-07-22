@@ -280,10 +280,10 @@ class HistoryContent extends StatelessWidget {
     if (userProvider.isHistoryLoading ?? false) {
       return Center(child: CustomLoading(text: "Fetching History..."));
     } else if (userProvider.history?.isEmpty ?? false) {
-      return 
-
-        EmptyWidget(text: 'Oops! Looks like you have not participated in any activities yet.', image: 'assets/oops.png');
-      
+      return EmptyWidget(
+          text:
+              'Oops! Looks like you have not participated in any activities yet.',
+          image: 'assets/oops.png');
     } else {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
