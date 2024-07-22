@@ -230,6 +230,37 @@ class ActivityRepository {
     }
   }
 
+  Future<void> addSpeech(String organizerID, String organizerName, Map<String, dynamic> data, XFile? imageFile) async {
+    DocumentReference docRef;
+    try {
+      if (imageFile != null) {
+        String fileName =
+            'speeches/$organizerID/speech_${DateTime.now().millisecondsSinceEpoch}.png';
+        Reference storageRef = _storage.ref().child(fileName);
+        UploadTask uploadTask = storageRef.putFile(File(imageFile.path));
+        TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get download URL
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+        data['image'] = downloadUrl;
+        data['organizerID'] = organizerID;
+        data['organizer'] = organizerName;
+
+        
+        // Create a new document in the posts collection
+        docRef = await _firestore.collection('speeches').add(data);
+
+        // Update the document with the document ID as the bookmarkID
+        await docRef.update({
+          'speechID': docRef.id,
+        });
+      }
+    } catch (e) {
+      throw Exception('Error adding speech: $e');
+    }
+  }
+
   Future<void> updateProject(Map<String, dynamic> data, XFile? imageFile) async {
     final projectID = data['projectID'];
 
@@ -256,6 +287,32 @@ class ActivityRepository {
     }
   }
 
+  Future<void> updateSpeech(Map<String, dynamic> data, XFile? imageFile) async {
+    final speechID = data['speechID'];
+
+    try {
+      if (imageFile != null) {
+        String fileName =
+            'projects/$speechID/project_${DateTime.now().millisecondsSinceEpoch}.png';
+        Reference storageRef = _storage.ref().child(fileName);
+        UploadTask uploadTask = storageRef.putFile(File(imageFile.path));
+        TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get download URL
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+        data['image'] = downloadUrl;
+
+      }
+
+      // Create a new document in the posts collection
+        await _firestore.collection('speeches').doc(speechID).update(data);
+
+    } catch (e) {
+      throw Exception('Error updating speech: $e');
+    }
+  }
+
   Future<void> deleteProject(String projectID) async {
     try {
 
@@ -266,6 +323,17 @@ class ActivityRepository {
 
     } catch (e) {
       throw Exception('Error Deleting project: $e');
+    }
+  }
+
+  Future<void> deleteSpeech(String speechID) async {
+    try {
+      DocumentReference docRef = await _firestore.collection('speeches').doc(speechID);
+
+      await docRef.update({'status': 'inactive'});
+
+    } catch (e) {
+      throw Exception('Error Deleting Speech: $e');
     }
   }
 

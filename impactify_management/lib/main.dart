@@ -5,9 +5,11 @@ import 'package:impactify_management/providers/auth_provider.dart';
 import 'package:impactify_management/providers/post_provider.dart';
 import 'package:impactify_management/providers/user_provider.dart';
 import 'package:impactify_management/screens/add_project.dart';
+import 'package:impactify_management/screens/add_speech.dart';
 import 'package:impactify_management/screens/attendees.dart';
 import 'package:impactify_management/screens/dashboard.dart';
 import 'package:impactify_management/screens/edit_project.dart';
+import 'package:impactify_management/screens/edit_speech.dart';
 import 'package:impactify_management/screens/home_screen.dart';
 import 'package:impactify_management/screens/login.dart';
 import 'package:impactify_management/screens/manage_project.dart';
@@ -62,6 +64,9 @@ class MyApp extends StatelessWidget {
             '/viewPost': (context) => ViewPost(),
             '/addProject': (context) => AddProject(),
             '/editProject': (context) => EditProject(),
+            '/addSpeech': (context) => AddSpeech(),
+            '/editSpeech': (context) => EditSpeech(),
+
 
 
 

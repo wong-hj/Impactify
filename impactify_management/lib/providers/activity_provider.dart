@@ -235,6 +235,21 @@ class ActivityProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> addSpeech(XFile? imageFile, Map<String, dynamic> data) async {
+    await _userProvider.fetchOrganizer();
+    final organizer = _userProvider.user!;
+
+    try {
+      await _activityRepository.addSpeech(
+          organizer.organizerID, organizer.organizationName, data, imageFile);
+      await fetchAllSpeechesByOrganizer();
+    } catch (e) {
+      print('Error in ActivityProvider: $e');
+    }
+
+    notifyListeners();
+  }
+
   Future<void> updateProject(XFile? imageFile, Map<String, dynamic> data) async {
     
 
@@ -248,10 +263,33 @@ class ActivityProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateSpeech(XFile? imageFile, Map<String, dynamic> data) async {
+    
+
+    try {
+      await _activityRepository.updateSpeech(data, imageFile);
+      //await fetchAllProjectsByOrganizer();
+    } catch (e) {
+      print('Error in ActivityProvider: $e');
+    }
+
+    notifyListeners();
+  }
+
   Future<void> deleteProject(String projectID) async {
 
     try {
       await _activityRepository.deleteProject(projectID);
+    } catch (e) {
+      print('Error in ActivityProvider: $e');
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteSpeech(String speechID) async {
+
+    try {
+      await _activityRepository.deleteSpeech(speechID);
     } catch (e) {
       print('Error in ActivityProvider: $e');
     }

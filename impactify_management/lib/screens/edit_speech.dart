@@ -21,14 +21,14 @@ import 'package:provider/provider.dart';
 
 import '../widgets/custom_tag_pill.dart';
 
-class EditProject extends StatefulWidget {
-  const EditProject({super.key});
+class EditSpeech extends StatefulWidget {
+  const EditSpeech({super.key});
 
   @override
-  State<EditProject> createState() => _EditProjectState();
+  State<EditSpeech> createState() => _EditSpeechState();
 }
 
-class _EditProjectState extends State<EditProject> {
+class _EditSpeechState extends State<EditSpeech> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _titleController = TextEditingController();
@@ -37,30 +37,32 @@ class _EditProjectState extends State<EditProject> {
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
   
+  String? selectedProject;
 
-  String? selectedImpoints;
-  String? selectedSdg;
   DateTime? selectedDateTime;
   List<Tag>? selectedTags;
   List<String> tagIDs = [];
-  String? projectID;
+  String? speechID;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
-      activityProvider.fetchAllTags();
       final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
+      activityProvider.fetchAllTags();
+      activityProvider.fetchProjectByID(args['projectID']);
+      activityProvider.fetchAllProjectsByOrganizer();
+
+      
     _titleController.text = args['title'];
     _venueController.text = args['location'];
     _aboutController.text = args['description'];
     selectedDateTime = args['hostDate'];
-    selectedSdg = args['sdg'];
+    selectedProject = args['projectID'];
     tagIDs = List<String>.from(args['tags'] ?? []);
-    selectedImpoints = args['impoints'];
-    projectID = args['projectID'];
+    speechID = args['speechID'];
     // Filter tags based on tagIDs
     //final activityProvider = Provider.of<ActivityProvider>(context);
     setState(() {
@@ -126,12 +128,16 @@ class _EditProjectState extends State<EditProject> {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    List<DropdownMenuItem<String>> impointsDropdownItems =
-        impoints.map((impoint) {
+
+    final activityProvider =
+        Provider.of<ActivityProvider>(context);
+
+    List<DropdownMenuItem<String>> projectDropdownItems =
+        activityProvider.projects.map((project) {
       return DropdownMenuItem<String>(
-        value: impoint,
+        value: project.eventID,
         child: Text(
-          impoint,
+          project.title,
           style: GoogleFonts.merriweather(fontSize: 14),
         ),
       );
@@ -296,6 +302,7 @@ class _EditProjectState extends State<EditProject> {
                         placeholderText: 'Project Description',
                         errorText: 'Please insert project description.')),
                 SizedBox(height: 10),
+                
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                   decoration: BoxDecoration(
@@ -307,39 +314,14 @@ class _EditProjectState extends State<EditProject> {
                       barrierColor: Colors.black.withAlpha(100),
                       isExpanded: true,
                       hint: Text(
-                        'Impoints',
+                        'For Project',
                         style: GoogleFonts.poppins(color: Colors.black),
                       ),
-                      items: impointsDropdownItems,
-                      value: selectedImpoints,
+                      items: projectDropdownItems,
+                      value: selectedProject,
                       onChanged: (String? value) async {
                         setState(() {
-                          selectedImpoints = value!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  decoration: BoxDecoration(
-                    color: AppColors.tertiary,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      barrierColor: Colors.black.withAlpha(100),
-                      isExpanded: true,
-                      hint: Text(
-                        'Sustainable Development Goals',
-                        style: GoogleFonts.poppins(color: Colors.black),
-                      ),
-                      items: sdgDropdownItems,
-                      value: selectedSdg,
-                      onChanged: (String? value) async {
-                        setState(() {
-                          selectedSdg = value!;
+                          selectedProject = value!;
                         });
                       },
                     ),
@@ -382,14 +364,13 @@ class _EditProjectState extends State<EditProject> {
                   ),
                 SizedBox(height: 20),
                 CustomPrimaryButton(
-                    text: 'Update Project',
+                    text: 'Update Speech',
                     onPressed: () async {
                       if (_formKey.currentState!.validate() &&
-                          selectedImpoints != null &&
                           selectedDateTime != null &&
-                          selectedSdg != null) {
+                          selectedProject != null) {
                         
-                        _updateProject();
+                        _updateSpeech();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -426,7 +407,7 @@ class _EditProjectState extends State<EditProject> {
     });
   }
 
-  Future<void> _updateProject() async {
+  Future<void> _updateSpeech() async {
     
     final activityProvider =
         Provider.of<ActivityProvider>(context, listen: false);
@@ -438,17 +419,16 @@ class _EditProjectState extends State<EditProject> {
     }
 
     final data = {
-      'projectID': projectID,
+      'speechID': speechID,
       'title': _titleController.text.trim(),
       'location': _venueController.text.trim(),
       'description': _aboutController.text,
-      'impointsAdd': int.parse(selectedImpoints!),
-      'sdg': selectedSdg,
+      'eventID': selectedProject,
       'tags': tagIDs ?? null,
       'hostDate': Timestamp.fromDate(selectedDateTime ?? DateTime.now()),
     };
     try {
-      await activityProvider.updateProject(_image, data);
+      await activityProvider.updateSpeech(_image, data);
     } catch (e) {
       print("::: ERROR $e");
     }

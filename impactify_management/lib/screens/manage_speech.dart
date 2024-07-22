@@ -30,7 +30,7 @@ class _ManageSpeechState extends State<ManageSpeech> {
   }
 
   String searchText = '';
-  
+
   void _searchActivities(String text) {
     setState(() {
       searchText = text;
@@ -47,6 +47,7 @@ class _ManageSpeechState extends State<ManageSpeech> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
 
+          Navigator.pushNamed(context, '/addSpeech');
         },
         backgroundColor: AppColors.tertiary,
         foregroundColor: Colors.black,
@@ -56,87 +57,138 @@ class _ManageSpeechState extends State<ManageSpeech> {
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-        child: 
-        activityProvider.isLoading ?
-        CustomLoading(text: 'Fetching Speeches...')
-        :
-        Column(crossAxisAlignment: CrossAxisAlignment.start, 
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'Manage\nSpeeches',
-                style:
-                    GoogleFonts.merriweather(fontSize: 24, color: Colors.black),
-              ),
-              SizedBox(width: 7),
-              Expanded(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight:
-                        40, // Adjust this value to set the desired height
-                  ),
-                  child: TextField(
-                    onChanged: (text) {
-                      _searchActivities(text);
-                    },
-                    onTapOutside: ((event) {
-                      FocusScope.of(context).unfocus();
-                    }),
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      hintStyle: GoogleFonts.poppins(
-                          fontSize: 12), // Smaller font size
-                      suffixIcon:
-                          Icon(Icons.search, size: 20), // Smaller icon size
-                      filled: true,
-                      isDense: true,
-                      fillColor: Colors.white,
-                      focusColor: AppColors.tertiary,
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 8.0), // Reduced padding
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+        child: activityProvider.isLoading
+            ? CustomLoading(text: 'Fetching Speeches...')
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Manage\nSpeeches',
+                        style: GoogleFonts.merriweather(
+                            fontSize: 24, color: Colors.black),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primary),
-                        borderRadius: BorderRadius.circular(30),
+                      SizedBox(width: 7),
+                      Expanded(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: 40,
+                          ),
+                          child: TextField(
+                            onChanged: (text) {
+                              _searchActivities(text);
+                            },
+                            onTapOutside: ((event) {
+                              FocusScope.of(context).unfocus();
+                            }),
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              hintStyle: GoogleFonts.poppins(
+                                  fontSize: 12), // Smaller font size
+                              suffixIcon: Icon(Icons.search,
+                                  size: 20), // Smaller icon size
+                              filled: true,
+                              isDense: true,
+                              fillColor: Colors.white,
+                              focusColor: AppColors.tertiary,
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10.0,
+                                  vertical: 8.0), // Reduced padding
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: AppColors.primary),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
+                  SizedBox(height: 20),
+                  Expanded(
+                    child: activityProvider.speeches.isEmpty
+                        ? Center(
+                            child: Text(
+                              'No Speeches Found.',
+                              style: GoogleFonts.poppins(
+                                  color: AppColors.primary, fontSize: 18),
+                            ),
+                          )
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              await activityProvider
+                                  .fetchAllSpeechesByOrganizer();
+                            },
+                            child: ListView.builder(
+                              itemCount: activityProvider.speeches.length,
+                              itemBuilder: (context, index) {
+                                final speech = activityProvider.speeches[index];
+
+                                return CustomSpeechList(
+                                  speechID: speech.speechID,
+                                  speech: speech,
+                                  hasRecording:
+                                      speech.recording!.isEmpty ? false : true,
+                                  deleteFunction: (speechID) =>
+                                      _showDeleteDialog(speech.speechID),
+                                );
+                              },
+                            ),
+                          ),
+                  )
+                ],
               ),
-            ],
-          ),
-          SizedBox(height: 20),
-          // // Expanded(
-          // //   child: activityProvider.speeches.isEmpty
-          // //       ? Center(
-          // //           child: Text(
-          // //             'No Speeches Found.',
-          // //             style: GoogleFonts.poppins(
-          // //                 color: AppColors.primary, fontSize: 18),
-          // //           ),
-          // //         )
-          // //       : ListView.builder(
-          // //           itemCount: activityProvider.speeches.length,
-          // //           itemBuilder: (context, index) {
-          // //             final speech = activityProvider.speeches[index];
-                      
-          // //             return CustomList(
-          // //               speechID: speech.speechID,
-          // //               title: speech.title,
-          // //               date1: speech.hostDate,
-          // //               image: speech.image,
-          // //               location: speech.location,
-          // //               hasRecording: speech.recording!.isEmpty ? false : true,
-          // //               deleteFunction: (),
-          // //             );
-          // //           }),
-          // )
-        ]),
       ),
+    );
+  }
+
+  void _showDeleteDialog(String speechID) async {
+    final activityProvider =
+        Provider.of<ActivityProvider>(context, listen: false);
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.background,
+          title: Text('Confirm Delete'),
+          content: Text('Are you sure you want to Delete this Speech?\n*Highly Not Recommended if attendees have enrolled in this activity.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('Cancel',
+                  style: TextStyle(color: AppColors.placeholder)),
+            ),
+            TextButton(
+              onPressed: () async {
+                try {
+                  await activityProvider.deleteSpeech(speechID);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Sucessfully deleted the speech.'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } catch (e) {
+                  print('Error delete speech: $e');
+                }
+
+                Navigator.of(context).pop();
+              },
+              child: Text('Confirm', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

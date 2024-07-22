@@ -129,7 +129,7 @@ class _ManageProjectState extends State<ManageProject> {
                               itemBuilder: (context, index) {
                                 final project = activityProvider.projects[index];
                           
-                                return CustomList(
+                                return CustomProjectList(
                                   projectID: project.eventID,
                                   project: project,
                                   deleteFunction: (projectID) => _showDeleteDialog(project.eventID),
@@ -153,7 +153,7 @@ class _ManageProjectState extends State<ManageProject> {
         return AlertDialog(
           backgroundColor: AppColors.background,
           title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to Delete this Project?'),
+          content: Text('Are you sure you want to Delete this Project?\n*Highly Not Recommended if attendees have enrolled in this activity.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {

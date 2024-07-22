@@ -241,7 +241,7 @@ class CustomMultiLineTextForm extends StatelessWidget {
               borderSide: BorderSide(
                   color: AppColors.primary, width: 2.0))),
       style: GoogleFonts.poppins(
-          fontSize: 12, color: AppColors.placeholder),
+          fontSize: 14, color: Colors.black),
       maxLines: null,
       expands: true,
       validator: (value) {

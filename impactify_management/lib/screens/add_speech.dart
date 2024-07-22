@@ -21,64 +21,34 @@ import 'package:provider/provider.dart';
 
 import '../widgets/custom_tag_pill.dart';
 
-class EditProject extends StatefulWidget {
-  const EditProject({super.key});
+class AddSpeech extends StatefulWidget {
+  const AddSpeech({super.key});
 
   @override
-  State<EditProject> createState() => _EditProjectState();
+  State<AddSpeech> createState() => _AddSpeechState();
 }
 
-class _EditProjectState extends State<EditProject> {
-  final _formKey = GlobalKey<FormState>();
-
-  late TextEditingController _titleController = TextEditingController();
-  late TextEditingController _venueController = TextEditingController();
-  late TextEditingController _aboutController = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
-  XFile? _image;
-  
-
-  String? selectedImpoints;
-  String? selectedSdg;
-  DateTime? selectedDateTime;
-  List<Tag>? selectedTags;
-  List<String> tagIDs = [];
-  String? projectID;
-
+class _AddSpeechState extends State<AddSpeech> {
   @override
   void initState() {
     super.initState();
+    final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
       activityProvider.fetchAllTags();
-      final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    _titleController.text = args['title'];
-    _venueController.text = args['location'];
-    _aboutController.text = args['description'];
-    selectedDateTime = args['hostDate'];
-    selectedSdg = args['sdg'];
-    tagIDs = List<String>.from(args['tags'] ?? []);
-    selectedImpoints = args['impoints'];
-    projectID = args['projectID'];
-    // Filter tags based on tagIDs
-    //final activityProvider = Provider.of<ActivityProvider>(context);
-    setState(() {
-      selectedTags = activityProvider.tags
-          .where((tag) => tagIDs.contains(tag.tagID))
-          .toList();
-    });
+      activityProvider.fetchAllProjectsByOrganizer();
     });
   }
+  final _formKey = GlobalKey<FormState>();
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-    
-    
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _venueController = TextEditingController();
+  final TextEditingController _aboutController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
 
-    
-  // }
+  String? selectedProject;
+  DateTime? selectedDateTime;
+  List<Tag>? selectedTags;
 
   void _removeTag(Tag tag) {
     setState(() {
@@ -87,12 +57,8 @@ class _EditProjectState extends State<EditProject> {
   }
 
   void openFilterDelegate() async {
-
     final activityProvider =
         Provider.of<ActivityProvider>(context, listen: false);
-        selectedTags = activityProvider.tags
-          .where((tag) => tagIDs.contains(tag.tagID))
-          .toList();
     await FilterListDelegate.show<Tag>(
       context: context,
       list: activityProvider.tags,
@@ -124,25 +90,15 @@ class _EditProjectState extends State<EditProject> {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    List<DropdownMenuItem<String>> impointsDropdownItems =
-        impoints.map((impoint) {
-      return DropdownMenuItem<String>(
-        value: impoint,
-        child: Text(
-          impoint,
-          style: GoogleFonts.merriweather(fontSize: 14),
-        ),
-      );
-    }).toList();
+    final activityProvider =
+        Provider.of<ActivityProvider>(context);
 
-    List<DropdownMenuItem<String>> sdgDropdownItems =
-        sdgMap.entries.map((entry) {
+    List<DropdownMenuItem<String>> projectDropdownItems =
+        activityProvider.projects.map((project) {
       return DropdownMenuItem<String>(
-        value: entry.key,
+        value: project.eventID,
         child: Text(
-          entry.value,
+          project.title,
           style: GoogleFonts.merriweather(fontSize: 14),
         ),
       );
@@ -150,7 +106,7 @@ class _EditProjectState extends State<EditProject> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('Edit your Project', style: GoogleFonts.merriweather())),
+          title: Text('Host your Speech', style: GoogleFonts.merriweather())),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -159,26 +115,21 @@ class _EditProjectState extends State<EditProject> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                          20) // Adjust the radius as needed
-                      ),
-                  child: _image == null
-                      ? Image.network(
-                          args['image'],
-                          width: double.infinity,
-                          height: 300,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
+                _image == null
+                    ? SizedBox.shrink()
+                    : Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                20) // Adjust the radius as needed
+                            ),
+                        child: Image.file(
                           width: double.infinity,
                           height: 300,
                           fit: BoxFit.cover,
                           File(_image!.path),
                         ),
-                ),
+                      ),
                 SizedBox(height: 10),
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -192,8 +143,8 @@ class _EditProjectState extends State<EditProject> {
                         onPressed: () {
                           getImage();
                         },
-                        icon: Icon(Icons.image_outlined,
-                            color: AppColors.primary),
+                        icon:
+                            Icon(Icons.image_outlined, color: AppColors.primary),
                         label: Text(
                           'Pick an Image',
                           style: GoogleFonts.poppins(
@@ -261,7 +212,7 @@ class _EditProjectState extends State<EditProject> {
                       setState(() {
                         selectedDateTime = date;
                       });
-                    }, currentTime: selectedDateTime != null ? selectedDateTime : DateTime.now(), locale: LocaleType.en);
+                    }, currentTime: DateTime.now(), locale: LocaleType.en);
                   },
                   child: Container(
                     padding: EdgeInsets.all(20),
@@ -293,9 +244,10 @@ class _EditProjectState extends State<EditProject> {
                     height: 200,
                     child: CustomMultiLineTextForm(
                         controller: _aboutController,
-                        placeholderText: 'Project Description',
-                        errorText: 'Please insert project description.')),
+                        placeholderText: 'Speech Description',
+                        errorText: 'Please insert speech description.')),
                 SizedBox(height: 10),
+              
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                   decoration: BoxDecoration(
@@ -307,39 +259,14 @@ class _EditProjectState extends State<EditProject> {
                       barrierColor: Colors.black.withAlpha(100),
                       isExpanded: true,
                       hint: Text(
-                        'Impoints',
+                        'For Project:',
                         style: GoogleFonts.poppins(color: Colors.black),
                       ),
-                      items: impointsDropdownItems,
-                      value: selectedImpoints,
+                      items: projectDropdownItems,
+                      value: selectedProject,
                       onChanged: (String? value) async {
                         setState(() {
-                          selectedImpoints = value!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  decoration: BoxDecoration(
-                    color: AppColors.tertiary,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      barrierColor: Colors.black.withAlpha(100),
-                      isExpanded: true,
-                      hint: Text(
-                        'Sustainable Development Goals',
-                        style: GoogleFonts.poppins(color: Colors.black),
-                      ),
-                      items: sdgDropdownItems,
-                      value: selectedSdg,
-                      onChanged: (String? value) async {
-                        setState(() {
-                          selectedSdg = value!;
+                          selectedProject = value!;
                         });
                       },
                     ),
@@ -357,12 +284,11 @@ class _EditProjectState extends State<EditProject> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Click to add tags (Optional)',
-                            style: GoogleFonts.poppins()),
+                        Text('Click to add tags (Optional)', style: GoogleFonts.poppins()),
                         Icon(Icons.tag)
                       ],
                     ),
-
+            
                     // Handle tap
                   ),
                 ),
@@ -381,25 +307,23 @@ class _EditProjectState extends State<EditProject> {
                     onRemove: _removeTag,
                   ),
                 SizedBox(height: 20),
-                CustomPrimaryButton(
-                    text: 'Update Project',
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate() &&
-                          selectedImpoints != null &&
-                          selectedDateTime != null &&
-                          selectedSdg != null) {
-                        
-                        _updateProject();
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                'Please fill out all fields and select an image'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    })
+                CustomPrimaryButton(text: 'List Speech', onPressed: () async {
+                  if (
+                    _formKey.currentState!.validate() 
+                    &&
+                      _image != null && selectedDateTime != null && selectedProject !=null) {
+                    //print("::: REACH1");
+                    _addSpeech();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            'Please fill out all fields and select an image'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                })
               ],
             ),
           ),
@@ -426,41 +350,45 @@ class _EditProjectState extends State<EditProject> {
     });
   }
 
-  Future<void> _updateProject() async {
-    
-    final activityProvider =
-        Provider.of<ActivityProvider>(context, listen: false);
+  Future<void> _addSpeech() async {
+    print("::: REACH");
+    final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
 
     List<String>? tagIDs;
-
+    
     if (selectedTags != null) {
       tagIDs = selectedTags!.map((tag) => tag.tagID).toList();
     }
 
     final data = {
-      'projectID': projectID,
       'title': _titleController.text.trim(),
       'location': _venueController.text.trim(),
       'description': _aboutController.text,
-      'impointsAdd': int.parse(selectedImpoints!),
-      'sdg': selectedSdg,
       'tags': tagIDs ?? null,
+      'eventID': selectedProject,
       'hostDate': Timestamp.fromDate(selectedDateTime ?? DateTime.now()),
+      'createdAt': Timestamp.now(),
+      'recording': "",
+      'status' : 'active',
+      'type': 'speech'
     };
+    print("::: ${data}");
     try {
-      await activityProvider.updateProject(_image, data);
+      await activityProvider.addSpeech(_image, data);
     } catch (e) {
       print("::: ERROR $e");
     }
+    
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Project Successfully Updated!'),
+        content: Text('Speech Listed!'),
         backgroundColor: Colors.green,
       ),
     );
     Navigator.pop(context);
   }
+
 
   void _showAddTagDialog() {
     final TextEditingController _tagController = TextEditingController();
@@ -499,7 +427,9 @@ class _EditProjectState extends State<EditProject> {
                     ),
                   );
                 }
-                setState(() {});
+                setState(() {
+                  
+                });
                 Navigator.of(context).pop();
               },
             ),

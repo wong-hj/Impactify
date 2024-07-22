@@ -3,24 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/models/project.dart';
+import 'package:impactify_management/models/speech.dart';
 import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 
-class CustomList extends StatelessWidget {
+class CustomProjectList extends StatelessWidget {
   final String? projectID;
-  final String? speechID;
-  final bool? hasRecording;
   final Project project;
   final Function(String projectID) deleteFunction;
 
-  const CustomList({
+  const CustomProjectList({
     this.projectID,
-    this.speechID,
     required this.deleteFunction,
     required this.project,
-    this.hasRecording = false,
     Key? key,
   }) : super(key: key);
 
@@ -84,17 +81,8 @@ class CustomList extends StatelessWidget {
             ),
             child: GestureDetector(
               onTap: () {
-                projectID != null
-                    ? Navigator.pushNamed(
-                        context,
-                        '/projectDetail',
-                        arguments: projectID,
-                      )
-                    : Navigator.pushNamed(
-                        context,
-                        '/speechDetail',
-                        arguments: speechID,
-                      );
+                Navigator.pushNamed(context, '/projectDetail',
+                    arguments: projectID);
               },
               child: Stack(
                 children: [
@@ -135,9 +123,141 @@ class CustomList extends StatelessWidget {
                       ),
                     ],
                   ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Divider(
+          color: Colors.grey,
+          thickness: 1,
+        ),
+      ],
+    );
+  }
+}
+
+class CustomSpeechList extends StatelessWidget {
+  final String? speechID;
+  final bool? hasRecording;
+  final Speech speech;
+  final Function(String speechID) deleteFunction;
+
+  const CustomSpeechList({
+    this.speechID,
+    required this.deleteFunction,
+    required this.speech,
+    this.hasRecording = false,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    DateTime date = speech.hostDate.toDate();
+    String formattedDate =
+        DateFormat('dd MMMM yyyy, HH:mm').format(date).toUpperCase();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Slidable(
+            key: Key(speech.title),
+            startActionPane: ActionPane(
+              extentRatio: 0.3,
+              motion: ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) {
+                    Navigator.pushNamed(
+                      context,
+                      '/editSpeech',
+                      arguments: {
+                        'speechID': speech.speechID,
+                        'title': speech.title,
+                        'location': speech.location,
+                        'projectID': speech.eventID,
+                        'description': speech.description,
+                        'hostDate': speech.hostDate.toDate(),
+                        'tags': speech.tags,
+                        'image': speech.image,
+                      },
+                    );
+                  },
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  icon: Icons.edit_square,
+                  label: 'Edit',
+                ),
+              ],
+            ),
+            endActionPane: ActionPane(
+              extentRatio: 0.3,
+              motion: ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) {
+                    if (speechID != null) {
+                      deleteFunction(speechID!);
+                    }
+                  },
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                ),
+              ],
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/speechDetail',
+                  arguments: speechID,
+                );
+              },
+              child: Stack(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        speech.image,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              speech.title,
+                              style: GoogleFonts.merriweather(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            CustomIconText(
+                                text: speech.location,
+                                icon: Icons.pin_drop_outlined,
+                                size: 12,
+                                color: AppColors.primary),
+                            SizedBox(height: 2),
+                            CustomIconText(
+                                text: formattedDate,
+                                icon: Icons.calendar_month,
+                                size: 12,
+                                color: AppColors.primary),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                   if ((speechID != null) &&
                       !hasRecording! &&
-                      project.hostDate.compareTo(Timestamp.now()) < 0)
+                      speech.hostDate.compareTo(Timestamp.now()) < 0)
                     Positioned(
                       bottom: 1,
                       right: 1,

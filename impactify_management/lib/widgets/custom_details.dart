@@ -192,7 +192,9 @@ class CustomDetailScreen extends StatelessWidget {
                               ? Colors.red
                               : Colors.black),
                       SizedBox(height: 8),
-                      if (recordingUrl!.isEmpty) ...[
+                      if (recordingUrl!.isEmpty && 
+                      hostDate.compareTo(Timestamp.now()) < 0
+                      ) ...[
                         Text(
                           "Add recording of the speech for users' reference!",
                           style: GoogleFonts.poppins(
@@ -227,25 +229,33 @@ class CustomDetailScreen extends StatelessWidget {
                             ),
                           ],
                         )
-                      ] else ...[
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/recording',
-                                arguments: recordingUrl,
-                              );
-                            },
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            child: Text(
-                              'View Recording >',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 14, color: AppColors.primary),
-                            )),
-                      ],
+                      ] else if(recordingUrl!.isNotEmpty)...[
+                        
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/recording',
+                                  arguments: recordingUrl,
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                'View Recording >',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14, color: AppColors.primary),
+                              )),
+                      ] else...[
+                        Text(
+                          "Remember to add recording when the speech ends for user references!",
+                          style: GoogleFonts.poppins(
+                              fontSize: 14, color: AppColors.placeholder),
+                        ),
+                      ]
+                      
                     ],
                     SizedBox(height: 20),
                     CustomLargeIconText(
