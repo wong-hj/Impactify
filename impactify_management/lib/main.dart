@@ -7,6 +7,7 @@ import 'package:impactify_management/providers/user_provider.dart';
 import 'package:impactify_management/screens/add_project.dart';
 import 'package:impactify_management/screens/attendees.dart';
 import 'package:impactify_management/screens/dashboard.dart';
+import 'package:impactify_management/screens/edit_project.dart';
 import 'package:impactify_management/screens/home_screen.dart';
 import 'package:impactify_management/screens/login.dart';
 import 'package:impactify_management/screens/manage_project.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
             '/recording': (context) => Recording(),
             '/viewPost': (context) => ViewPost(),
             '/addProject': (context) => AddProject(),
+            '/editProject': (context) => EditProject(),
 
 
 

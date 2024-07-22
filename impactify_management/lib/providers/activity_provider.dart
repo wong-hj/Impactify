@@ -207,6 +207,8 @@ class ActivityProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  
+
   Future<void> addTag(String tagName) async {
     notifyListeners();
     try {
@@ -233,11 +235,23 @@ class ActivityProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateProject(XFile? imageFile, Map<String, dynamic> data) async {
+    
+
+    try {
+      await _activityRepository.updateProject(data, imageFile);
+      //await fetchAllProjectsByOrganizer();
+    } catch (e) {
+      print('Error in ActivityProvider: $e');
+    }
+
+    notifyListeners();
+  }
+
   Future<void> deleteProject(String projectID) async {
 
     try {
       await _activityRepository.deleteProject(projectID);
-      //await fetchAllProjectsByOrganizer();
     } catch (e) {
       print('Error in ActivityProvider: $e');
     }

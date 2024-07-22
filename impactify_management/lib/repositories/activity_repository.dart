@@ -230,6 +230,32 @@ class ActivityRepository {
     }
   }
 
+  Future<void> updateProject(Map<String, dynamic> data, XFile? imageFile) async {
+    final projectID = data['projectID'];
+
+    try {
+      if (imageFile != null) {
+        String fileName =
+            'projects/$projectID/project_${DateTime.now().millisecondsSinceEpoch}.png';
+        Reference storageRef = _storage.ref().child(fileName);
+        UploadTask uploadTask = storageRef.putFile(File(imageFile.path));
+        TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get download URL
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+        data['image'] = downloadUrl;
+
+      }
+
+      // Create a new document in the posts collection
+        await _firestore.collection('events').doc(projectID).update(data);
+
+    } catch (e) {
+      throw Exception('Error updating project: $e');
+    }
+  }
+
   Future<void> deleteProject(String projectID) async {
     try {
 

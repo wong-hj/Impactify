@@ -9,28 +9,24 @@ import 'package:provider/provider.dart';
 class CommunityPost extends StatelessWidget {
   final String postID;
   final String profileImage;
-  
   final String name;
   final String bio;
   final Timestamp date;
   final String postImage;
   final String postTitle;
   final String postDescription;
-  
   final List<String> likes;
   
 
   const CommunityPost({
     required this.postID,
     required this.profileImage,
-  
     required this.name,
     required this.bio,
     required this.date,
     required this.postImage,
     required this.postTitle,
     required this.postDescription,
-
     required this.likes,
     Key? key,
   }) : super(key: key);
@@ -70,7 +66,6 @@ class CommunityPost extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 8),
-                    
                   ],
                 ),
                 Text(
@@ -120,7 +115,6 @@ class CommunityPost extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10),
-        // Post Description
         Text(
           postDescription,
           style: GoogleFonts.poppins(
@@ -128,8 +122,6 @@ class CommunityPost extends StatelessWidget {
             color: AppColors.placeholder,
           ),
         ),
-        // Actions Row
-
         Row(
           
           children: [
@@ -144,7 +136,7 @@ class CommunityPost extends StatelessWidget {
               color: AppColors.primary,
             ),
           ],
-        )
+        ),
       ],
     );
   }

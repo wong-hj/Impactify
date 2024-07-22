@@ -131,10 +131,7 @@ class _ManageProjectState extends State<ManageProject> {
                           
                                 return CustomList(
                                   projectID: project.eventID,
-                                  title: project.title,
-                                  date1: project.hostDate,
-                                  image: project.image,
-                                  location: project.location,
+                                  project: project,
                                   deleteFunction: (projectID) => _showDeleteDialog(project.eventID),
                                 );
                               }),

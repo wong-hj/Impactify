@@ -64,7 +64,7 @@ class _ViewPostState extends State<ViewPost> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Padding(
-        padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+        padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
         child: Column(
           children: [
             DropdownButtonHideUnderline(
@@ -103,7 +103,7 @@ class _ViewPostState extends State<ViewPost> {
                 child:  CustomLoading(text: 'Fetching interesting Posts!'),
                 
               )
-            else if (postProvider.posts!.isEmpty)
+            else if (postProvider.posts?.isEmpty ?? false)
               Expanded(
                 child: Center(
                   child: Text(
@@ -118,9 +118,9 @@ class _ViewPostState extends State<ViewPost> {
                 child: ListView.builder(
                   itemCount: postProvider.posts?.length ?? 0,
                   itemBuilder: (context, index) {
-                    final post = postProvider.posts![index];
+                    final post = postProvider.posts?[index] ?? null;
                     return CommunityPost(
-                      postID: post.postID,
+                      postID: post!.postID,
                       profileImage: post.user!.profileImage,
                       name: post.user!.username,
                       bio: post.user!.introduction,

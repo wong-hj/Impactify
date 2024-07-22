@@ -32,7 +32,6 @@ class CustomDetailScreen extends StatelessWidget {
   final Function? onUploadVideo;
   final String? errorLocation;
 
-
   const CustomDetailScreen({
     required this.id,
     required this.image,
@@ -63,6 +62,7 @@ class CustomDetailScreen extends StatelessWidget {
     DateTime date = hostDate.toDate();
     String formattedDate =
         DateFormat('dd MMMM yyyy, HH:mm').format(date).toUpperCase();
+
     return Stack(
       children: [
         SingleChildScrollView(
@@ -74,6 +74,10 @@ class CustomDetailScreen extends StatelessWidget {
                   Container(
                     height: 300,
                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
                       image: DecorationImage(
                         image: NetworkImage(image),
                         fit: BoxFit.cover,
@@ -86,6 +90,7 @@ class CustomDetailScreen extends StatelessWidget {
                           right: 30,
                           child: Material(
                             elevation: 10,
+                            borderRadius: BorderRadius.circular(30),
                             child: Container(
                               width: 60,
                               height: 60,
@@ -119,8 +124,9 @@ class CustomDetailScreen extends StatelessWidget {
                     Text(
                       type.toUpperCase(),
                       style: GoogleFonts.merriweather(
-                          fontSize: 12, color: AppColors.primary),
+                          fontSize: 14, color: AppColors.primary),
                     ),
+                    SizedBox(height: 10),
                     Text(
                       title,
                       style: GoogleFonts.merriweather(
@@ -128,33 +134,34 @@ class CustomDetailScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    SizedBox(height: 8),
                     Text.rich(
                       TextSpan(
                         children: [
                           TextSpan(
                             text: 'Hosted by ',
                             style: GoogleFonts.merriweather(
-                                fontSize: 12, color: AppColors.placeholder),
+                                fontSize: 14, color: AppColors.placeholder),
                           ),
                           TextSpan(
                             text: hoster,
                             style: GoogleFonts.merriweather(
-                                fontSize: 12,
+                                fontSize: 14,
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 16),
                     CustomIconText(
-                        text: location, icon: Icons.location_on, size: 12),
+                        text: location, icon: Icons.location_on, size: 14),
                     SizedBox(height: 8),
                     CustomIconText(
                         text: formattedDate,
                         icon: Icons.calendar_month,
-                        size: 12),
-                    SizedBox(height: 16),
+                        size: 14),
+                    SizedBox(height: 20),
                     CustomLargeIconText(
                         icon: Icons.info_outlined, text: 'About this Event'),
                     SizedBox(height: 8),
@@ -162,9 +169,9 @@ class CustomDetailScreen extends StatelessWidget {
                       "${aboutDescription} ${type == "project" ? "\n\n**Participation adds ${impointsAdd ?? 0} Impoints!" : ""}",
                       textAlign: TextAlign.justify,
                       style: GoogleFonts.poppins(
-                          fontSize: 12, color: AppColors.placeholder),
+                          fontSize: 14, color: AppColors.placeholder),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 20),
                     if (type != "speech") ...[
                       CustomLargeIconText(
                           icon: Icons.flag_outlined,
@@ -174,9 +181,9 @@ class CustomDetailScreen extends StatelessWidget {
                         'This event tackles SDG ${sdg}',
                         textAlign: TextAlign.justify,
                         style: GoogleFonts.poppins(
-                            fontSize: 12, color: AppColors.placeholder),
+                            fontSize: 14, color: AppColors.placeholder),
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 20),
                     ] else ...[
                       CustomLargeIconText(
                           icon: Icons.videocam_outlined,
@@ -184,12 +191,12 @@ class CustomDetailScreen extends StatelessWidget {
                           color: recordingUrl!.isEmpty
                               ? Colors.red
                               : Colors.black),
-                       SizedBox(height: 8),
+                      SizedBox(height: 8),
                       if (recordingUrl!.isEmpty) ...[
                         Text(
                           "Add recording of the speech for users' reference!",
                           style: GoogleFonts.poppins(
-                              fontSize: 12, color: AppColors.placeholder),
+                              fontSize: 14, color: AppColors.placeholder),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -204,7 +211,7 @@ class CustomDetailScreen extends StatelessWidget {
                                         ? 'Upload Recording'
                                         : 'Recording - ${videoName}',
                                     style: GoogleFonts.poppins(
-                                        fontSize: 12, color: AppColors.primary),
+                                        fontSize: 14, color: AppColors.primary),
                                     overflow: TextOverflow
                                         .ellipsis, // Add ellipsis to handle overflow
                                   ),
@@ -240,11 +247,10 @@ class CustomDetailScreen extends StatelessWidget {
                             )),
                       ],
                     ],
-                    SizedBox(height: 8),
+                    SizedBox(height: 20),
                     CustomLargeIconText(
-                          icon: Icons.explore_outlined, text: 'Location'),
-                    if (errorLocation == null)...[
-                      
+                        icon: Icons.explore_outlined, text: 'Location'),
+                    if (errorLocation == null) ...[
                       SizedBox(height: 8),
                       if (center != null && marker != null)
                         Container(
@@ -265,12 +271,14 @@ class CustomDetailScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                      
-                    ] else...[ 
-                      Text(errorLocation!, style: GoogleFonts.poppins(
-                          fontSize: 12, color: AppColors.placeholder),)
+                    ] else ...[
+                      Text(
+                        errorLocation!,
+                        style: GoogleFonts.poppins(
+                            fontSize: 14, color: AppColors.placeholder),
+                      )
                     ],
-                    SizedBox(height: 8),
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
