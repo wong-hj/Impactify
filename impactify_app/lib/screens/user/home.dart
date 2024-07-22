@@ -69,12 +69,12 @@ class _HomeState extends State<Home> {
                                   child: CircleAvatar(
                                     radius: 30,
                                     backgroundImage: NetworkImage(
-                                        userProvider.userData!.profileImage),
+                                        userProvider.userData?.profileImage ?? userPlaceholder),
                                   ),
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  'Hello, ${userProvider.userData!.username}!',
+                                  'Hello, ${userProvider.userData?.username ?? 'Unknown User'}!',
                                   style: GoogleFonts.merriweather(fontSize: 15),
                                 ),
                               ],

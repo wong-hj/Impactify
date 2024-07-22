@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
+import 'package:impactify_app/widgets/custom_empty.dart';
 import 'package:impactify_app/widgets/custom_lists.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:intl/intl.dart';
@@ -136,10 +137,8 @@ class ProjectContent extends StatelessWidget {
       children: [
         Expanded(
           child: bookmarkProvider.events.isEmpty
-              ? Center(
-                  child: Text('No Bookmark for Projects as of now.',
-                      style: GoogleFonts.poppins(
-                          color: AppColors.primary, fontSize: 18)))
+               ? 
+                EmptyWidget(text: 'No Bookmark for Projects as of now.', image: 'assets/no-bookmark.png')
               : ListView.builder(
                   itemCount: bookmarkProvider.events.length,
                   itemBuilder: (context, index) {
@@ -186,10 +185,7 @@ class SpeechContent extends StatelessWidget {
       children: [
         Expanded(
           child: bookmarkProvider.speeches.isEmpty
-              ? Center(
-                  child: Text('No Bookmark for Speeches as of now.',
-                      style: GoogleFonts.poppins(
-                          color: AppColors.primary, fontSize: 18)))
+              ? EmptyWidget(text: 'No Bookmark for Speeches as of now.', image: 'assets/no-bookmark.png')
               : ListView.builder(
                   itemCount: bookmarkProvider.speeches.length,
                   itemBuilder: (context, index) {

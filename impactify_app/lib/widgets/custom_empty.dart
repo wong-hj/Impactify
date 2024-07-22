@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_management/theming/custom_themes.dart';
+import 'package:impactify_app/theming/custom_themes.dart';
 
 class EmptyWidget extends StatelessWidget {
   final String text;

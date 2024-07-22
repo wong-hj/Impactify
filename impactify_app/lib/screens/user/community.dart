@@ -6,6 +6,7 @@ import 'package:impactify_app/screens/user/addPost.dart';
 import 'package:impactify_app/screens/user/filterOption.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/util/filter.dart';
+import 'package:impactify_app/widgets/custom_empty.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:impactify_app/widgets/custom_posts.dart';
 import 'package:provider/provider.dart';
@@ -123,13 +124,7 @@ class _CommunityState extends State<Community> {
                   ),
                 )
               else if (postProvider.posts?.isEmpty ?? false)
-                Center(
-                  child: Text('No Posts after Filtered.\nPlease Try Again.',
-                      style: GoogleFonts.merriweather(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primary)),
-                )
+                Expanded(child: EmptyWidget(text: 'No Posts after Filtered.\nPlease Try Again.', image: 'assets/no-filter.png'))
               else
                 Expanded(
                   child: ListView.builder(

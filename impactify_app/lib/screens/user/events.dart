@@ -8,6 +8,7 @@ import 'package:impactify_app/screens/user/filterOption.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/util/filter.dart';
 import 'package:impactify_app/widgets/custom_cards.dart';
+import 'package:impactify_app/widgets/custom_empty.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -156,42 +157,42 @@ class _EventsState extends State<Events> {
                     //   ),
                     // ),
                     Expanded(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxHeight:
-                            40, // Adjust this value to set the desired height
-                      ),
-                      child: TextField(
-                        onChanged: (text) {
-                          _searchActivities(text);
-                        },
-                        onTapOutside: ((event) {
-                          FocusScope.of(context).unfocus();
-                        }),
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          hintStyle: GoogleFonts.poppins(
-                              fontSize: 12), // Smaller font size
-                          suffixIcon:
-                              Icon(Icons.search, size: 20), // Smaller icon size
-                          filled: true,
-                          isDense: true,
-                          fillColor: Colors.white,
-                          focusColor: AppColors.tertiary,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10.0,
-                              vertical: 8.0), // Reduced padding
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.primary),
-                            borderRadius: BorderRadius.circular(30),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight:
+                              40, // Adjust this value to set the desired height
+                        ),
+                        child: TextField(
+                          onChanged: (text) {
+                            _searchActivities(text);
+                          },
+                          onTapOutside: ((event) {
+                            FocusScope.of(context).unfocus();
+                          }),
+                          decoration: InputDecoration(
+                            hintText: 'Search',
+                            hintStyle: GoogleFonts.poppins(
+                                fontSize: 12), // Smaller font size
+                            suffixIcon: Icon(Icons.search,
+                                size: 20), // Smaller icon size
+                            filled: true,
+                            isDense: true,
+                            fillColor: Colors.white,
+                            focusColor: AppColors.tertiary,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                                vertical: 8.0), // Reduced padding
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: AppColors.primary),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
                   ],
                 ),
               ),
@@ -204,12 +205,10 @@ class _EventsState extends State<Events> {
             else if (eventProvider.activities!.isEmpty)
               SliverFillRemaining(
                   child: Center(
-                child: Text("No Activities after Filtered.\nPlease try again.",
-                    style: GoogleFonts.merriweather(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary)),
-              ))
+                      child: EmptyWidget(
+                          text:
+                              "No Activities after Filtered.\nPlease try again.",
+                          image: 'assets/projectEmpty.png')))
             else
               SliverList(
                 delegate: SliverChildBuilderDelegate(

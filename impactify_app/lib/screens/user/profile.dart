@@ -8,6 +8,7 @@ import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/screens/user/editProfile.dart';
 import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
+import 'package:impactify_app/widgets/custom_empty.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
@@ -235,15 +236,10 @@ class PostContent extends StatelessWidget {
     if (postProvider.isLoading) {
       return Center(child: CustomLoading(text: "Fetching Posts..."));
     } else if (postProvider.postsByUserID?.isEmpty ?? false) {
-      return Padding(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-        child: Text(
-            'No Posts Added Yet.\nLooking forward for your first post in Impactify!',
-            style: GoogleFonts.merriweather(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary)),
-      );
+      return EmptyWidget(
+          text:
+              'No Posts Added Yet.\nLooking forward for your first post in Impactify!',
+          image: 'assets/no-post.png');
     } else {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 10),
@@ -284,15 +280,10 @@ class HistoryContent extends StatelessWidget {
     if (userProvider.isHistoryLoading ?? false) {
       return Center(child: CustomLoading(text: "Fetching History..."));
     } else if (userProvider.history?.isEmpty ?? false) {
-      return Padding(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-        child: Text(
-            'Oops! Looks like you have not participated in any activities yet.',
-            style: GoogleFonts.merriweather(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary)),
-      );
+      return 
+
+        EmptyWidget(text: 'Oops! Looks like you have not participated in any activities yet.', image: 'assets/oops.png');
+      
     } else {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
