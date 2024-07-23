@@ -67,7 +67,7 @@ class _ManageProjectState extends State<ManageProject> {
                     children: [
                       Text(
                         'Manage\nProjects',
-                        style: GoogleFonts.merriweather(
+                        style: GoogleFonts.nunitoSans(
                             fontSize: 24, color: Colors.black),
                       ),
                       SizedBox(width: 7),

@@ -57,7 +57,7 @@ class _ViewPostState extends State<ViewPost> {
         value: entry.value,
         child: Text(
           entry.key,
-          style: GoogleFonts.merriweather(fontSize: 14),
+          style: GoogleFonts.nunitoSans(fontSize: 14),
         ),
       );
     }).toList();

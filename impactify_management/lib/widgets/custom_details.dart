@@ -74,12 +74,6 @@ class CustomDetailScreen extends StatelessWidget {
                 children: [
                   Container(
                     height: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                      ),
-                    ),
                     child: Image.network(
                       image,
                       fit: BoxFit.cover,
@@ -135,13 +129,13 @@ class CustomDetailScreen extends StatelessWidget {
                   children: [
                     Text(
                       type.toUpperCase(),
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                           fontSize: 14, color: AppColors.primary),
                     ),
                     SizedBox(height: 10),
                     Text(
                       title,
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -152,12 +146,12 @@ class CustomDetailScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: 'Hosted by ',
-                            style: GoogleFonts.merriweather(
+                            style: GoogleFonts.nunitoSans(
                                 fontSize: 14, color: AppColors.placeholder),
                           ),
                           TextSpan(
                             text: hoster,
-                            style: GoogleFonts.merriweather(
+                            style: GoogleFonts.nunitoSans(
                                 fontSize: 14,
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold),
@@ -165,38 +159,59 @@ class CustomDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 20),
                     CustomIconText(
                         text: location, icon: Icons.location_on, size: 14),
                     SizedBox(height: 8),
                     CustomIconText(
                         text: formattedDate,
                         icon: Icons.calendar_month,
-                        size: 14),
-                    SizedBox(height: 20),
-                    CustomLargeIconText(
-                        icon: Icons.info_outlined, text: 'About this Event'),
-                    SizedBox(height: 8),
-                    Text(
-                      "${aboutDescription} ${type == "project" ? "\n\n**Participation adds ${impointsAdd ?? 0} Impoints!" : ""}",
-                      textAlign: TextAlign.justify,
-                      style: GoogleFonts.poppins(
-                          fontSize: 14, color: AppColors.placeholder),
-                    ),
-                    SizedBox(height: 20),
-                    if (type != "speech") ...[
-                      CustomLargeIconText(
-                          icon: Icons.flag_outlined,
-                          text: 'Sustainable Development Goals'),
-                      SizedBox(height: 8),
-                      Text(
-                        'This event tackles SDG ${sdg}',
-                        textAlign: TextAlign.justify,
-                        style: GoogleFonts.poppins(
-                            fontSize: 14, color: AppColors.placeholder),
+                        size: 12),
+                    SizedBox(height: 15),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomLargeIconText(
+                              icon: Icons.info_outlined,
+                              text: 'About this Event'),
+                          SizedBox(height: 8),
+                          Text(
+                            "${aboutDescription} ${type == "project" ? "\n\n**Participation adds ${impointsAdd ?? 0} Impoints!" : ""}",
+                            textAlign: TextAlign.justify,
+                            style: GoogleFonts.poppins(
+                                fontSize: 14, color: AppColors.placeholder),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 20),
+                    ),
+                    Divider(),
+                    if (type != "speech") ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                        
+                          children: [
+                            CustomLargeIconText(
+                                icon: Icons.flag_outlined,
+                                text: 'Sustainable Development Goals'),
+                            SizedBox(height: 8),
+                            Text(
+                              'This event tackles SDG ${sdg}',
+                              textAlign: TextAlign.justify,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 14, color: AppColors.placeholder),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
                     ] else ...[
+                      SizedBox(height:15),
                       CustomLargeIconText(
                           icon: Icons.videocam_outlined,
                           text: 'Recording',
@@ -264,9 +279,11 @@ class CustomDetailScreen extends StatelessWidget {
                           style: GoogleFonts.poppins(
                               fontSize: 14, color: AppColors.placeholder),
                         ),
-                      ]
+                      ],
+                      SizedBox(height:15),
                     ],
-                    SizedBox(height: 20),
+                    Divider(),
+                    SizedBox(height:15),
                     CustomLargeIconText(
                         icon: Icons.explore_outlined, text: 'Location'),
                     if (errorLocation == null) ...[
@@ -297,7 +314,8 @@ class CustomDetailScreen extends StatelessWidget {
                             fontSize: 14, color: AppColors.placeholder),
                       )
                     ],
-                    SizedBox(height: 20),
+                    SizedBox(height: 15),
+                    Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

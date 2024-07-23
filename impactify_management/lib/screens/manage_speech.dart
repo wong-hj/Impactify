@@ -67,7 +67,7 @@ class _ManageSpeechState extends State<ManageSpeech> {
                     children: [
                       Text(
                         'Manage\nSpeeches',
-                        style: GoogleFonts.merriweather(
+                        style: GoogleFonts.nunitoSans(
                             fontSize: 24, color: Colors.black),
                       ),
                       SizedBox(width: 7),

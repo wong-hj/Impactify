@@ -72,7 +72,7 @@ class _EditPostState extends State<EditPost> {
         value: entry.value,
         child: Text(
           entry.key,
-          style: GoogleFonts.merriweather(fontSize: 14),
+          style: GoogleFonts.nunitoSans(fontSize: 14),
         ),
       );
     }).toList();
@@ -86,11 +86,11 @@ class _EditPostState extends State<EditPost> {
             children: [
               TextSpan(
                 text: 'Share your ',
-                style: GoogleFonts.merriweather(fontSize: 24),
+                style: GoogleFonts.nunitoSans(fontSize: 24),
               ),
               TextSpan(
                 text: 'Thoughts!',
-                style: GoogleFonts.merriweather(
+                style: GoogleFonts.nunitoSans(
                     fontSize: 24,
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold),

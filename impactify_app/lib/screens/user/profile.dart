@@ -79,13 +79,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                     children: [
                       Text(
                         'You Yourself,',
-                        style: GoogleFonts.merriweather(fontSize: 17),
+                        style: GoogleFonts.nunitoSans(fontSize: 17),
                       ),
                       Row(
                         children: [
                           Text(
                             userProvider.userData?.fullName ?? "",
-                            style: GoogleFonts.merriweather(
+                            style: GoogleFonts.nunitoSans(
                                 fontSize: 25, color: AppColors.primary),
                           ),
                           IconButton(
@@ -136,7 +136,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                           SizedBox(width: 8),
                           Text(
                             'My Proudly Stats',
-                            style: GoogleFonts.merriweather(
+                            style: GoogleFonts.nunitoSans(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -318,29 +318,23 @@ class HistoryContent extends StatelessWidget {
               ),
               elevation: 3,
               child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 height: 80,
                 child: Row(
                   children: [
-                    Container(
-                      width: 90,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                        ),
-                      ),
-                      child: Image.network(
+                     Image.network(
                         history.image,
+                        width:100,
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
                             return child;
                           } else {
-                            return CustomImageLoading(width: 90);
+                            return CustomImageLoading(width: 100);
                           }
                         },
                       ),
-                    ),
+                    
 
                     Expanded(
                       child: Padding(
@@ -351,7 +345,7 @@ class HistoryContent extends StatelessWidget {
                           children: [
                             Text(
                               history.title,
-                              style: GoogleFonts.merriweather(
+                              style: GoogleFonts.nunitoSans(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -379,7 +373,7 @@ class HistoryContent extends StatelessWidget {
                     //         children: [
                     //           Text(
                     //             '+20',
-                    //             style: GoogleFonts.merriweather(
+                    //             style: GoogleFonts.nunitoSans(
                     //               fontSize: 12,
                     //               fontWeight: FontWeight.bold,
                     //               color: AppColors.secondary,

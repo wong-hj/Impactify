@@ -130,6 +130,8 @@ class EventProvider with ChangeNotifier {
     }
   }
 
+  
+
   Future<void> fetchPastParticipatedActivities() async {
      _isLoading = true;
      notifyListeners();

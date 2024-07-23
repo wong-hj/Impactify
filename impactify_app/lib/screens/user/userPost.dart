@@ -77,7 +77,7 @@ class _UserPostState extends State<UserPost> {
         centerTitle: true,
         title: Column(
           children: [
-            Text('HORNGJUN_',
+            Text(userProvider.userData?.username.toUpperCase() ?? '',
                 style: GoogleFonts.poppins(
                     fontSize: 12, color: AppColors.placeholder)),
             Text('Posts',

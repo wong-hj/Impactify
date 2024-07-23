@@ -62,7 +62,7 @@ class CommunityPost extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -115,7 +115,7 @@ class CommunityPost extends StatelessWidget {
         SizedBox(height: 10),
         Text(
           postTitle,
-          style: GoogleFonts.merriweather(
+          style: GoogleFonts.nunitoSans(
             fontSize: 19,
             fontWeight: FontWeight.bold,
           ),

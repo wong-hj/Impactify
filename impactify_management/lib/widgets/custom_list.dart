@@ -110,7 +110,7 @@ class CustomProjectList extends StatelessWidget {
                           children: [
                             Text(
                               project.title,
-                              style: GoogleFonts.merriweather(
+                              style: GoogleFonts.nunitoSans(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -249,7 +249,7 @@ class CustomSpeechList extends StatelessWidget {
                           children: [
                             Text(
                               speech.title,
-                              style: GoogleFonts.merriweather(
+                              style: GoogleFonts.nunitoSans(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -339,7 +339,7 @@ class CustomAttendeesList extends StatelessWidget {
                   children: [
                     Text(
                       user.fullName,
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),

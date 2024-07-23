@@ -37,6 +37,7 @@ class CustomDetailScreen extends StatelessWidget {
   final List<Speech>? relatedSpeeches;
   final bool isJoined;
   final VoidCallback toggleJoinStatus;
+  final List<String> participants;
 
   const CustomDetailScreen({
     required this.id,
@@ -61,6 +62,7 @@ class CustomDetailScreen extends StatelessWidget {
     this.relatedSpeeches = const [],
     required this.isJoined,
     required this.toggleJoinStatus,
+    this.participants = const [],
     Key? key,
   }) : super(key: key);
 
@@ -137,7 +139,7 @@ class CustomDetailScreen extends StatelessWidget {
                       children: [
                         Text(
                           type.toUpperCase(),
-                          style: GoogleFonts.merriweather(
+                          style: GoogleFonts.nunitoSans(
                               fontSize: 12, color: AppColors.primary),
                         ),
                         Spacer(),
@@ -151,7 +153,7 @@ class CustomDetailScreen extends StatelessWidget {
                     ),
                     Text(
                       title,
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -190,12 +192,12 @@ class CustomDetailScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: 'Hosted by ',
-                            style: GoogleFonts.merriweather(
+                            style: GoogleFonts.nunitoSans(
                                 fontSize: 12, color: AppColors.placeholder),
                           ),
                           TextSpan(
                             text: hoster,
-                            style: GoogleFonts.merriweather(
+                            style: GoogleFonts.nunitoSans(
                                 fontSize: 12,
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold),
@@ -203,7 +205,7 @@ class CustomDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 20),
                     CustomIconText(
                         text: location, icon: Icons.location_on, size: 12),
                     SizedBox(height: 8),
@@ -211,68 +213,121 @@ class CustomDetailScreen extends StatelessWidget {
                         text: formattedDate,
                         icon: Icons.calendar_month,
                         size: 12),
-                    SizedBox(height: 8),
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundImage:
-                          NetworkImage('https://via.placeholder.com/40'),
-                    ),
-                    SizedBox(height: 16),
-                    CustomLargeIconText(
-                        icon: Icons.info_outlined, text: 'About this Event'),
-                    SizedBox(height: 8),
-                    Text(
-                      "${aboutDescription} ${type == "project" ? "\n\n**Participation adds ${impointsAdd ?? 0} Impoints!" : ""}",
-                      textAlign: TextAlign.justify,
-                      style: GoogleFonts.poppins(
-                          fontSize: 12, color: AppColors.placeholder),
-                    ),
-                    if (relatedSpeeches!.isNotEmpty) ...[
-                      SizedBox(height: 16),
-                      CustomLargeIconText(
-                          icon: Icons.record_voice_over_outlined,
-                          text: 'Upcoming Related Speech / Pitch'),
-                      SizedBox(height: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: relatedSpeeches!.map((speech) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/speechDetail',
-                                  arguments: speech.speechID,
-                                );
-                              },
-                              child: Text(
-                                "• ${speech.title}   ${DateFormat('dd MMMM, HH:mm').format(speech.hostDate.toDate())}",
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                    color: AppColors.placeholder,
-                                    decoration: TextDecoration.underline),
-                              ),
+                    SizedBox(height: 15),
+                    participants.isNotEmpty
+                        ? Container(
+                            height: 50,
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  child: Stack(
+                                    children:
+                                        participants.take(6).map((picture) {
+                                      int index = participants.indexOf(picture);
+                                      return Positioned(
+                                        left: index * 25.0,
+                                        child: CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage:
+                                              NetworkImage(picture),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                if (participants.length > 6)
+                                  Text(
+                                    '+ ${participants.length - 6} More Attendees!',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 13, color: AppColors.primary),
+                                  ),
+                              ],
                             ),
-                          );
-                        }).toList(),
+                          )
+                        : SizedBox.shrink(),
+                    
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomLargeIconText(
+                              icon: Icons.info_outlined,
+                              text: 'About this Event'),
+                          SizedBox(height: 8),
+                          Text(
+                            "${aboutDescription} ${type == "project" ? "\n\n**Participation adds ${impointsAdd ?? 0} Impoints!" : ""}",
+                            textAlign: TextAlign.justify,
+                            style: GoogleFonts.poppins(
+                                fontSize: 12, color: AppColors.placeholder),
+                          ),
+                        ],
                       ),
+                    ),
+                    Divider(),
+                    if (relatedSpeeches!.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomLargeIconText(
+                                icon: Icons.record_voice_over_outlined,
+                                text: 'Upcoming Related Speech / Pitch'),
+                            SizedBox(height: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: relatedSpeeches!.map((speech) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/speechDetail',
+                                        arguments: speech.speechID,
+                                      );
+                                    },
+                                    child: Text(
+                                      "• ${speech.title}   ${DateFormat('dd MMMM, HH:mm').format(speech.hostDate.toDate())}",
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          color: AppColors.placeholder,
+                                          decoration: TextDecoration.underline),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(),
                     ],
-                    SizedBox(height: 16),
                     if (type != "speech") ...[
-                      CustomLargeIconText(
-                          icon: Icons.flag_outlined,
-                          text: 'Sustainable Development Goals'),
-                      SizedBox(height: 8),
-                      Text(
-                        'This event tackles SDG ${sdg}',
-                        textAlign: TextAlign.justify,
-                        style: GoogleFonts.poppins(
-                            fontSize: 12, color: AppColors.placeholder),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomLargeIconText(
+                                icon: Icons.flag_outlined,
+                                text: 'Sustainable Development Goals'),
+                            SizedBox(height: 8),
+                            Text(
+                              'This event tackles SDG ${sdg}',
+                              textAlign: TextAlign.justify,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12, color: AppColors.placeholder),
+                            ),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: 16),
+                      Divider(),
                     ],
+                    SizedBox(height: 15),
                     CustomLargeIconText(
                         icon: Icons.explore_outlined, text: 'Location'),
                     SizedBox(height: 8),
@@ -295,7 +350,8 @@ class CustomDetailScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 15),
+                    
                     if (!isJoined) ...[
                       CustomPrimaryButton(
                           onPressed: () async {
@@ -328,8 +384,8 @@ class CustomDetailScreen extends StatelessWidget {
                           text: "I'm In!"),
                     ] else ...[
                       Text("*You are joining this activity, to opt out:",
-                          style: GoogleFonts.merriweather(
-                              color: AppColors.primary)),
+                          style:
+                              GoogleFonts.nunitoSans(color: AppColors.primary)),
                       SizedBox(height: 2),
                       CustomOptOutButton(
                           onPressed: () async {

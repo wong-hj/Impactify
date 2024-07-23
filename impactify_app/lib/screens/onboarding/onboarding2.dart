@@ -31,7 +31,7 @@ class Onboarding2 extends StatelessWidget {
             Image.asset("assets/onboard2.png"),
             const SizedBox(height: 20),
             Text("Managing Sustainability",
-                style: GoogleFonts.merriweather(
+                style: GoogleFonts.nunitoSans(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                 )),

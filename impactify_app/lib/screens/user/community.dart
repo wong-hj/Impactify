@@ -68,11 +68,11 @@ class _CommunityState extends State<Community> {
                       children: [
                         TextSpan(
                           text: 'The ',
-                          style: GoogleFonts.merriweather(fontSize: 24),
+                          style: GoogleFonts.nunitoSans(fontSize: 24),
                         ),
                         TextSpan(
                           text: 'Community',
-                          style: GoogleFonts.merriweather(
+                          style: GoogleFonts.nunitoSans(
                               fontSize: 24,
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold),

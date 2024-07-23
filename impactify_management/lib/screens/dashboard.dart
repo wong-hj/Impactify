@@ -44,7 +44,7 @@ class _DashboardState extends State<Dashboard> {
             children: [
               Text(
                 'My\nDashboard',
-                style: GoogleFonts.merriweather(fontSize: 24, color: Colors.black),
+                style: GoogleFonts.nunitoSans(fontSize: 24, color: Colors.black),
               ),
               SizedBox(height: 8),
               Card(
@@ -63,7 +63,7 @@ class _DashboardState extends State<Dashboard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Projects Organized",
-                              style: GoogleFonts.merriweather(fontSize: 23)),
+                              style: GoogleFonts.nunitoSans(fontSize: 23)),
                           Row(
                             children: [
                               Text(activityProvider.ongoingProjects.toString(),
@@ -105,7 +105,7 @@ class _DashboardState extends State<Dashboard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Speeches Given",
-                              style: GoogleFonts.merriweather(fontSize: 22)),
+                              style: GoogleFonts.nunitoSans(fontSize: 22)),
                           Row(
                             children: [
                               Text(activityProvider.ongoingSpeeches.toString(),
@@ -145,7 +145,7 @@ class _DashboardState extends State<Dashboard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Users Engaged",
-                              style: GoogleFonts.merriweather(fontSize: 23, color: Colors.white)),
+                              style: GoogleFonts.nunitoSans(fontSize: 23, color: Colors.white)),
                           Row(
                             children: [
                               Text('150 ',

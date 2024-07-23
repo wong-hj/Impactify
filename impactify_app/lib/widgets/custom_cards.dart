@@ -65,7 +65,7 @@ class CustomVerticalCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
@@ -171,7 +171,7 @@ class CustomHorizontalCard extends StatelessWidget {
                       ),
                       child: Text(
                         formattedDate,
-                        style: GoogleFonts.merriweather(
+                        style: GoogleFonts.nunitoSans(
                           fontSize: 10,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -190,7 +190,7 @@ class CustomHorizontalCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                           fontSize: 14, fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis, // Ensure text wraps
                       maxLines: 2,
@@ -246,7 +246,7 @@ class CustomEventCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),
         ),
-        elevation: 4,
+        elevation: 6,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -263,7 +263,7 @@ class CustomEventCard extends StatelessWidget {
                       if (loadingProgress == null) {
                         return child;
                       } else {
-                        return CustomImageLoading(width: 180);
+                        return CustomImageLoading(width: double.infinity);
                       }
                     },
                   ),
@@ -286,7 +286,7 @@ class CustomEventCard extends StatelessWidget {
                     ),
                     child: Text(
                       formattedDate,
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                         fontSize: 14,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -308,7 +308,7 @@ class CustomEventCard extends StatelessWidget {
                     ),
                     child: Text(
                       type.toUpperCase(),
-                      style: GoogleFonts.merriweather(
+                      style: GoogleFonts.nunitoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: type == 'project'
@@ -327,7 +327,7 @@ class CustomEventCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.merriweather(
+                    style: GoogleFonts.nunitoSans(
                         fontSize: 16, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2, // Ensure text wraps
@@ -340,7 +340,7 @@ class CustomEventCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      
+                      Spacer(),
                       ElevatedButton(
                         onPressed: () {
                           type == "project"
@@ -459,7 +459,7 @@ class CustomEventCard extends StatelessWidget {
 //                     ),
 //                     child: Text(
 //                       formattedDate,
-//                       style: GoogleFonts.merriweather(
+//                       style: GoogleFonts.nunitoSans(
 //                         fontSize: 12,
 //                         color: Colors.white,
 //                         fontWeight: FontWeight.bold,
@@ -481,7 +481,7 @@ class CustomEventCard extends StatelessWidget {
 //                     ),
 //                     child: Text(
 //                       type.toUpperCase(),
-//                       style: GoogleFonts.merriweather(
+//                       style: GoogleFonts.nunitoSans(
 //                         fontSize: 12,
 //                         fontWeight: FontWeight.bold,
 //                         color: type == 'project'
@@ -500,7 +500,7 @@ class CustomEventCard extends StatelessWidget {
 //                 children: [
 //                   Text(
 //                     title,
-//                     style: GoogleFonts.merriweather(
+//                     style: GoogleFonts.nunitoSans(
 //                         fontSize: 16, fontWeight: FontWeight.bold),
 //                     overflow: TextOverflow.ellipsis,
 //                     maxLines: 2, // Ensure text wraps

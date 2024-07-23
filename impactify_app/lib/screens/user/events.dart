@@ -95,7 +95,7 @@ class _EventsState extends State<Events> {
                       children: [
                         Text(
                           'Discover',
-                          style: GoogleFonts.merriweather(
+                          style: GoogleFonts.nunitoSans(
                               fontSize: 24,
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold),

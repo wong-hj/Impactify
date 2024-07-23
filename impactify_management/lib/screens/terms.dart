@@ -11,7 +11,7 @@ class Terms extends StatelessWidget {
         appBar: AppBar(
             centerTitle: true,
             title:
-                Text("Terms and Condition", style: GoogleFonts.merriweather())),
+                Text("Terms and Condition", style: GoogleFonts.nunitoSans())),
         body: SingleChildScrollView(
             child: SafeArea(
                 child: Padding(
@@ -87,7 +87,7 @@ class Terms extends StatelessWidget {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: GoogleFonts.merriweather(
+      style: GoogleFonts.nunitoSans(
         fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
@@ -99,7 +99,7 @@ class Terms extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10, bottom: 5),
       child: Text(
         title,
-        style: GoogleFonts.merriweather(
+        style: GoogleFonts.nunitoSans(
           fontSize: 13,
           fontWeight: FontWeight.bold,
         ),

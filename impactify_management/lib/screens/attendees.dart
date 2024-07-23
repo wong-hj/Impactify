@@ -47,7 +47,7 @@ class _AttendeesState extends State<Attendees> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text('Attendees (${attendees.length})',
-            style: GoogleFonts.merriweather()),
+            style: GoogleFonts.nunitoSans()),
         actions: [
           if (isSelectMode)
             TextButton(

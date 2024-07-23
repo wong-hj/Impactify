@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Impactify Management Center',
-            style: GoogleFonts.merriweather(fontSize: 17)),
+            style: GoogleFonts.nunitoSans(fontSize: 17)),
         backgroundColor: AppColors.tertiary,
       ),
       drawer: Drawer(
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(height: 6),
                     Text(
                       userProvider.user?.fullName ?? "",
-                      style: GoogleFonts.merriweather(fontSize: 16),
+                      style: GoogleFonts.nunitoSans(fontSize: 16),
                     ),
                     SizedBox(height: 10),
                     Text(

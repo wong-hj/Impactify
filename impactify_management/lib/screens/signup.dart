@@ -66,7 +66,7 @@ class _SignUpState extends State<SignUp> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Register Now!\nBring your project.",
-                      style: GoogleFonts.merriweather(fontSize: 30)),
+                      style: GoogleFonts.nunitoSans(fontSize: 30)),
                   const SizedBox(height: 30),
                   CustomTextFormField(
                     controller: _emailController,
@@ -305,7 +305,7 @@ class _SignUpState extends State<SignUp> {
         //         ),
         //         SizedBox(height: 10),
         //         Text("Logging you in...",
-        //             style: GoogleFonts.merriweather(
+        //             style: GoogleFonts.nunitoSans(
         //                 color: AppColors.primary, fontSize: 20))
         //       ],
         //     ),

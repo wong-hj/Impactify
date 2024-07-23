@@ -95,7 +95,7 @@ class _AddProjectState extends State<AddProject> {
         value: impoint,
         child: Text(
           impoint,
-          style: GoogleFonts.merriweather(fontSize: 14),
+          style: GoogleFonts.nunitoSans(fontSize: 14),
         ),
       );
     }).toList();
@@ -106,14 +106,14 @@ class _AddProjectState extends State<AddProject> {
         value: entry.key,
         child: Text(
           entry.value,
-          style: GoogleFonts.merriweather(fontSize: 14),
+          style: GoogleFonts.nunitoSans(fontSize: 14),
         ),
       );
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('List your Project', style: GoogleFonts.merriweather())),
+          title: Text('List your Project', style: GoogleFonts.nunitoSans())),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

@@ -133,7 +133,7 @@ class _EditProjectState extends State<EditProject> {
         value: impoint,
         child: Text(
           impoint,
-          style: GoogleFonts.merriweather(fontSize: 14),
+          style: GoogleFonts.nunitoSans(fontSize: 14),
         ),
       );
     }).toList();
@@ -144,14 +144,14 @@ class _EditProjectState extends State<EditProject> {
         value: entry.key,
         child: Text(
           entry.value,
-          style: GoogleFonts.merriweather(fontSize: 14),
+          style: GoogleFonts.nunitoSans(fontSize: 14),
         ),
       );
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('Edit your Project', style: GoogleFonts.merriweather())),
+          title: Text('Edit your Project', style: GoogleFonts.nunitoSans())),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

@@ -69,7 +69,7 @@ class _FilterOptionsState extends State<FilterOptions> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Filter by Type',
-                style: GoogleFonts.merriweather(
+                style: GoogleFonts.nunitoSans(
                     fontSize: 18, fontWeight: FontWeight.bold)),
             Column(
               children: ['All', 'Project', 'Speech'].map((String filter) {
@@ -88,7 +88,7 @@ class _FilterOptionsState extends State<FilterOptions> {
             ),
             Divider(),
             Text('Filter by Tags',
-                style: GoogleFonts.merriweather(
+                style: GoogleFonts.nunitoSans(
                     fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
             Wrap(
@@ -100,6 +100,10 @@ class _FilterOptionsState extends State<FilterOptions> {
                       style: GoogleFonts.poppins(
                           color:
                               isSelected ? Colors.white : AppColors.primary)),
+                  side: BorderSide(width: 0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
                   selected: isSelected,
                   onSelected: (selected) {
                     setState(() {
@@ -119,7 +123,7 @@ class _FilterOptionsState extends State<FilterOptions> {
             ),
             Divider(),
             Text('Filter by Date Range',
-                style: GoogleFonts.merriweather(
+                style: GoogleFonts.nunitoSans(
                     fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 20),
             Row(
@@ -188,7 +192,8 @@ class _FilterOptionsState extends State<FilterOptions> {
                 style: TextStyle(
                   color: Colors.red,
                 ),
-              ),),
+              ),
+            ),
             SizedBox(height: 40),
             CustomPrimaryButton(
               text: 'Apply Filters',

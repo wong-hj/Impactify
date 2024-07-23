@@ -99,14 +99,14 @@ class _AddSpeechState extends State<AddSpeech> {
         value: project.eventID,
         child: Text(
           project.title,
-          style: GoogleFonts.merriweather(fontSize: 14),
+          style: GoogleFonts.nunitoSans(fontSize: 14),
         ),
       );
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('Host your Speech', style: GoogleFonts.merriweather())),
+          title: Text('Host your Speech', style: GoogleFonts.nunitoSans())),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

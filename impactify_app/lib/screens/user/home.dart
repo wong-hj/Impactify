@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
                                 SizedBox(width: 8),
                                 Text(
                                   'Hello, ${userProvider.userData?.username ?? 'Unknown User'}!',
-                                  style: GoogleFonts.merriweather(fontSize: 15),
+                                  style: GoogleFonts.nunitoSans(fontSize: 15),
                                 ),
                               ],
                             ),
@@ -93,7 +93,7 @@ class _HomeState extends State<Home> {
                         // My Events Text
                         Text(
                           'My Events',
-                          style: GoogleFonts.merriweather(fontSize: 20),
+                          style: GoogleFonts.nunitoSans(fontSize: 20),
                         ),
                         SizedBox(height: 16),
                         eventProvider.allUserActivities!.isEmpty
@@ -175,7 +175,7 @@ class _HomeState extends State<Home> {
 
                         Text(
                           'SDG Related Articles',
-                          style: GoogleFonts.merriweather(fontSize: 20),
+                          style: GoogleFonts.nunitoSans(fontSize: 20),
                         ),
 
                         SizedBox(height: 20),
@@ -245,7 +245,7 @@ class _HomeState extends State<Home> {
                                   //                 CrossAxisAlignment.start,
                                   //             children: [
                                   //               Text(article.title,
-                                  //                   style: GoogleFonts.merriweather(
+                                  //                   style: GoogleFonts.nunitoSans(
                                   //                       fontSize: 15,
                                   //                       fontWeight:
                                   //                           FontWeight.bold),
@@ -350,7 +350,7 @@ class _HomeState extends State<Home> {
                                                   Text(
                                                     article.title,
                                                     style: GoogleFonts
-                                                        .merriweather(
+                                                        .nunitoSans(
                                                       fontSize: 13,
                                                       fontWeight:
                                                           FontWeight.bold,

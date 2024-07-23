@@ -17,6 +17,7 @@ class Event implements Activity {
   final String type;
   final String status;
   final List<String> tags; 
+  List<String> participants;
 
   Event({
     required this.eventID,
@@ -33,6 +34,7 @@ class Event implements Activity {
     required this.type,
     required this.status,
     required this.tags,
+    this.participants = const [],
   });
 
   @override

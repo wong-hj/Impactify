@@ -179,7 +179,10 @@ class EventRepository {
           await _firestore.collection('events').doc(eventID).get();
 
       if (doc.exists) {
-        return Event.fromFirestore(doc);
+        Event event = Event.fromFirestore(doc);
+        event.participants = await fetchUserProfileImages(eventID);
+        return event;
+
       } else {
         throw Exception('Event not found');
       }
@@ -188,6 +191,34 @@ class EventRepository {
       throw e;
     }
   }
+
+  Future<List<String>> fetchUserProfileImages(String activityID) async {
+  List<String> profileImages = [];
+  try {
+    // Step 1: Fetch user IDs from participation collection
+    QuerySnapshot participationSnapshot = await FirebaseFirestore.instance
+        .collection('participation')
+        .where('activityID', isEqualTo: activityID)
+        .get();
+
+    List<String> userIDs = participationSnapshot.docs
+        .map((doc) => doc['userID'] as String)
+        .toList();
+
+    // Step 2: Fetch user profile images from users collection
+    for (String userID in userIDs) {
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(userID).get();
+      if (userDoc.exists) {
+        String profileImage = userDoc['profileImage'] ?? 'https://via.placeholder.com/40';
+        profileImages.add(profileImage);
+      }
+    }
+  } catch (e) {
+    print('Error fetching user profile images: $e');
+  }
+  return profileImages;
+}
 
   Future<List<Speech>> fetchSpeechesByProjectID(String eventID) async {
     List<Speech> speeches = [];
@@ -224,7 +255,7 @@ class EventRepository {
       QuerySnapshot eventSnapshot = await FirebaseFirestore.instance
           .collection('events')
           .where('eventID', whereIn: activityIDs)
-          .where('hostDate', isLessThan: now)
+         .where('hostDate', isLessThan: now)
           .get();
 
       activities.addAll(

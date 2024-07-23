@@ -41,7 +41,7 @@ class Login extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                         Text("Welcome Back.",
-                            style: GoogleFonts.merriweather(fontSize: 30)),
+                            style: GoogleFonts.nunitoSans(fontSize: 30)),
                         const SizedBox(height: 30),
                         CustomTextFormField(
                           controller: _emailController,

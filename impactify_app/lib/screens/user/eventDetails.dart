@@ -126,6 +126,7 @@ class _EventDetailState extends State<EventDetail> {
                     relatedSpeeches: eventProvider.relatedSpeeches,
                     isJoined: isJoined,
                     toggleJoinStatus: _toggleJoinStatus,
+                    participants: event.participants,
                   );
                   
                 }

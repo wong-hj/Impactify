@@ -136,7 +136,7 @@ class Login extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text("Logging you in...",
-                        style: GoogleFonts.merriweather(
+                        style: GoogleFonts.nunitoSans(
                             color: AppColors.primary, fontSize: 20))
                   ],
                 ),
