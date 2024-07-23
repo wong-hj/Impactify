@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
+import 'package:impactify_app/widgets/custom_loading.dart';
 
 class CustomList extends StatelessWidget {
   final String imageUrl;
@@ -66,6 +67,13 @@ class CustomList extends StatelessWidget {
                     image,
                     width: 100,
                     fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return CustomImageLoading(width: 100);
+                          }
+                        },
                   ),
                   SizedBox(width: 8),
                   Column(

@@ -9,6 +9,7 @@ import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/providers/participation_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
+import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -79,11 +80,16 @@ class CustomDetailScreen extends StatelessWidget {
                 children: [
                   Container(
                     height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(image),
-                        fit: BoxFit.cover,
-                      ),
+                    child: Image.network(
+                      image,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return CustomImageLoading(width: 250);
+                        }
+                      },
                     ),
                   ),
                   type == "project"
@@ -95,12 +101,17 @@ class CustomDetailScreen extends StatelessWidget {
                             child: Container(
                               width: 60,
                               height: 60,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdg}.jpg"),
-                                  fit: BoxFit.cover,
-                                ),
+                              child: Image.network(
+                                "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdg}.jpg",
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return CustomImageLoading(width: 60);
+                                  }
+                                },
                               ),
                             ),
                           ),
@@ -317,7 +328,8 @@ class CustomDetailScreen extends StatelessWidget {
                           text: "I'm In!"),
                     ] else ...[
                       Text("*You are joining this activity, to opt out:",
-                          style: GoogleFonts.merriweather(color: AppColors.primary)),
+                          style: GoogleFonts.merriweather(
+                              color: AppColors.primary)),
                       SizedBox(height: 2),
                       CustomOptOutButton(
                           onPressed: () async {
@@ -396,8 +408,7 @@ class CustomDetailScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  if (type == 'speech' 
-                  || recordingUrl != null)...[
+                  if (type == 'speech' || recordingUrl != null) ...[
                     SizedBox(height: 5),
                     Text(
                       'To view the recording of the session:',

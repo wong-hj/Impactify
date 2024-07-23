@@ -114,6 +114,13 @@ class _EditPostState extends State<EditPost> {
                         width: double.infinity,
                         height: 300,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return CustomImageLoading(width: 300);
+                          }
+                        },
                       )
                     : Image.file(
                         width: double.infinity,

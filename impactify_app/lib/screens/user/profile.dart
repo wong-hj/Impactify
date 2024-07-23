@@ -258,11 +258,23 @@ class PostContent extends StatelessWidget {
                 Navigator.pushNamed(context, '/userPost',
                     arguments: post.postID);
               },
-              child: Ink.image(
+              // child: Ink.image(
+              //   fit: BoxFit.cover,
+              //   image: NetworkImage(post.postImage),
+              // ),
+              child: Image.network(
+                post.postImage,
                 fit: BoxFit.cover,
-                image: NetworkImage(post.postImage),
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return CustomImageLoading(width: 30);
+                  }
+                },
               ),
             );
+            // );
           },
         ),
       );
@@ -316,12 +328,20 @@ class HistoryContent extends StatelessWidget {
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
                         ),
-                        image: DecorationImage(
-                          image: NetworkImage(history.image),
-                          fit: BoxFit.cover,
-                        ),
+                      ),
+                      child: Image.network(
+                        history.image,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return CustomImageLoading(width: 90);
+                          }
+                        },
                       ),
                     ),
+
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(

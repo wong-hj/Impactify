@@ -26,3 +26,29 @@ class CustomLoading extends StatelessWidget {
     );
   }
 }
+
+class CustomImageLoading extends StatelessWidget {
+  final double? width;
+
+  const CustomImageLoading({
+    required this.width,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            color: AppColors.primary,
+            //size: 25.0,
+          ),
+        ],
+      ),
+    );
+  }
+}

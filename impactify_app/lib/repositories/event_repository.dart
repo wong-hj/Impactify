@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:impactify_app/constants/placeholderURL.dart';
 import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/tag.dart';
+import 'package:impactify_app/models/user.dart';
 
 class EventRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -38,7 +40,6 @@ class EventRepository {
   }
 
   Future<List<Activity>> fetchAllActivities() async {
-    //await Future.delayed(Duration(seconds: 1));
     List<Activity> activities = [];
     try {
       QuerySnapshot eventSnapshot = await _firestore
@@ -62,7 +63,6 @@ class EventRepository {
       activities.forEach((activity) {
         print(activity.toString());
       });
-
       return activities;
     } catch (e) {
       print('Error fetching activities: $e');
@@ -131,20 +131,18 @@ class EventRepository {
             .where('status', isEqualTo: 'active');
         if (tagIDs.isNotEmpty) {
           eventQuery = eventQuery.where('tags', arrayContainsAny: tagIDs);
-          
         }
         if (startDate != null && endDate != null) {
           eventQuery = eventQuery.where('hostDate',
               isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
           eventQuery = eventQuery.where('hostDate',
               isLessThanOrEqualTo: Timestamp.fromDate(endDate));
-          
         } else {
           eventQuery =
               eventQuery.where('hostDate', isGreaterThan: Timestamp.now());
         }
         QuerySnapshot eventSnapshot = await eventQuery.get();
-        
+
         activities.addAll(
             eventSnapshot.docs.map((doc) => Event.fromFirestore(doc)).toList());
       }

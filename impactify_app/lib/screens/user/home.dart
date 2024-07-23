@@ -69,7 +69,8 @@ class _HomeState extends State<Home> {
                                   child: CircleAvatar(
                                     radius: 30,
                                     backgroundImage: NetworkImage(
-                                        userProvider.userData?.profileImage ?? userPlaceholder),
+                                        userProvider.userData?.profileImage ??
+                                            userPlaceholder),
                                   ),
                                 ),
                                 SizedBox(width: 8),
@@ -320,6 +321,15 @@ class _HomeState extends State<Home> {
                                             height: 120,
                                             width: 120,
                                             fit: BoxFit.cover,
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              } else {
+                                                return CustomImageLoading(
+                                                    width: 120);
+                                              }
+                                            },
                                           ),
 
                                           SizedBox(width: 10),

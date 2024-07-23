@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:impactify_app/models/activity.dart';
+import 'package:impactify_app/models/user.dart';
 
 class Event implements Activity {
   final String eventID;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/providers/post_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
+import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +48,7 @@ class CommunityPost extends StatelessWidget {
 
     final postProvider = Provider.of<PostProvider>(context);
     final bool isLiked = likes.contains(userID);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -108,23 +109,27 @@ class CommunityPost extends StatelessWidget {
               ],
             ),
             Spacer(),
-            edit! ? 
-              
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/editPost',  arguments: {
-                    'postID': postID,
-                    'currentTitle': postTitle,
-                    'currentDescription': postDescription,
-                    'activityID': activityID,
-                    'postImage': postImage,
-                  },);
-                },
-                child: Icon(Icons.edit, color: Colors.blue, size: 20,))
-            : 
-              SizedBox.shrink()
-
-            
+            edit!
+                ? GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/editPost',
+                        arguments: {
+                          'postID': postID,
+                          'currentTitle': postTitle,
+                          'currentDescription': postDescription,
+                          'activityID': activityID,
+                          'postImage': postImage,
+                        },
+                      );
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.blue,
+                      size: 20,
+                    ))
+                : SizedBox.shrink()
           ],
         ),
         Column(
@@ -145,11 +150,16 @@ class CommunityPost extends StatelessWidget {
             Container(
               width: double.infinity,
               height: 250,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(postImage),
-                  fit: BoxFit.cover,
-                ),
+              child: Image.network(
+                postImage,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return CustomImageLoading(width: 250);
+                  }
+                },
               ),
             ),
           ],

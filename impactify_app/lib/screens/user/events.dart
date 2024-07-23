@@ -34,10 +34,12 @@ class _EventsState extends State<Events> {
   void initState() {
     super.initState();
     // Fetch events when the widget is built
-
+    final eventProvider = Provider.of<EventProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _requestLocationPermission();
-      Provider.of<EventProvider>(context, listen: false).fetchAllActivities();
+      eventProvider.fetchAllActivities();
+      
+
     });
   }
 
@@ -220,11 +222,34 @@ class _EventsState extends State<Events> {
                         location: activity.location,
                         hostDate: activity.hostDate,
                         eventID: activity.id,
-                        type: activity.type);
+                        type: activity.type,
+                        );
                   },
                   childCount: eventProvider.activities!.length,
                 ),
               ),
+
+              // SliverGrid(
+              //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //     crossAxisCount: 2,
+              //     crossAxisSpacing: 10,
+              //     mainAxisSpacing: 10,
+              //     childAspectRatio: 0.7,
+              //   ),
+              //   delegate: SliverChildBuilderDelegate(
+              //     (context, index) {
+              //       Activity activity = eventProvider.activities![index];
+              //       return CustomEventCard(
+              //           imageUrl: activity.image,
+              //           title: activity.title,
+              //           location: activity.location,
+              //           hostDate: activity.hostDate,
+              //           eventID: activity.id,
+              //           type: activity.type);
+              //     },
+              //     childCount: eventProvider.activities!.length,
+              //   ),
+              // )
           ],
         ),
       ),

@@ -55,7 +55,7 @@ class _CommunityState extends State<Community> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,7 +112,7 @@ class _CommunityState extends State<Community> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               // Post Content
               if (postProvider.isLoading)
                 Expanded(
