@@ -14,6 +14,7 @@ import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_buttons.dart';
+import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:intl/intl.dart';
@@ -177,6 +178,13 @@ class _EditSpeechState extends State<EditSpeech> {
                           width: double.infinity,
                           height: 300,
                           fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return CustomImageLoading(width: 300);
+                          }
+                        },
                         )
                       : Image.file(
                           width: double.infinity,

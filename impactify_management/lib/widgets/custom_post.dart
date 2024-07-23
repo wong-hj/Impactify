@@ -1,8 +1,11 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/providers/post_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
+import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +19,6 @@ class CommunityPost extends StatelessWidget {
   final String postTitle;
   final String postDescription;
   final List<String> likes;
-  
 
   const CommunityPost({
     required this.postID,
@@ -95,15 +97,19 @@ class CommunityPost extends StatelessWidget {
               ),
             ),
             Container(
-              width: double.infinity,
-              height: 250,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(postImage),
+                width: double.infinity,
+                height: 250,
+                child: Image.network(
+                  postImage,
                   fit: BoxFit.cover,
-                ),
-              ),
-            ),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return CustomImageLoading(width: 250);
+                    }
+                  },
+                )),
           ],
         ),
         SizedBox(height: 10),
@@ -123,7 +129,6 @@ class CommunityPost extends StatelessWidget {
           ),
         ),
         Row(
-          
           children: [
             Spacer(),
             Text('${likes.length} Likes',

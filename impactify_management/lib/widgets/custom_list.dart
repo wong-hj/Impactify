@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/models/project.dart';
 import 'package:impactify_management/models/speech.dart';
 import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
+import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 
@@ -93,6 +95,13 @@ class CustomProjectList extends StatelessWidget {
                         project.image,
                         width: 100,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return CustomImageLoading(width: 100);
+                          }
+                        },
                       ),
                       SizedBox(width: 12),
                       Expanded(
@@ -225,6 +234,13 @@ class CustomSpeechList extends StatelessWidget {
                         speech.image,
                         width: 100,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return CustomImageLoading(width: 100);
+                          }
+                        },
                       ),
                       SizedBox(width: 12),
                       Expanded(
@@ -312,7 +328,8 @@ class CustomAttendeesList extends StatelessWidget {
                 ),
                 child: CircleAvatar(
                   radius: 25,
-                  backgroundImage: NetworkImage(user.profileImage),
+                  backgroundImage: 
+                  NetworkImage(user.profileImage),
                 ),
               ),
               SizedBox(width: 12),
@@ -353,5 +370,4 @@ class CustomAttendeesList extends StatelessWidget {
       ],
     );
   }
-
 }

@@ -7,6 +7,7 @@ import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_buttons.dart';
 import 'package:impactify_management/widgets/custom_list.dart';
+import 'package:intl/intl.dart';
 
 class Attendees extends StatefulWidget {
   const Attendees({super.key});
@@ -19,16 +20,20 @@ class _AttendeesState extends State<Attendees> {
   List<String> selectedEmails = [];
   bool isSelectMode = false;
   bool selectAll = false;
+  String activityTitle = '';
+  String activityLocation = '';
+  Timestamp activityDate = Timestamp.now();
+  String activityOrganizer = '';
 
   @override
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final List<User> attendees = args['attendees'];
-    // final String activityTitle = args['title'];
-    // final String activityLocation = args['location'];
-    // final Timestamp activityDate = args['hostDate'];
-    // final String activityOrganizer = args['hoster'];
+    activityTitle = args['title'];
+    activityLocation = args['location'];
+    activityDate = args['hostDate'];
+    activityOrganizer = args['organizer'];
 
     void toggleSelectAll(bool value) {
       setState(() {
@@ -117,13 +122,13 @@ class _AttendeesState extends State<Attendees> {
   void _sendEmails() async {
     // Your email sending logic goes here
     print('Sending email to: $selectedEmails');
+
     FlutterEmailSender.send(
       Email(
-        body: 'I would like to request more information.',
+        body: 
+        'Hello there Impactify Folks! Hope you are doing well.\n\nThis is an reminder for the activity - ${activityTitle} on ${DateFormat('dd MMMM yyyy, HH:mm').format(activityDate.toDate()).toUpperCase()}.\n\nThe activity will be hosted at ${activityLocation}\n\nFrom ${activityOrganizer} via Impactify App.',
         recipients: selectedEmails,
-        subject: 'Information request',
-        bcc: ['info@yournews.com'],
-        cc: ['support@yournews.com'],
+        subject: 'Reminder on your participation for ${activityTitle}.',
       ),
     ).then(
       (_) => ScaffoldMessenger.of(context).showSnackBar(

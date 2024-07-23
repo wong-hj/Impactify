@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
+import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 
@@ -78,10 +79,17 @@ class CustomDetailScreen extends StatelessWidget {
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30),
                       ),
-                      image: DecorationImage(
-                        image: NetworkImage(image),
-                        fit: BoxFit.cover,
-                      ),
+                    ),
+                    child: Image.network(
+                      image,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return CustomImageLoading(width: 250);
+                        }
+                      },
                     ),
                   ),
                   type == "project"
@@ -90,16 +98,20 @@ class CustomDetailScreen extends StatelessWidget {
                           right: 30,
                           child: Material(
                             elevation: 10,
-                            borderRadius: BorderRadius.circular(30),
                             child: Container(
                               width: 60,
                               height: 60,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdg}.jpg"),
-                                  fit: BoxFit.cover,
-                                ),
+                              child: Image.network(
+                                "https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${sdg}.jpg",
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return CustomImageLoading(width: 30);
+                                  }
+                                },
                               ),
                             ),
                           ),
@@ -192,9 +204,8 @@ class CustomDetailScreen extends StatelessWidget {
                               ? Colors.red
                               : Colors.black),
                       SizedBox(height: 8),
-                      if (recordingUrl!.isEmpty && 
-                      hostDate.compareTo(Timestamp.now()) < 0
-                      ) ...[
+                      if (recordingUrl!.isEmpty &&
+                          hostDate.compareTo(Timestamp.now()) < 0) ...[
                         Text(
                           "Add recording of the speech for users' reference!",
                           style: GoogleFonts.poppins(
@@ -229,33 +240,31 @@ class CustomDetailScreen extends StatelessWidget {
                             ),
                           ],
                         )
-                      ] else if(recordingUrl!.isNotEmpty)...[
-                        
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/recording',
-                                  arguments: recordingUrl,
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: Text(
-                                'View Recording >',
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14, color: AppColors.primary),
-                              )),
-                      ] else...[
+                      ] else if (recordingUrl!.isNotEmpty) ...[
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/recording',
+                                arguments: recordingUrl,
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              'View Recording >',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 14, color: AppColors.primary),
+                            )),
+                      ] else ...[
                         Text(
                           "Remember to add recording when the speech ends for user references!",
                           style: GoogleFonts.poppins(
                               fontSize: 14, color: AppColors.placeholder),
                         ),
                       ]
-                      
                     ],
                     SizedBox(height: 20),
                     CustomLargeIconText(
