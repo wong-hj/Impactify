@@ -300,7 +300,13 @@ class CustomDetailScreen extends StatelessWidget {
                         TextButton(
                             onPressed: () {
                               Navigator.pushNamed(context, '/attendees',
-                                  arguments: attendees);
+                                  arguments: {
+                                    'attendees': attendees,
+                                    'title': title,
+                                    'organizer': hoster,
+                                    'location': location,
+                                    'hostDate': hostDate
+                                  });
                             },
                             child: Text('View More',
                                 style: GoogleFonts.poppins(color: Colors.blue)))

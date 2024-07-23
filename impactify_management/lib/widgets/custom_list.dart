@@ -283,9 +283,15 @@ class CustomSpeechList extends StatelessWidget {
 
 class CustomAttendeesList extends StatelessWidget {
   final User user;
+  final bool isSelectMode;
+  final bool isSelected;
+  final ValueChanged<bool?> onSelectChanged;
 
   const CustomAttendeesList({
     required this.user,
+    required this.isSelectMode,
+    required this.isSelected,
+    required this.onSelectChanged,
     Key? key,
   }) : super(key: key);
 
@@ -305,7 +311,7 @@ class CustomAttendeesList extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: CircleAvatar(
-                  radius: 30,
+                  radius: 25,
                   backgroundImage: NetworkImage(user.profileImage),
                 ),
               ),
@@ -317,7 +323,7 @@ class CustomAttendeesList extends StatelessWidget {
                     Text(
                       user.fullName,
                       style: GoogleFonts.merriweather(
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -331,6 +337,12 @@ class CustomAttendeesList extends StatelessWidget {
                   ],
                 ),
               ),
+              if (isSelectMode)
+                Checkbox(
+                  value: isSelected,
+                  onChanged: onSelectChanged,
+                  activeColor: Colors.green,
+                ),
             ],
           ),
         ),
@@ -341,4 +353,5 @@ class CustomAttendeesList extends StatelessWidget {
       ],
     );
   }
+
 }
