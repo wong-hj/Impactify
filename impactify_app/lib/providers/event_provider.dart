@@ -9,6 +9,7 @@ import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/tag.dart';
 import 'package:impactify_app/repositories/auth_repository.dart';
 import 'package:impactify_app/repositories/event_repository.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class EventProvider with ChangeNotifier {
   final EventRepository _eventRepository = EventRepository();
@@ -167,6 +168,11 @@ class EventProvider with ChangeNotifier {
     return await _eventRepository.isActivityJoined(
         _authRepository.currentUser!.uid, activityID);
   }
+
+  List<Activity> getEventsForDay(DateTime day) {
+    return _allUserActivities!.where((activity) => isSameDay(activity.hostDate.toDate(), day)).toList();
+  }
+
 
   
 }

@@ -29,9 +29,11 @@ class CustomLoading extends StatelessWidget {
 
 class CustomImageLoading extends StatelessWidget {
   final double? width;
+  final double? height;
 
   const CustomImageLoading({
     required this.width,
+    this.height,
     Key? key,
   }) : super(key: key);
 
@@ -39,6 +41,7 @@ class CustomImageLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
+      height: height!=null ? height : null,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

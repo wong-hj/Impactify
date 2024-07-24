@@ -25,12 +25,14 @@ import 'package:impactify_app/screens/user/signup.dart';
 import 'package:impactify_app/screens/user/schedule.dart';
 import 'package:impactify_app/screens/user/speechDetails.dart';
 import 'package:impactify_app/screens/user/userPost.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'theming/custom_themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await initializeDateFormatting();
   runApp(const MyApp());
 }
 
@@ -81,7 +83,7 @@ class MyApp extends StatelessWidget {
               '/recording': (context) => Recording(),
               '/userPost': (context) => UserPost(),
               '/editPost': (context) => EditPost(),
-              //'/schedule': (context) => Schedule(),
+              '/schedule': (context) => Schedule(),
             },
           );
         },

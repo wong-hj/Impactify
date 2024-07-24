@@ -263,7 +263,7 @@ class CustomEventCard extends StatelessWidget {
                       if (loadingProgress == null) {
                         return child;
                       } else {
-                        return CustomImageLoading(width: double.infinity);
+                        return CustomImageLoading(width: double.infinity, height: 200);
                       }
                     },
                   ),
