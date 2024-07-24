@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_management/constants/placeholderURL.dart';
 import 'package:impactify_management/providers/user_provider.dart';
-import 'package:impactify_management/screens/pdfviewer.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_buttons.dart';
 import 'package:impactify_management/widgets/custom_text.dart';

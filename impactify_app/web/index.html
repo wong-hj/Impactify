@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,7 +28,7 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>impactify_app</title>
   <link rel="manifest" href="manifest.json">
@@ -43,21 +44,38 @@
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
 </head>
+
 <body>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script>
-    window.addEventListener('load', function(ev) {
+    const firebaseConfig = {
+      apiKey: "AIzaSyBSxrAM8U54JxMdCaFboUoONylVEcGCGhg",
+      authDomain: "impactifyapp-1fcfa.firebaseapp.com",
+      projectId: "impactifyapp-1fcfa",
+      storageBucket: "impactifyapp-1fcfa.appspot.com",
+      messagingSenderId: "1038533174457",
+      appId: "1:1038533174457:web:68a902e9ae25ef59676768",
+      measurementId: "G-39WP4XVTZG"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <!-- <script>
+    window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.load({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
+        onEntrypointLoaded: function (engineInitializer) {
+          engineInitializer.initializeEngine().then(function (appRunner) {
             appRunner.runApp();
           });
         }
       });
     });
-  </script>
+  </script> -->
 </body>
+
 </html>

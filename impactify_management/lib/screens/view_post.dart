@@ -10,13 +10,6 @@ import 'package:impactify_management/widgets/custom_post.dart';
 import 'package:impactify_management/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_management/providers/activity_provider.dart';
-import 'package:impactify_management/providers/post_provider.dart';
-import 'package:impactify_management/widgets/custom_loading.dart';
-import 'package:impactify_management/widgets/custom_text.dart';
-import 'package:provider/provider.dart';
 
 class ViewPost extends StatefulWidget {
   const ViewPost({super.key});

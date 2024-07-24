@@ -38,8 +38,6 @@ class _EventsState extends State<Events> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _requestLocationPermission();
       eventProvider.fetchAllActivities();
-      
-
     });
   }
 
@@ -80,7 +78,14 @@ class _EventsState extends State<Events> {
       backgroundColor: AppColors.background,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-        child: CustomScrollView(
+        child: 
+        RefreshIndicator(
+    onRefresh: () async {
+      await eventProvider.fetchAllActivities();
+    },
+    edgeOffset: 100, 
+    child:
+        CustomScrollView(
           slivers: [
             SliverAppBar(
               automaticallyImplyLeading: false,
@@ -134,30 +139,6 @@ class _EventsState extends State<Events> {
                       ],
                     ),
                     SizedBox(height: 10),
-                    // Search Bar
-                    // TextField(
-                    //   onChanged: (text) {
-                    //     _searchActivities(text);
-                    //   },
-                    //   onTapOutside: ((event) {
-                    //     FocusScope.of(context).unfocus();
-                    //   }),
-                    //   decoration: InputDecoration(
-                    //     hintText: 'Search',
-                    //     prefixIcon: Icon(Icons.search),
-                    //     filled: true,
-                    //     fillColor: Colors.white,
-                    //     focusColor: AppColors.tertiary,
-                    //     contentPadding: EdgeInsets.symmetric(vertical: 10.0),
-                    //     border: OutlineInputBorder(
-                    //       borderRadius: BorderRadius.circular(30),
-                    //     ),
-                    //     focusedBorder: OutlineInputBorder(
-                    //       borderSide: BorderSide(color: AppColors.primary),
-                    //       borderRadius: BorderRadius.circular(30),
-                    //     ),
-                    //   ),
-                    // ),
                     Expanded(
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
@@ -217,42 +198,42 @@ class _EventsState extends State<Events> {
                   (context, index) {
                     Activity activity = eventProvider.activities![index];
                     return CustomEventCard(
-                        imageUrl: activity.image,
-                        title: activity.title,
-                        location: activity.location,
-                        hostDate: activity.hostDate,
-                        eventID: activity.id,
-                        type: activity.type,
-                        );
+                      imageUrl: activity.image,
+                      title: activity.title,
+                      location: activity.location,
+                      hostDate: activity.hostDate,
+                      eventID: activity.id,
+                      type: activity.type,
+                    );
                   },
                   childCount: eventProvider.activities!.length,
                 ),
               ),
 
-              // SliverGrid(
-              //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //     crossAxisCount: 2,
-              //     crossAxisSpacing: 10,
-              //     mainAxisSpacing: 10,
-              //     childAspectRatio: 0.7,
-              //   ),
-              //   delegate: SliverChildBuilderDelegate(
-              //     (context, index) {
-              //       Activity activity = eventProvider.activities![index];
-              //       return CustomEventCard(
-              //           imageUrl: activity.image,
-              //           title: activity.title,
-              //           location: activity.location,
-              //           hostDate: activity.hostDate,
-              //           eventID: activity.id,
-              //           type: activity.type);
-              //     },
-              //     childCount: eventProvider.activities!.length,
-              //   ),
-              // )
+            // SliverGrid(
+            //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //     crossAxisCount: 2,
+            //     crossAxisSpacing: 10,
+            //     mainAxisSpacing: 10,
+            //     childAspectRatio: 0.7,
+            //   ),
+            //   delegate: SliverChildBuilderDelegate(
+            //     (context, index) {
+            //       Activity activity = eventProvider.activities![index];
+            //       return CustomEventCard(
+            //           imageUrl: activity.image,
+            //           title: activity.title,
+            //           location: activity.location,
+            //           hostDate: activity.hostDate,
+            //           eventID: activity.id,
+            //           type: activity.type);
+            //     },
+            //     childCount: eventProvider.activities!.length,
+            //   ),
+            // )
           ],
         ),
       ),
-    );
+    ));
   }
 }

@@ -1,15 +1,12 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_management/constants/placeholderURL.dart';
 import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_empty.dart';
 import 'package:impactify_management/widgets/custom_list.dart';
 import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class ManageProject extends StatefulWidget {
   const ManageProject({super.key});

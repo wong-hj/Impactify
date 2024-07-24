@@ -1,13 +1,9 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_management/providers/post_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_loading.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class CommunityPost extends StatelessWidget {
   final String postID;

@@ -174,32 +174,29 @@ class ActivityRepository {
   }
 
   Future<void> addTag(String tagName) async {
-  try {
-    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    try {
+      FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-    DocumentReference docRef = _firestore.collection('tags').doc();
+      DocumentReference docRef = _firestore.collection('tags').doc();
 
-    // Create the tag data
-    Map<String, dynamic> tagData = {
-      'tagID': docRef.id,  
-      'name': tagName,
-    };
+      // Create the tag data
+      Map<String, dynamic> tagData = {
+        'tagID': docRef.id,
+        'name': tagName,
+      };
 
-    // Set the document with the tag data
-    await docRef.set(tagData);
+      // Set the document with the tag data
+      await docRef.set(tagData);
 
-    print('Tag added successfully with ID: ${docRef.id}');
-  } catch (e) {
-    print('Error adding tag: $e');
-    throw e;  
+      print('Tag added successfully with ID: ${docRef.id}');
+    } catch (e) {
+      print('Error adding tag: $e');
+      throw e;
+    }
   }
 
-
-  
-
-  }
-
-  Future<void> addProject(String organizerID, String organizerName, Map<String, dynamic> data, XFile? imageFile) async {
+  Future<void> addProject(String organizerID, String organizerName,
+      Map<String, dynamic> data, XFile? imageFile) async {
     DocumentReference docRef;
     try {
       if (imageFile != null) {
@@ -216,7 +213,6 @@ class ActivityRepository {
         data['organizerID'] = organizerID;
         data['organizer'] = organizerName;
 
-        
         // Create a new document in the posts collection
         docRef = await _firestore.collection('events').add(data);
 
@@ -230,7 +226,8 @@ class ActivityRepository {
     }
   }
 
-  Future<void> addSpeech(String organizerID, String organizerName, Map<String, dynamic> data, XFile? imageFile) async {
+  Future<void> addSpeech(String organizerID, String organizerName,
+      Map<String, dynamic> data, XFile? imageFile) async {
     DocumentReference docRef;
     try {
       if (imageFile != null) {
@@ -247,7 +244,6 @@ class ActivityRepository {
         data['organizerID'] = organizerID;
         data['organizer'] = organizerName;
 
-        
         // Create a new document in the posts collection
         docRef = await _firestore.collection('speeches').add(data);
 
@@ -261,7 +257,8 @@ class ActivityRepository {
     }
   }
 
-  Future<void> updateProject(Map<String, dynamic> data, XFile? imageFile) async {
+  Future<void> updateProject(
+      Map<String, dynamic> data, XFile? imageFile) async {
     final projectID = data['projectID'];
 
     try {
@@ -276,12 +273,10 @@ class ActivityRepository {
         String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
         data['image'] = downloadUrl;
-
       }
 
       // Create a new document in the posts collection
-        await _firestore.collection('events').doc(projectID).update(data);
-
+      await _firestore.collection('events').doc(projectID).update(data);
     } catch (e) {
       throw Exception('Error updating project: $e');
     }
@@ -302,12 +297,10 @@ class ActivityRepository {
         String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
         data['image'] = downloadUrl;
-
       }
 
       // Create a new document in the posts collection
-        await _firestore.collection('speeches').doc(speechID).update(data);
-
+      await _firestore.collection('speeches').doc(speechID).update(data);
     } catch (e) {
       throw Exception('Error updating speech: $e');
     }
@@ -315,12 +308,10 @@ class ActivityRepository {
 
   Future<void> deleteProject(String projectID) async {
     try {
-
-
-      DocumentReference docRef = await _firestore.collection('events').doc(projectID);
+      DocumentReference docRef =
+          await _firestore.collection('events').doc(projectID);
 
       await docRef.update({'status': 'inactive'});
-
     } catch (e) {
       throw Exception('Error Deleting project: $e');
     }
@@ -328,80 +319,117 @@ class ActivityRepository {
 
   Future<void> deleteSpeech(String speechID) async {
     try {
-      DocumentReference docRef = await _firestore.collection('speeches').doc(speechID);
+      DocumentReference docRef =
+          await _firestore.collection('speeches').doc(speechID);
 
       await docRef.update({'status': 'inactive'});
-
     } catch (e) {
       throw Exception('Error Deleting Speech: $e');
     }
   }
 
   Future<Map<String, int>> fetchProjectsStats(String organizerID) async {
-  try {
-    QuerySnapshot snapshot = await _firestore
-        .collection('events')
-        .where('hostDate', isGreaterThan: Timestamp.now())
-        .where('organizerID', isEqualTo: organizerID)
-        .get();
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('events')
+          .where('hostDate', isGreaterThan: Timestamp.now())
+          .where('organizerID', isEqualTo: organizerID)
+          .get();
 
-    List<Project> ongoingProjects = snapshot.docs
-        .map((doc) => Project.fromFirestore(doc))
-        .toList();
+      List<Project> ongoingProjects =
+          snapshot.docs.map((doc) => Project.fromFirestore(doc)).toList();
 
-    QuerySnapshot completedProjectSnapshot = await _firestore
-        .collection('events')
-        .where('hostDate', isLessThanOrEqualTo: Timestamp.now())
-        .where('organizerID', isEqualTo: organizerID)
-        .get();
+      QuerySnapshot completedProjectSnapshot = await _firestore
+          .collection('events')
+          .where('hostDate', isLessThanOrEqualTo: Timestamp.now())
+          .where('organizerID', isEqualTo: organizerID)
+          .get();
 
-    List<Project> completedProjects = completedProjectSnapshot.docs
-        .map((doc) => Project.fromFirestore(doc))
-        .toList();
+      List<Project> completedProjects = completedProjectSnapshot.docs
+          .map((doc) => Project.fromFirestore(doc))
+          .toList();
 
-    return {
-      'ongoingProjects': ongoingProjects.length,
-      'completedProjects': completedProjects.length,
-    };
-
-  } catch (e) {
-    print('Error fetching ongoing projects: $e');
-    throw e;
+      return {
+        'ongoingProjects': ongoingProjects.length,
+        'completedProjects': completedProjects.length,
+      };
+    } catch (e) {
+      print('Error fetching ongoing projects: $e');
+      throw e;
+    }
   }
-}
 
-Future<Map<String, int>> fetchSpeechesStats(String organizerID) async {
-  try {
-    QuerySnapshot snapshot = await _firestore
-        .collection('speeches')
-        .where('hostDate', isGreaterThan: Timestamp.now())
-        .where('organizerID', isEqualTo: organizerID)
-        .get();
+  Future<Map<String, int>> fetchSpeechesStats(String organizerID) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('speeches')
+          .where('hostDate', isGreaterThan: Timestamp.now())
+          .where('organizerID', isEqualTo: organizerID)
+          .get();
 
-    List<Project> ongoingSpeeches = snapshot.docs
-        .map((doc) => Project.fromFirestore(doc))
-        .toList();
+      List<Project> ongoingSpeeches =
+          snapshot.docs.map((doc) => Project.fromFirestore(doc)).toList();
 
-    QuerySnapshot completedSpeechSnapshot = await _firestore
-        .collection('speeches')
-        .where('hostDate', isLessThanOrEqualTo: Timestamp.now())
-        .where('organizerID', isEqualTo: organizerID)
-        .get();
+      QuerySnapshot completedSpeechSnapshot = await _firestore
+          .collection('speeches')
+          .where('hostDate', isLessThanOrEqualTo: Timestamp.now())
+          .where('organizerID', isEqualTo: organizerID)
+          .get();
 
-    List<Project> completedSpeeches = completedSpeechSnapshot.docs
-        .map((doc) => Project.fromFirestore(doc))
-        .toList();
+      List<Project> completedSpeeches = completedSpeechSnapshot.docs
+          .map((doc) => Project.fromFirestore(doc))
+          .toList();
 
-    return {
-      'ongoingSpeeches': ongoingSpeeches.length,
-      'completedSpeeches': completedSpeeches.length,
-    };
-
-  } catch (e) {
-    print('Error fetching Speeches Stats: $e');
-    throw e;
+      return {
+        'ongoingSpeeches': ongoingSpeeches.length,
+        'completedSpeeches': completedSpeeches.length,
+      };
+    } catch (e) {
+      print('Error fetching Speeches Stats: $e');
+      throw e;
+    }
   }
-}
 
+  Future<int> fetchParticipationStats(String organizerID) async {
+    FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    int participantCount = 0;
 
+    try {
+      // Step 1: Search for the given organizerID in events and speeches collections
+      QuerySnapshot eventSnapshot = await _firestore
+          .collection('events')
+          .where('organizerID', isEqualTo: organizerID)
+          .get();
+
+      QuerySnapshot speechSnapshot = await _firestore
+          .collection('speeches')
+          .where('organizerID', isEqualTo: organizerID)
+          .get();
+
+      List<String> idsToCheck = [];
+
+      if (eventSnapshot.docs.isNotEmpty) {
+        idsToCheck.addAll(eventSnapshot.docs.map((doc) => doc.id).toList());
+      }
+
+      if (speechSnapshot.docs.isNotEmpty) {
+        idsToCheck.addAll(speechSnapshot.docs.map((doc) => doc.id).toList());
+      }
+
+      // Step 2: Loop through the collected IDs and query the participation table
+      for (String id in idsToCheck) {
+        QuerySnapshot participationSnapshot = await _firestore
+            .collection('participation')
+            .where('activityID', isEqualTo: id)
+            .get();
+
+        participantCount += participationSnapshot.docs.length;
+      }
+
+      return participantCount;
+    } catch (e) {
+      print('Error finding participants: $e');
+      return 0;
+    }
+  }
 }

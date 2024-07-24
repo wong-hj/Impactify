@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_management/models/project.dart';
 import 'package:impactify_management/models/tag.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 

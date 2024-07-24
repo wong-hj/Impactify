@@ -127,26 +127,32 @@ class _CommunityState extends State<Community> {
                 Expanded(child: EmptyWidget(text: 'No Posts after Filtered.\nPlease Try Again.', image: 'assets/no-filter.png'))
               else
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: postProvider.posts?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final post = postProvider.posts![index];
-                      return CommunityPost(
-                        postID: post.postID,
-                        profileImage: post.user!.profileImage,
-                        type: post.activity!.type,
-                        name: post.user!.username,
-                        bio: post.user!.introduction,
-                        date: post.createdAt,
-                        postImage: post.postImage,
-                        postTitle: post.title,
-                        postDescription: post.description,
-                        activity: post.activity!.title,
-                        activityID: post.activityID,
-                        likes: post.likes,
-                        userID: userProvider.userData!.userID,
-                      );
-                    },
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                              await postProvider
+                                  .fetchAllPosts();
+                            },
+                    child: ListView.builder(
+                      itemCount: postProvider.posts?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final post = postProvider.posts![index];
+                        return CommunityPost(
+                          postID: post.postID,
+                          profileImage: post.user!.profileImage,
+                          type: post.activity!.type,
+                          name: post.user!.username,
+                          bio: post.user!.introduction,
+                          date: post.createdAt,
+                          postImage: post.postImage,
+                          postTitle: post.title,
+                          postDescription: post.description,
+                          activity: post.activity!.title,
+                          activityID: post.activityID,
+                          likes: post.likes,
+                          userID: userProvider.userData!.userID,
+                        );
+                      },
+                    ),
                   ),
                 )
             ],

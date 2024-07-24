@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_management/theming/custom_themes.dart';
 
 class Terms extends StatelessWidget {
   const Terms({super.key});
