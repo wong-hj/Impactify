@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
                         SizedBox(height: 10),
                         // My Events Text
                         Text(
-                          'My Events',
+                          'My Activities',
                           style: GoogleFonts.nunitoSans(fontSize: 20),
                         ),
                         SizedBox(height: 16),
