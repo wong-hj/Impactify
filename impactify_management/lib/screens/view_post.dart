@@ -65,13 +65,9 @@ class _ViewPostState extends State<ViewPost> {
               child: DropdownButton2<String>(
                 buttonStyleData: ButtonStyleData(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    //color: Colors.redAccent,
+                    color: Colors.white,
                   ),
-                  elevation: 20,
+                  
                 ),
                 barrierColor: Colors.black.withAlpha(100),
                 isExpanded: true,

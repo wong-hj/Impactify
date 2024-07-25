@@ -157,7 +157,7 @@ class _EditSpeechState extends State<EditSpeech> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('Edit your Project', style: GoogleFonts.nunitoSans())),
+          title: Text('Edit your Speech', style: GoogleFonts.nunitoSans())),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

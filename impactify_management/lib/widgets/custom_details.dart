@@ -174,7 +174,7 @@ class CustomDetailScreen extends StatelessWidget {
                         children: [
                           CustomLargeIconText(
                               icon: Icons.info_outlined,
-                              text: 'About this Event'),
+                              text: 'About this Activity'),
                           SizedBox(height: 8),
                           Text(
                             "${aboutDescription} ${type == "project" ? "\n\n**Participation adds ${impointsAdd ?? 0} Impoints!" : ""}",

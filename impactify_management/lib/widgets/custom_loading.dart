@@ -34,7 +34,7 @@ class CustomImageLoading extends StatelessWidget {
   const CustomImageLoading({
     required this.width,
     Key? key,
-  }) : super(key: key);
+  }) : super(key: key); 
 
   @override
   Widget build(BuildContext context) {
