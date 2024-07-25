@@ -111,7 +111,7 @@ class CustomHorizontalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime date = date1.toDate();
-    String formattedDate = DateFormat('dd MMMM').format(date);
+    String formattedDate = DateFormat('MMMM dd').format(date).toUpperCase();
     return Container(
       margin: EdgeInsets.only(bottom: 10, right: 16),
       width: 200,
@@ -134,22 +134,19 @@ class CustomHorizontalCard extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     height: 160,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                      child: Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return CustomImageLoading(width: 160);
+                          }
+                        },
                       ),
-                    ),
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return CustomImageLoading(width: 160);
-                        }
-                      },
                     ),
                   ),
                   Positioned(
@@ -263,7 +260,8 @@ class CustomEventCard extends StatelessWidget {
                       if (loadingProgress == null) {
                         return child;
                       } else {
-                        return CustomImageLoading(width: double.infinity, height: 200);
+                        return CustomImageLoading(
+                            width: double.infinity, height: 200);
                       }
                     },
                   ),
