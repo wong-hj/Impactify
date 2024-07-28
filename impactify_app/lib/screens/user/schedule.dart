@@ -1,12 +1,8 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
-import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -52,24 +48,24 @@ class _ScheduleState extends State<Schedule> {
     return eventProvider.getEventsForDay(day);
   }
 
-  List<Activity> _getEventsForRange(DateTime start, DateTime end) {
-    final days = daysInRange(start, end);
-    return [
-      for (final d in days) ..._getEventsForDay(d),
-    ];
-  }
+  // List<Activity> _getEventsForRange(DateTime start, DateTime end) {
+  //   final days = daysInRange(start, end);
+  //   return [
+  //     for (final d in days) ..._getEventsForDay(d),
+  //   ];
+  // }
 
-  int getHashCode(DateTime key) {
-    return key.day * 1000000 + key.month * 10000 + key.year;
-  }
+  // int getHashCode(DateTime key) {
+  //   return key.day * 1000000 + key.month * 10000 + key.year;
+  // }
 
-  List<DateTime> daysInRange(DateTime first, DateTime last) {
-    final dayCount = last.difference(first).inDays + 1;
-    return List.generate(
-      dayCount,
-      (index) => DateTime.utc(first.year, first.month, first.day + index),
-    );
-  }
+  // List<DateTime> daysInRange(DateTime first, DateTime last) {
+  //   final dayCount = last.difference(first).inDays + 1;
+  //   return List.generate(
+  //     dayCount,
+  //     (index) => DateTime.utc(first.year, first.month, first.day + index),
+  //   );
+  // }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -85,23 +81,23 @@ class _ScheduleState extends State<Schedule> {
     }
   }
 
-  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
-    setState(() {
-      _selectedDay = null;
-      _focusedDay = focusedDay;
-      _rangeStart = start;
-      _rangeEnd = end;
-      _rangeSelectionMode = RangeSelectionMode.toggledOn;
-    });
+  // void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
+  //   setState(() {
+  //     _selectedDay = null;
+  //     _focusedDay = focusedDay;
+  //     _rangeStart = start;
+  //     _rangeEnd = end;
+  //     _rangeSelectionMode = RangeSelectionMode.toggledOn;
+  //   });
 
-    if (start != null && end != null) {
-      _selectedEvents.value = _getEventsForRange(start, end);
-    } else if (start != null) {
-      _selectedEvents.value = _getEventsForDay(start);
-    } else if (end != null) {
-      _selectedEvents.value = _getEventsForDay(end);
-    }
-  }
+  //   if (start != null && end != null) {
+  //     _selectedEvents.value = _getEventsForRange(start, end);
+  //   } else if (start != null) {
+  //     _selectedEvents.value = _getEventsForDay(start);
+  //   } else if (end != null) {
+  //     _selectedEvents.value = _getEventsForDay(end);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +146,7 @@ class _ScheduleState extends State<Schedule> {
                   outsideDaysVisible: false,
                 ),
                 onDaySelected: _onDaySelected,
-                onRangeSelected: _onRangeSelected,
+                //onRangeSelected: _onRangeSelected,
                 onFormatChanged: (format) {
                   if (_calendarFormat != format) {
                     setState(() {

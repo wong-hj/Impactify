@@ -124,7 +124,7 @@ class _CommunityState extends State<Community> {
                   ),
                 )
               else if (postProvider.posts?.isEmpty ?? false)
-                Expanded(child: EmptyWidget(text: 'No Posts after Filtered.\nPlease Try Again.', image: 'assets/no-filter.png'))
+                Expanded(child: EmptyWidget(text: 'No Posts Found.\nPlease Try Again.', image: 'assets/no-filter.png'))
               else
                 Expanded(
                   child: RefreshIndicator(

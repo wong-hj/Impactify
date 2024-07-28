@@ -19,22 +19,22 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-   final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
   XFile? _image;
   final TextEditingController _fullNameController = TextEditingController();
-  
+
   final TextEditingController _usernameController = TextEditingController();
 
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _introductionController = TextEditingController();
-  
 
-@override
+  @override
   void initState() {
     super.initState();
     // Fetch user data and set it to the text controllers
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final _formKey = GlobalKey<FormState>();
 
     final user = userProvider.userData;
     if (user != null) {
@@ -42,10 +42,8 @@ class _EditProfileState extends State<EditProfile> {
       _usernameController.text = user.username;
       _emailController.text = user.email;
       _introductionController.text = user.introduction;
-      
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +70,13 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         child: CircleAvatar(
                           radius: 60,
-                          backgroundImage:
-                              _image == null ? NetworkImage( userProvider.userData?.profileImage ?? userPlaceholder) as ImageProvider
+                          backgroundImage: _image == null
+                              ? NetworkImage(
+                                  userProvider.userData?.profileImage ??
+                                      userPlaceholder) as ImageProvider
                               : FileImage(
-                                 
-                                File(_image!.path),
-                                
-                              ),
-                              
+                                  File(_image!.path),
+                                ),
                         ),
                       ),
                       Positioned(
@@ -144,15 +141,30 @@ class _EditProfileState extends State<EditProfile> {
                 },
               ),
               SizedBox(height: 50),
-              CustomPrimaryButton(onPressed: () {
-                _updateProfile();
-              }, text: "Update")
+              CustomPrimaryButton(
+                  onPressed: () {
+                    if (_fullNameController != "" &&
+                        _usernameController != "" &&
+                        _emailController != "") {
+                      _updateProfile();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'Please fill out all fields.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                  text: "Update")
             ],
           ),
         ),
       ),
     );
   }
+
   Future getImage() async {
     final XFile? image = await _picker.pickImage(
       source: ImageSource.gallery,
@@ -180,5 +192,3 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 }
-
-

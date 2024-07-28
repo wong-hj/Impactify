@@ -19,7 +19,7 @@ class _RecordingState extends State<Recording> {
       final String recordingURL = ModalRoute.of(context)!.settings.arguments as String;
       setState(() {
         flickManager = FlickManager(
-          videoPlayerController: VideoPlayerController.network(recordingURL),
+          videoPlayerController: VideoPlayerController.networkUrl(Uri.parse(recordingURL)),
         );
       });
     });

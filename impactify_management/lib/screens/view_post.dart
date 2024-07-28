@@ -72,7 +72,7 @@ class _ViewPostState extends State<ViewPost> {
                 barrierColor: Colors.black.withAlpha(100),
                 isExpanded: true,
                 hint: CustomIconText(
-                  text: 'Project / Speech Participated (All)',
+                  text: 'Project / Speech Listed (All)',
                   icon: Icons.event,
                   size: 14,
                   color: AppColors.primary,

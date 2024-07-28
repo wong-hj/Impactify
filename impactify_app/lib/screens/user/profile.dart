@@ -325,6 +325,7 @@ class HistoryContent extends StatelessWidget {
                      Image.network(
                         history.image,
                         width:100,
+                        height: 70,
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {

@@ -75,6 +75,7 @@ class CustomDetailScreen extends StatelessWidget {
                     child: Image.network(
                       image,
                       fit: BoxFit.cover,
+                      width: double.infinity,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) {
                           return child;

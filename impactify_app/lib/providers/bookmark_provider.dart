@@ -79,7 +79,7 @@ class BookmarkProvider with ChangeNotifier {
 
     try {
       await _bookmarkRepository.removeBookmark(
-          _authRepository.currentUser!.uid, speechID, 'project');
+          _authRepository.currentUser!.uid, speechID, 'speech');
       await fetchBookmarksAndSpeeches();
     } catch (e) {
       print('Error in BookmarkProvider: $e');

@@ -127,6 +127,7 @@ class _AttendeesState extends State<Attendees> {
       Email(
         body: 
         'Hello there Impactify Folks! Hope you are doing well.\n\nThis is an reminder for the activity - ${activityTitle} on ${DateFormat('dd MMMM yyyy, HH:mm').format(activityDate.toDate()).toUpperCase()}.\n\nThe activity will be hosted at ${activityLocation}\n\nFrom ${activityOrganizer} via Impactify App.',
+        
         recipients: selectedEmails,
         subject: 'Reminder on your participation for ${activityTitle}.',
       ),

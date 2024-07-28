@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:http/http.dart' as http;
@@ -10,15 +9,14 @@ Future<List<Article>> fetchArticles() async {
   final response = await http.get(
     Uri.parse('https://news-api14.p.rapidapi.com/v2/search/articles?language=en&query=SDG in Malaysia'),
     headers: {
-      'x-rapidapi-key': '4f4db97a3bmsh97af06e218c97eap1b238ajsn7a5f20cd8acf',
+      'x-rapidapi-key': '4f4db97a3bmsh97af06e218c97eap1b238ajsn7a5f20cd8acf()',
     },
     )
   
   ;
   
   if (response.statusCode == 200) {
-    print("here");
-   List<dynamic> data = json.decode(response.body)['data'];
+    List<dynamic> data = json.decode(response.body)['data'];
     List<Article> articles = data.map((json) => Article.fromJson(json)).toList();
 
 

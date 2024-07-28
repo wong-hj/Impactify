@@ -15,7 +15,7 @@ class Post {
   User? user;
 
   Post({
-    required this.postID,
+    required this.postID, 
     required this.postImage,
     required this.title,
     required this.description,

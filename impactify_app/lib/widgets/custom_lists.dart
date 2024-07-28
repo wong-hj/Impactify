@@ -66,6 +66,7 @@ class CustomList extends StatelessWidget {
                   Image.network(
                     image,
                     width: 100,
+                    height: 70,
                     fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
