@@ -143,15 +143,15 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(height: 50),
               CustomPrimaryButton(
                   onPressed: () {
-                    if (_fullNameController != "" &&
-                        _usernameController != "" &&
-                        _emailController != "") {
+                    if (_fullNameController.text.isNotEmpty &&
+                        _usernameController.text.isNotEmpty &&
+                        _emailController.text.isNotEmpty) {
                       _updateProfile();
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                              'Please fill out all fields.'),
+                              'Please fill in all fields. (Introduction is Optional)'),
                           backgroundColor: Colors.red,
                         ),
                       );

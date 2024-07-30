@@ -77,25 +77,27 @@ class CustomList extends StatelessWidget {
                         },
                   ),
                   SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: GoogleFonts.nunitoSans(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: GoogleFonts.nunitoSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        date,
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          color: AppColors.placeholder,
+                        SizedBox(height: 8),
+                        Text(
+                          date,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: AppColors.placeholder,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

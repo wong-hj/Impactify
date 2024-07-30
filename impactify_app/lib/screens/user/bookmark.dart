@@ -24,7 +24,6 @@ class _BookmarkState extends State<Bookmark>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    // Fetch events when the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final bookmarkProvider =
           Provider.of<BookmarkProvider>(context, listen: false);
@@ -53,7 +52,6 @@ class _BookmarkState extends State<Bookmark>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Heading
                     Text.rich(
                       TextSpan(
                         children: [
@@ -109,14 +107,12 @@ class _BookmarkState extends State<Bookmark>
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                          ProjectContent(),
-                          SpeechContent()
-                          //PostContent(),
-                          //HistoryContent(),
+                          ProjectContent(parentContext: context),
+                          SpeechContent(parentContext: context)
                         ],
                       ),
                     ),
-                  ]
+                  ],
                 ),
               ),
             ),
@@ -125,20 +121,21 @@ class _BookmarkState extends State<Bookmark>
 }
 
 class ProjectContent extends StatelessWidget {
-  const ProjectContent({super.key});
+  final BuildContext parentContext;
+
+  const ProjectContent({super.key, required this.parentContext});
 
   @override
   Widget build(BuildContext context) {
-
     final bookmarkProvider = Provider.of<BookmarkProvider>(context);
 
-    
     return Column(
       children: [
         Expanded(
           child: bookmarkProvider.events.isEmpty
-               ? 
-                EmptyWidget(text: 'No Bookmark for Projects as of now.', image: 'assets/no-bookmark.png')
+              ? EmptyWidget(
+                  text: 'No Bookmark for Projects as of now.',
+                  image: 'assets/no-bookmark.png')
               : ListView.builder(
                   itemCount: bookmarkProvider.events.length,
                   itemBuilder: (context, index) {
@@ -155,19 +152,32 @@ class ProjectContent extends StatelessWidget {
                       image: bookmark.image,
                       onPressed: (context) async {
                         try {
-                          await bookmarkProvider.removeProjectBookmark(bookmark.eventID);
+                          await bookmarkProvider
+                              .removeProjectBookmark(bookmark.eventID);
+                          if (parentContext.mounted) {
+                            ScaffoldMessenger.of(parentContext).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('Removed Bookmark for the Project!'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         } catch (e) {
                           print('Error removing bookmark: $e');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Failed to remove bookmark'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
+                          if (parentContext.mounted) {
+                            ScaffoldMessenger.of(parentContext).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to remove bookmark'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         }
                       },
                     );
-                  }),
+                  },
+                ),
         ),
       ],
     );
@@ -175,17 +185,21 @@ class ProjectContent extends StatelessWidget {
 }
 
 class SpeechContent extends StatelessWidget {
-  const SpeechContent({super.key});
+  final BuildContext parentContext;
+
+  const SpeechContent({super.key, required this.parentContext});
 
   @override
-  Widget build(BuildContext context,) {
+  Widget build(BuildContext context) {
     final bookmarkProvider = Provider.of<BookmarkProvider>(context);
 
     return Column(
       children: [
         Expanded(
           child: bookmarkProvider.speeches.isEmpty
-              ? EmptyWidget(text: 'No Bookmark for Speeches as of now.', image: 'assets/no-bookmark.png')
+              ? EmptyWidget(
+                  text: 'No Bookmark for Speeches as of now.',
+                  image: 'assets/no-bookmark.png')
               : ListView.builder(
                   itemCount: bookmarkProvider.speeches.length,
                   itemBuilder: (context, index) {
@@ -202,22 +216,34 @@ class SpeechContent extends StatelessWidget {
                       image: bookmark.image,
                       onPressed: (context) async {
                         try {
-                          await bookmarkProvider.removeSpeechBookmark(bookmark.speechID);
+                          await bookmarkProvider
+                              .removeSpeechBookmark(bookmark.speechID);
+                          if (parentContext.mounted) {
+                            ScaffoldMessenger.of(parentContext).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('Removed Bookmark for the Speech!'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         } catch (e) {
                           print('Error removing bookmark: $e');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Failed to remove bookmark'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
+                          if (parentContext.mounted) {
+                            ScaffoldMessenger.of(parentContext).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to remove bookmark'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         }
                       },
                     );
-                  }),
+                  },
+                ),
         ),
       ],
     );
   }
 }
-

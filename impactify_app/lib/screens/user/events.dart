@@ -190,7 +190,7 @@ class _EventsState extends State<Events> {
                   child: Center(
                       child: EmptyWidget(
                           text:
-                              "No Activities after Filtered.\nPlease try again.",
+                              "No Activities Found.\nPlease try again.",
                           image: 'assets/projectEmpty.png')))
             else
               SliverList(

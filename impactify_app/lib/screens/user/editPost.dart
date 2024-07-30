@@ -278,7 +278,7 @@ class _EditPostState extends State<EditPost> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                'Please fill out all fields and select an image'),
+                                'Please fill out all fields.'),
                             backgroundColor: Colors.red,
                           ),
                         );

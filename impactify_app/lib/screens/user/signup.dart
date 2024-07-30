@@ -79,28 +79,44 @@ class SignUp extends StatelessWidget {
                           final fullname = _fullnameController.text.trim();
                           final email = _emailController.text.trim();
                           final password = _passwordController.text.trim();
-          
                           if (username.isNotEmpty &&
                               fullname.isNotEmpty &&
                               email.isNotEmpty &&
                               password.isNotEmpty) {
-                            await authProvider.signUpWithEmail(email, password, fullname, username);
-                            if (authProvider.user != null) {
-                              Navigator.pushReplacementNamed(
-                                  context, '/homeScreen');
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: Colors.red,
-                                  content: Text(
-                                    'Something Went Wrong Please Try Again.',
-                                    style:
-                                        GoogleFonts.poppins(color: Colors.white),
-                                  ),
-                                  showCloseIcon: true,
-                                ),
-                              );
-                            }
+                                if(password.length > 5) {
+                                    await authProvider.signUpWithEmail(email, password, fullname, username);
+                                    if (authProvider.user != null) {
+                                      Navigator.pushReplacementNamed(
+                                          context, '/homeScreen');
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(
+                                            'Something Went Wrong Please Try Again.',
+                                            style:
+                                                GoogleFonts.poppins(color: Colors.white),
+                                          ),
+                                          showCloseIcon: true,
+                                        ),
+                                      );
+                                    }
+                                } else {
+                                    AwesomeDialog(
+                                      context: context,
+                                      animType: AnimType.scale,
+                                      dialogType: DialogType.warning,
+                                      body: Center(
+                                        child: Text(
+                                          'Password must be longer than 6 characters.',
+                                          style: TextStyle(),
+                                        ),
+                                      ),
+                                      btnOkOnPress: () {},
+                                      btnOkColor: AppColors.secondary,
+                                    )..show();
+                                }                  
+                            
                           } else {
                             AwesomeDialog(
                               context: context,
