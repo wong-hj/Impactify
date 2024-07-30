@@ -16,10 +16,8 @@ class ActivityProvider with ChangeNotifier {
   final UserProvider _userProvider = UserProvider();
   final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
 
-  bool _isLoading = false;
+  
   bool _isUploadLoading = false;
-  List<Project> _projects = [];
-  List<Project> _allProjects = [];
   List<Speech> _speeches = [];
   List<Speech> _allSpeeches = [];
   List<User> _attendees = [];
@@ -37,12 +35,10 @@ class ActivityProvider with ChangeNotifier {
   Marker? _marker;
   String? _errorLocation;
 
-  bool get isLoading => _isLoading;
+
   bool get isUploadLoading => _isUploadLoading;
   Project? get project => _project;
   Speech? get speech => _speech;
-  List<Project> get projects => _projects;
-  List<Project> get allProjects => _allProjects;
   List<Speech> get speeches => _speeches;
   List<Speech> get allSpeeches => _allSpeeches;
   List<User> get attendees => _attendees;
@@ -56,6 +52,14 @@ class ActivityProvider with ChangeNotifier {
   LatLng? get center => _center;
   Marker? get marker => _marker;
   String? get errorLocation => _errorLocation;
+
+  bool _isLoading = false;
+  List<Project> _projects = [];
+  List<Project> _allProjects = [];
+
+  bool get isLoading => _isLoading;
+  List<Project> get projects => _projects;
+  List<Project> get allProjects => _allProjects;
 
   Future<void> fetchAllProjectsByOrganizer() async {
     _isLoading = true;
@@ -122,9 +126,6 @@ class ActivityProvider with ChangeNotifier {
 
       return _project;
     } catch (e) {
-      // _isLoading = false;
-      // _errorLocation = 'Error fetching Project';
-      // notifyListeners();
       print('Error in ProjectProvider: $e');
       throw Exception('Error fetching Project');
     }

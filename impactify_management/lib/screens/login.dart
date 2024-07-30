@@ -89,7 +89,7 @@ class Login extends StatelessWidget {
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Please fill out all fields.'),
+                                  content: Text('Please fill in all fields.'),
                                   backgroundColor: Colors.red,
                                 ),
                               );

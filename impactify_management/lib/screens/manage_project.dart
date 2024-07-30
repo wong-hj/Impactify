@@ -165,7 +165,7 @@ class _ManageProjectState extends State<ManageProject> {
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Sucessfully deleted the project.'),
+                      content: Text('Successfully deleted the project.'),
                       backgroundColor: Colors.green,
                     ),
                   );

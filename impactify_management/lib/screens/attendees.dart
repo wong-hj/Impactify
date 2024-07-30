@@ -120,13 +120,14 @@ class _AttendeesState extends State<Attendees> {
   }
 
   void _sendEmails() async {
-    // Your email sending logic goes here
     print('Sending email to: $selectedEmails');
 
     FlutterEmailSender.send(
       Email(
         body: 
-        'Hello there Impactify Folks! Hope you are doing well.\n\nThis is an reminder for the activity - ${activityTitle} on ${DateFormat('dd MMMM yyyy, HH:mm').format(activityDate.toDate()).toUpperCase()}.\n\nThe activity will be hosted at ${activityLocation}\n\nFrom ${activityOrganizer} via Impactify App.',
+        'Hello there Impactify Folks! Hope you are doing well.\n\nThis is an reminder for the activity - ' +
+        '${activityTitle} on ${DateFormat('dd MMMM yyyy, HH:mm').format(activityDate.toDate()).toUpperCase()}.\n\n' +
+        'The activity will be hosted at ${activityLocation}\n\nFrom ${activityOrganizer} via Impactify App.',
         
         recipients: selectedEmails,
         subject: 'Reminder on your participation for ${activityTitle}.',

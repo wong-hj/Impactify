@@ -212,56 +212,57 @@ class _SignUpState extends State<SignUp> {
                       final fullname = _fullnameController.text.trim();
                       final username = _usernameController.text.trim();
                       final organization = _organizationController.text.trim();
-                      final ssmNumber = _ssmController.text.isNotEmpty ? _ssmController.text.trim() : null;
+                      final ssmNumber = _ssmController.text.isNotEmpty
+                          ? _ssmController.text.trim()
+                          : null;
                       if (_formKey.currentState!.validate() && isAgreeTerm) {
-                        if ((_ssmController.text.isNotEmpty &&
-                                ssmPdfFile != null) ||
-                            (_ssmController.text.isEmpty &&
-                                ssmPdfFile == null)) {
-                          // Proceed with registration logic
-                          await authProvider.signUpWithEmail(email, password, fullname, username, organization, ssmNumber, ssmPdfFile?.xFile);
-                          if(authProvider.firebaseUser != null) {
-                            Navigator.pushReplacementNamed(
-                            context, '/homeScreen');
-                          
+                        if (_passwordController.text.length > 5) {
+                          if ((_ssmController.text.isNotEmpty &&
+                                  ssmPdfFile != null) ||
+                              (_ssmController.text.isEmpty &&
+                                  ssmPdfFile == null)) {
+                            // Proceed with registration logic
+                            await authProvider.signUpWithEmail(
+                                email,
+                                password,
+                                fullname,
+                                username,
+                                organization,
+                                ssmNumber,
+                                ssmPdfFile?.xFile);
+                            if (authProvider.firebaseUser != null) {
+                              Navigator.pushReplacementNamed(
+                                  context, '/homeScreen');
+                            }
+                          } else {
+                            // Show error message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Please ensure SSM registration number and PDF file match.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                           }
                         } else {
-                          // Show error message
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  'Please ensure SSM registration number and PDF file match.'),
+                                  'Password must be longer than 6 characters.'),
                               backgroundColor: Colors.red,
                             ),
                           );
                         }
-
                         //_addPost();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                'Please fill out all fields and read terms and conditions.'),
+                                'Please fill in all fields and read terms and conditions.'),
                             backgroundColor: Colors.red,
                           ),
                         );
                       }
-                      // await authProvider.signInWithEmail(email, password);
-                      // if (authProvider.user != null) {
-                      //   Navigator.pushReplacementNamed(
-                      //       context, '/homeScreen');
-                      // } else {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(
-                      //       backgroundColor: Colors.red,
-                      //       content: Text(
-                      //         'Error Logging In, Please Try Again.',
-                      //         style: GoogleFonts.poppins(color: Colors.white),
-                      //       ),
-                      //       showCloseIcon: true,
-                      //     ),
-                      //   );
-                      // }
                     },
                     text: "Register",
                   ),

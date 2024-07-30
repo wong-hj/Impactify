@@ -279,15 +279,14 @@ class _ProfileState extends State<Profile> {
     };
     if (_formKey.currentState!.validate()) {
       final ssmURLExists = userProvider.user?.ssmURL != null;
-      print("SSMURLEXIST:" + ssmURLExists.toString());
       if ((_ssmController.text.isNotEmpty && (ssmPdfFile != null || ssmURLExists)) ||
           (_ssmController.text.isEmpty && ssmPdfFile == null)) {
 
 
              // Add SSM data to the data map if it's valid
-      if (_ssmController.text.isNotEmpty) {
-        data['ssm'] = _ssmController.text.trim();
-      }
+        if (_ssmController.text.isNotEmpty) {
+          data['ssm'] = _ssmController.text.trim();
+        }
 
         await userProvider.updateUserData(data, _image, ssmPdfFile?.xFile);
         setState(() {
@@ -296,7 +295,7 @@ class _ProfileState extends State<Profile> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Profile updated successfully, Please check your mail inbox to verify updated email.'),
+                'Profile updated successfully, Please check your mail inbox to verify updated email if you changed email.'),
             backgroundColor: Colors.green,
           ),
         );
@@ -305,7 +304,7 @@ class _ProfileState extends State<Profile> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Please ensure SSM registration number and PDF file match.'),
+                'Please ensure SSM registration number and PDF file both updated.'),
             backgroundColor: Colors.red,
           ),
         );
