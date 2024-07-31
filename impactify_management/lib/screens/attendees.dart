@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
-import 'package:impactify_management/widgets/custom_buttons.dart';
 import 'package:impactify_management/widgets/custom_list.dart';
 import 'package:intl/intl.dart';
 

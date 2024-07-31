@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_management/constants/impoints.dart';
 import 'package:impactify_management/constants/sdg.dart';
-import 'package:impactify_management/models/project.dart';
 import 'package:impactify_management/models/tag.dart';
-import 'package:impactify_management/models/user.dart';
 import 'package:impactify_management/providers/activity_provider.dart';
 import 'package:impactify_management/theming/custom_themes.dart';
 import 'package:impactify_management/widgets/custom_buttons.dart';

@@ -1,14 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:impactify_management/models/activity.dart';
 import 'package:impactify_management/models/post.dart';
-import 'package:impactify_management/models/project.dart';
-import 'package:impactify_management/models/speech.dart';
 import 'package:impactify_management/models/user.dart';
 
 class PostRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<List<Post>> fetchAllPostsByOrganizerID(String organizerID) async {
     List<String> activityIDs = [];
