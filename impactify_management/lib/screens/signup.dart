@@ -239,7 +239,7 @@ class _SignUpState extends State<SignUp> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    'Please ensure SSM registration number and PDF file match.'),
+                                    'Please ensure SSM registration number and PDF file both filled and uploaded.'),
                                 backgroundColor: Colors.red,
                               ),
                             );

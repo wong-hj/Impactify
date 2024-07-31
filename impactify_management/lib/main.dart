@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => PostProvider()),
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner:false,
           theme: CustomTheme.lightTheme,
           darkTheme: CustomTheme.darkTheme,
           initialRoute: '/login',

@@ -61,12 +61,12 @@ class MyApp extends StatelessWidget {
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
           return MaterialApp(
+            debugShowCheckedModeBanner:false,
             theme: CustomTheme.lightTheme,
             darkTheme: CustomTheme.darkTheme,
             initialRoute: authProvider.userData != null ? '/homeScreen' : '/',
             routes: {
               '/': (context) => 
-              //Recording(),
               OnboardingScreens(),
               '/login': (context) => Login(),
               '/signup': (context) => SignUp(),
