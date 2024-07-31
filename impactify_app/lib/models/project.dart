@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/models/user.dart';
 
 class Event implements Activity {
   final String eventID;
@@ -44,24 +43,6 @@ class Event implements Activity {
   String toString() {
     return 'Event: {type: $type, eventID: $eventID, title: $title, organizer: $organizer, location: $location, hostDate: $hostDate, description: $description, sdg: $sdg, impointsAdd: $impointsAdd, createdAt: $createdAt, status: $status}';
   }
-
-  // factory Event.fromFirestore(DocumentSnapshot doc) {
-  //   Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-  //   return Event(
-  //     eventID: data['eventID'],
-  //     title: data['title'],
-  //     organizer: data['organizer'],
-  //     location: data['location'],
-  //     hostDate: data['hostDate'],
-  //     description: data['description'],
-  //     image: data['image'],
-  //     sdg: data['sdg'],
-  //     impointsAdd: data['impointsAdd'],
-  //     createdAt: data['createdAt'],
-  //     type: data['type'],
-  //     status: data['status'],
-  //   );
-  // }
 
   factory Event.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;

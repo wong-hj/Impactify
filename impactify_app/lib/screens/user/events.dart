@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/providers/event_provider.dart';
-import 'package:impactify_app/screens/user/filterOption.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/util/filter.dart';
 import 'package:impactify_app/widgets/custom_cards.dart';
@@ -22,13 +19,6 @@ class Events extends StatefulWidget {
 
 class _EventsState extends State<Events> {
   bool nearMe = false;
-  //List<bool> _isSelected = [true, false, false];
-
-  void _toggle() {
-    setState(() {
-      nearMe = !nearMe;
-    });
-  }
 
   @override
   void initState() {

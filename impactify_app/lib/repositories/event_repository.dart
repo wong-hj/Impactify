@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:impactify_app/constants/placeholderURL.dart';
 import 'package:impactify_app/models/activity.dart';
 import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/models/tag.dart';
-import 'package:impactify_app/models/user.dart';
 
 class EventRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

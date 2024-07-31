@@ -1,11 +1,8 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:impactify_app/constants/sdglogo.dart';
 import 'package:impactify_app/models/speech.dart';
-import 'package:impactify_app/providers/bookmark_provider.dart';
 import 'package:impactify_app/providers/participation_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';

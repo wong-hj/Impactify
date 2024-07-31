@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:impactify_app/api/articleAPI.dart';
 import 'package:impactify_app/constants/placeholderURL.dart';
 import 'package:impactify_app/models/article.dart';
-import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';

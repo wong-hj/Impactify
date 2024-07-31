@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_app/constants/placeholderURL.dart';
-import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
@@ -34,7 +32,6 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     // Fetch user data and set it to the text controllers
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final _formKey = GlobalKey<FormState>();
 
     final user = userProvider.userData;
     if (user != null) {

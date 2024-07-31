@@ -9,7 +9,6 @@ import 'package:impactify_app/providers/post_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_app/widgets/custom_buttons.dart';
-import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:impactify_app/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +47,6 @@ class _AddPostState extends State<AddPost> {
   @override
   Widget build(BuildContext context) {
     final eventProvider = Provider.of<EventProvider>(context);
-    final postProvider = Provider.of<PostProvider>(context);
 
     // Create a map of titles and IDs
     Map<String, String> activityMap = {

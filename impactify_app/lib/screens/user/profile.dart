@@ -5,8 +5,6 @@ import 'package:impactify_app/constants/placeholderURL.dart';
 import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/providers/post_provider.dart';
 import 'package:impactify_app/providers/user_provider.dart';
-import 'package:impactify_app/screens/user/editProfile.dart';
-import 'package:impactify_app/screens/user/home_screen.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_empty.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';

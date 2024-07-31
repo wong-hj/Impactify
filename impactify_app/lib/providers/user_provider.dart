@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:image_picker/image_picker.dart';
 import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/providers/auth_provider.dart';
 import 'package:impactify_app/repositories/auth_repository.dart';
 import '../repositories/user_repository.dart';
 import '../models/user.dart';

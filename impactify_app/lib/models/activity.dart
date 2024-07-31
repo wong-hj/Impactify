@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:impactify_app/models/user.dart';
 
 abstract class Activity {
   String get id;

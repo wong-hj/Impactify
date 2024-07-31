@@ -9,7 +9,6 @@ import 'package:impactify_app/providers/event_provider.dart';
 
 import 'package:impactify_app/widgets/custom_details.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'package:provider/provider.dart';
 

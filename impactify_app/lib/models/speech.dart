@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/models/user.dart';
 
 class Speech implements Activity {
   final String speechID;

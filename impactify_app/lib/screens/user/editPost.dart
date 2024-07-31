@@ -4,7 +4,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_app/models/post.dart';
 import 'package:impactify_app/providers/event_provider.dart';
 import 'package:impactify_app/providers/post_provider.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
@@ -55,7 +54,6 @@ class _EditPostState extends State<EditPost> {
   @override
   Widget build(BuildContext context) {
     final eventProvider = Provider.of<EventProvider>(context);
-    final postProvider = Provider.of<PostProvider>(context);
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 

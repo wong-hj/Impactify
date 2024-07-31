@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:impactify_app/models/activity.dart';
-import 'package:impactify_app/models/user.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:impactify_app/widgets/custom_loading.dart';
 import 'package:impactify_app/widgets/custom_text.dart';

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:impactify_app/models/bookmark.dart';
 import 'package:impactify_app/models/project.dart';
 import 'package:impactify_app/models/participation.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/repositories/auth_repository.dart';
-import 'package:impactify_app/repositories/bookmark_repository.dart';
 import 'package:impactify_app/repositories/participation_repository.dart';
-import 'package:impactify_app/repositories/user_repository.dart';
 
 class ParticipationProvider with ChangeNotifier {
   final ParticipationRepository _participationRepository = ParticipationRepository();
@@ -59,42 +56,4 @@ class ParticipationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  
-  // Future<void> fetchBookmarksAndProjects() async {
-  //   _isLoading = true;
-  //   notifyListeners();
-
-  //   try {
-  //     List<Bookmark> bookmarks = await _bookmarkRepository
-  //         .fetchBookmarksByUserID(_authRepository.currentUser!.uid);
-
-  //     // Fetch events using the eventIDs from the bookmarks
-  //     List<Event> fetchedEvents = [];
-  //     for (var bookmark in bookmarks) {
-  //       if (bookmark.eventID != "") {
-          
-  //         Event event = await _bookmarkRepository.getEventById(bookmark.eventID!);
-
-  //         fetchedEvents.add(event);
-  //       }
-  //     }
-
-  //     _events = fetchedEvents;
-  //   } catch (e) {
-  //     print('Error fetching bookmarks and events1: $e');
-  //   }
-
-  //   _isLoading = false;
-  //   notifyListeners();
-  // }
-
-  // Future<bool> isProjectBookmarked(String projectID) async {
-  //   return await _bookmarkRepository.isActivityBookmarked(
-  //       _authRepository.currentUser!.uid, projectID, 'project');
-  // }
-
-  // Future<bool> isSpeechBookmarked(String speechID) async {
-  //   return await _bookmarkRepository.isActivityBookmarked(
-  //       _authRepository.currentUser!.uid, speechID, 'speech');
-  // }
 }

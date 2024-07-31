@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'package:impactify_app/models/project.dart';
-import 'package:impactify_app/models/post.dart';
 import 'package:impactify_app/models/speech.dart';
 import 'package:impactify_app/providers/bookmark_provider.dart';
 
 import 'package:impactify_app/providers/event_provider.dart';
-import 'package:impactify_app/providers/post_provider.dart';
 import 'package:impactify_app/providers/speech_provider.dart';
 
 import 'package:impactify_app/widgets/custom_details.dart';
@@ -75,7 +71,6 @@ class _SpeechDetailState extends State<SpeechDetail> {
   Widget build(BuildContext context) {
     final speechProvider = Provider.of<SpeechProvider>(context, listen: false);
     final String speechID = ModalRoute.of(context)!.settings.arguments as String;
-    final postProvider = Provider.of<PostProvider>(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,

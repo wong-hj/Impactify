@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:impactify_app/screens/user/login.dart';
-import 'package:impactify_app/screens/user/signup.dart';
 import 'package:impactify_app/theming/custom_themes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
